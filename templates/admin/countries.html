@@ -1,0 +1,156 @@
+{% extends 'admin/base.html' %}
+
+{% block title %}Manage Countries - Daily News Flow Admin{% endblock %}
+
+{% block breadcrumbs %}
+    <li class="breadcrumb-item"><a href="{% url 'news:admin_dashboard' %}">Admin</a></li>
+    <li class="breadcrumb-item active">Countries</li>
+{% endblock %}
+
+{% block page_title %}Manage Countries{% endblock %}
+
+{% block content %}
+    <!-- Actions Bar -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <a href="{% url 'news:admin_add_country' %}" class="btn btn-admin">
+                <i class="fas fa-plus me-2"></i>
+                Add New Country
+            </a>
+        </div>
+        <div class="col-md-6 text-end">
+            <span class="text-muted">
+                Total: {{ page_obj.paginator.count }} countries
+            </span>
+        </div>
+    </div>
+    
+    <!-- Search -->
+    <div class="admin-card mb-4">
+        <div class="card-body">
+            <form method="GET" class="row g-3">
+                <div class="col-md-6">
+                    <label class="form-label">Search Countries</label>
+                    <input type="text" name="search" class="form-control" 
+                           placeholder="Search by name or code..." value="{{ search_query }}">
+                </div>
+                <div class="col-md-6 d-flex align-items-end">
+                    <button type="submit" class="btn btn-outline-primary me-2">
+                        <i class="fas fa-search me-1"></i>
+                        Search
+                    </button>
+                    <a href="{% url 'news:admin_countries' %}" class="btn btn-outline-secondary">
+                        <i class="fas fa-times me-1"></i>
+                        Clear
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Countries Table -->
+    <div class="admin-card">
+        <div class="table-responsive">
+            <table class="table table-admin mb-0">
+                <thead>
+                    <tr>
+                        <th>Flag</th>
+                        <th>Country</th>
+                        <th>Code</th>
+                        <th>Articles</th>
+                        <th>Status</th>
+                        <th>Created</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for country in page_obj %}
+                    <tr>
+                        <td>
+                            {% if country.flag_url %}
+                                <img src="{{ country.flag_url }}" alt="{{ country.name }} flag" 
+                                     class="rounded" style="width: 30px; height: 20px; object-fit: cover;">
+                            {% else %}
+                                <i class="fas fa-flag text-muted"></i>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <strong>{{ country.name }}</strong>
+                        </td>
+                        <td>
+                            <span class="badge bg-primary">{{ country.code }}</span>
+                        </td>
+                        <td>
+                            <span class="badge bg-info">{{ country.article_count }}</span>
+                        </td>
+                        <td>
+                            {% if country.is_active %}
+                                <span class="badge bg-success">Active</span>
+                            {% else %}
+                                <span class="badge bg-secondary">Inactive</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <small>{{ country.created_at|date:"M d, Y" }}</small>
+                        </td>
+                        <td>
+                            <div class="btn-group" role="group">
+                                <a href="{% url 'news:country' country.code %}" target="_blank" 
+                                   class="btn btn-outline-info btn-sm" title="View Articles">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <a href="{% url 'news:admin_edit_country' country.pk %}" 
+                                   class="btn btn-outline-primary btn-sm" title="Edit">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="7" class="text-center py-5">
+                            <i class="fas fa-flag fa-3x text-muted mb-3"></i>
+                            <p class="text-muted">No countries found.</p>
+                            <a href="{% url 'news:admin_add_country' %}" class="btn btn-admin">
+                                <i class="fas fa-plus me-2"></i>
+                                Add First Country
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Pagination -->
+        {% if page_obj.has_other_pages %}
+        <div class="card-footer bg-transparent border-0 p-4">
+            <nav aria-label="Countries pagination">
+                <ul class="pagination pagination-admin justify-content-center mb-0">
+                    {% if page_obj.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page=1{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">First</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">Previous</a>
+                        </li>
+                    {% endif %}
+                    
+                    <li class="page-item active">
+                        <span class="page-link">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+                    </li>
+                    
+                    {% if page_obj.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">Next</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">Last</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+        {% endif %}
+    </div>
+{% endblock %}

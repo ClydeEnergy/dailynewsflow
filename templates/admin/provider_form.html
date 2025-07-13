@@ -1,0 +1,191 @@
+{% extends 'admin/base.html' %}
+
+{% block title %}{{ title }} - Daily News Flow Admin{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">
+                    <i class="fas fa-building me-2"></i>{{ title }}
+                </h4>
+            </div>
+            <div class="card-body">
+                <form method="post" novalidate>
+                    {% csrf_token %}
+                    
+                    <div class="row">
+                        <!-- Provider Name -->
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ form.name.id_for_label }}" class="form-label">
+                                <i class="fas fa-building me-2"></i>Provider Name *
+                            </label>
+                            {{ form.name }}
+                            {% if form.name.errors %}
+                            <div class="text-danger mt-1">
+                                {% for error in form.name.errors %}
+                                <small>{{ error }}</small>
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Website -->
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ form.website.id_for_label }}" class="form-label">
+                                <i class="fas fa-globe me-2"></i>Website URL *
+                            </label>
+                            {{ form.website }}
+                            {% if form.website.errors %}
+                            <div class="text-danger mt-1">
+                                {% for error in form.website.errors %}
+                                <small>{{ error }}</small>
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <!-- Country -->
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ form.country.id_for_label }}" class="form-label">
+                                <i class="fas fa-flag me-2"></i>Country *
+                            </label>
+                            {{ form.country }}
+                            {% if form.country.errors %}
+                            <div class="text-danger mt-1">
+                                {% for error in form.country.errors %}
+                                <small>{{ error }}</small>
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Logo URL -->
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ form.logo_url.id_for_label }}" class="form-label">
+                                <i class="fas fa-image me-2"></i>Logo URL
+                            </label>
+                            {{ form.logo_url }}
+                            {% if form.logo_url.errors %}
+                            <div class="text-danger mt-1">
+                                {% for error in form.logo_url.errors %}
+                                <small>{{ error }}</small>
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                            <div class="form-text">
+                                <i class="fas fa-info-circle me-1"></i>
+                                Optional: Enter a URL for the provider's logo image
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Logo Preview -->
+                    <div class="mb-3" id="logo-preview" style="display: none;">
+                        <label class="form-label">Logo Preview</label>
+                        <div class="border rounded p-3 text-center bg-light">
+                            <img id="logo-preview-img" 
+                                 src="" 
+                                 alt="Logo Preview" 
+                                 class="img-fluid rounded"
+                                 style="max-height: 100px;">
+                        </div>
+                    </div>
+                    
+                    <!-- Status -->
+                    <div class="mb-4">
+                        <div class="form-check">
+                            {{ form.is_active }}
+                            <label for="{{ form.is_active.id_for_label }}" class="form-check-label">
+                                <i class="fas fa-toggle-on me-2"></i>Active
+                            </label>
+                        </div>
+                        {% if form.is_active.errors %}
+                        <div class="text-danger mt-1">
+                            {% for error in form.is_active.errors %}
+                            <small>{{ error }}</small>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                        <div class="form-text">
+                            <i class="fas fa-info-circle me-1"></i>
+                            Only active providers will be available for article assignment
+                        </div>
+                    </div>
+                    
+                    <!-- Form Actions -->
+                    <div class="d-flex justify-content-between">
+                        <a href="{% url 'news:admin_providers' %}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left me-2"></i>Back to Providers
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-2"></i>{{ submit_text }}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Provider Information Card -->
+        {% if provider %}
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-info-circle me-2"></i>Provider Information
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <strong>Created:</strong> {{ provider.created_at|date:"M d, Y H:i" }}
+                    </div>
+                    <div class="col-md-6">
+                        <strong>Last Updated:</strong> {{ provider.updated_at|date:"M d, Y H:i" }}
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-md-6">
+                        <strong>Total Articles:</strong> {{ provider.articles.count }}
+                    </div>
+                    <div class="col-md-6">
+                        <strong>Active Articles:</strong> 
+                        <span class="text-muted">See articles page</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const logoUrlInput = document.getElementById('{{ form.logo_url.id_for_label }}');
+    const logoPreview = document.getElementById('logo-preview');
+    const logoPreviewImg = document.getElementById('logo-preview-img');
+    
+    function updateLogoPreview() {
+        const url = logoUrlInput.value.trim();
+        if (url && (url.startsWith('http://') || url.startsWith('https://'))) {
+            logoPreviewImg.src = url;
+            logoPreview.style.display = 'block';
+            
+            logoPreviewImg.onerror = function() {
+                logoPreview.style.display = 'none';
+            };
+        } else {
+            logoPreview.style.display = 'none';
+        }
+    }
+    
+    // Update preview on input change
+    logoUrlInput.addEventListener('input', updateLogoPreview);
+    
+    // Initial preview if editing existing provider
+    updateLogoPreview();
+});
+</script>
+{% endblock %}

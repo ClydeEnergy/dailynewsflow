@@ -1,0 +1,403 @@
+{% extends 'admin/base.html' %}
+
+{% block title %}
+    {% if exchange_rate %}Edit Exchange Rate{% else %}Add Exchange Rate{% endif %} - Daily News Flow Admin
+{% endblock %}
+
+{% block breadcrumbs %}
+    <li class="breadcrumb-item">
+        <a href="{% url 'news:admin_exchange_rates' %}">Exchange Rates</a>
+    </li>
+    <li class="breadcrumb-item active">
+        {% if exchange_rate %}Edit Exchange Rate{% else %}Add Exchange Rate{% endif %}
+    </li>
+{% endblock %}
+
+{% block page_title %}
+    {% if exchange_rate %}Edit Exchange Rate{% else %}Add Exchange Rate{% endif %}
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-exchange-alt me-2"></i>
+                        {% if exchange_rate %}Edit Exchange Rate{% else %}Add New Exchange Rate{% endif %}
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form method="post" novalidate>
+                        {% csrf_token %}
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.base_currency.id_for_label }}" class="form-label">
+                                    Base Currency <span class="text-danger">*</span>
+                                </label>
+                                {{ form.base_currency }}
+                                {% if form.base_currency.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.base_currency.errors.0 }}
+                                    </div>
+                                {% endif %}
+                                <div class="form-text">The base currency in the currency pair (e.g., USD in USD/EUR)</div>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.quote_currency.id_for_label }}" class="form-label">
+                                    Quote Currency <span class="text-danger">*</span>
+                                </label>
+                                {{ form.quote_currency }}
+                                {% if form.quote_currency.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.quote_currency.errors.0 }}
+                                    </div>
+                                {% endif %}
+                                <div class="form-text">The quote currency in the currency pair (e.g., EUR in USD/EUR)</div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12 mb-3">
+                                <label for="{{ form.current_rate.id_for_label }}" class="form-label">
+                                    Current Rate <span class="text-danger">*</span>
+                                </label>
+                                {{ form.current_rate }}
+                                {% if form.current_rate.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.current_rate.errors.0 }}
+                                    </div>
+                                {% endif %}
+                                <div class="form-text">The current exchange rate value</div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.rate_change.id_for_label }}" class="form-label">
+                                    Rate Change
+                                </label>
+                                {{ form.rate_change }}
+                                {% if form.rate_change.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.rate_change.errors.0 }}
+                                    </div>
+                                {% endif %}
+                                <div class="form-text">The rate change from previous close (can be negative)</div>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.percentage_change.id_for_label }}" class="form-label">
+                                    Percentage Change
+                                </label>
+                                {{ form.percentage_change }}
+                                {% if form.percentage_change.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.percentage_change.errors.0 }}
+                                    </div>
+                                {% endif %}
+                                <div class="form-text">The percentage change from previous close (can be negative)</div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.market.id_for_label }}" class="form-label">
+                                    Market <span class="text-danger">*</span>
+                                </label>
+                                {{ form.market }}
+                                {% if form.market.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.market.errors.0 }}
+                                    </div>
+                                {% endif %}
+                                <div class="form-text">The market category for this exchange rate</div>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.description.id_for_label }}" class="form-label">
+                                    Description
+                                </label>
+                                {{ form.description }}
+                                {% if form.description.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.description.errors.0 }}
+                                    </div>
+                                {% endif %}
+                                <div class="form-text">Optional description (e.g., Euro to Dollar)</div>
+                            </div>
+                        </div>
+
+                        <h6 class="mt-4 mb-3 text-muted">Optional 24-Hour Data</h6>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.high_24h.id_for_label }}" class="form-label">
+                                    24-Hour High
+                                </label>
+                                {{ form.high_24h }}
+                                {% if form.high_24h.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.high_24h.errors.0 }}
+                                    </div>
+                                {% endif %}
+                                <div class="form-text">Highest rate in the last 24 hours (optional)</div>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.low_24h.id_for_label }}" class="form-label">
+                                    24-Hour Low
+                                </label>
+                                {{ form.low_24h }}
+                                {% if form.low_24h.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.low_24h.errors.0 }}
+                                    </div>
+                                {% endif %}
+                                <div class="form-text">Lowest rate in the last 24 hours (optional)</div>
+                            </div>
+                        </div>
+
+                        <h6 class="mt-4 mb-3 text-muted">Status Settings</h6>
+                        <div class="row">
+                            <div class="col-md-12 mb-3">
+                                <div class="form-check form-switch">
+                                    {{ form.is_active }}
+                                    <label class="form-check-label" for="{{ form.is_active.id_for_label }}">
+                                        Active Status
+                                    </label>
+                                    {% if form.is_active.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {{ form.is_active.errors.0 }}
+                                        </div>
+                                    {% endif %}
+                                    <div class="form-text">Whether this exchange rate is active and visible</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-2"></i>
+                                {% if exchange_rate %}Update Exchange Rate{% else %}Create Exchange Rate{% endif %}
+                            </button>
+                            <a href="{% url 'news:admin_exchange_rates' %}" class="btn btn-secondary">
+                                <i class="fas fa-times me-2"></i>Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="card-title mb-0">
+                        <i class="fas fa-info-circle me-2"></i>Exchange Rate Guidelines
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-info">
+                        <h6>Currency Pair Format</h6>
+                        <p class="mb-2">Follow the standard format:</p>
+                        <ul class="mb-0">
+                            <li><strong>Base Currency</strong>: The currency being quoted (USD)</li>
+                            <li><strong>Quote Currency</strong>: The currency it's quoted in (EUR)</li>
+                            <li><strong>Rate</strong>: How much quote currency equals 1 base currency</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="alert alert-warning">
+                        <h6>Rate Accuracy</h6>
+                        <p class="mb-0">Ensure rates are accurate and up-to-date. Use 4-6 decimal places for precision.</p>
+                    </div>
+                    
+                    <div class="alert alert-success">
+                        <h6>Market Categories</h6>
+                        <ul class="mb-0">
+                            <li><strong>Forex</strong>: Traditional currency pairs</li>
+                            <li><strong>Crypto</strong>: Cryptocurrency pairs</li>
+                            <li><strong>Commodities</strong>: Commodity-based rates</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            {% if exchange_rate %}
+            <div class="card mt-3">
+                <div class="card-header">
+                    <h6 class="card-title mb-0">
+                        <i class="fas fa-chart-line me-2"></i>Rate Information
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <small class="text-muted">Created</small>
+                        <div>{{ exchange_rate.created_at|date:"M d, Y H:i" }}</div>
+                    </div>
+                    <div class="mb-3">
+                        <small class="text-muted">Last Updated</small>
+                        <div>{{ exchange_rate.updated_at|date:"M d, Y H:i" }}</div>
+                    </div>
+                    <div class="mb-3">
+                        <small class="text-muted">Currency Pair</small>
+                        <div><strong>{{ exchange_rate.base_currency }}/{{ exchange_rate.quote_currency }}</strong></div>
+                    </div>
+                    <div>
+                        <small class="text-muted">Current Status</small>
+                        <div>
+                            {% if exchange_rate.is_active %}
+                                <span class="badge bg-success">Active</span>
+                            {% else %}
+                                <span class="badge bg-secondary">Inactive</span>
+                            {% endif %}
+                            {% if exchange_rate.is_featured %}
+                                <span class="badge bg-warning">Featured</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Get form elements
+    const baseCurrency = document.getElementById('{{ form.base_currency.id_for_label }}');
+    const quoteCurrency = document.getElementById('{{ form.quote_currency.id_for_label }}');
+    const description = document.getElementById('{{ form.description.id_for_label }}');
+    
+    // Currency pair display and validation
+    function updateCurrencyPairInfo() {
+        if (baseCurrency.value && quoteCurrency.value) {
+            const base = baseCurrency.value.toUpperCase();
+            const quote = quoteCurrency.value.toUpperCase();
+            const pairDisplay = `${base}/${quote}`;
+            
+            // Update description if empty
+            if (!description.value) {
+                const currencyNames = {
+                    'USD': 'US Dollar',
+                    'EUR': 'Euro',
+                    'GBP': 'British Pound',
+                    'JPY': 'Japanese Yen',
+                    'CHF': 'Swiss Franc',
+                    'CAD': 'Canadian Dollar',
+                    'AUD': 'Australian Dollar',
+                    'NZD': 'New Zealand Dollar',
+                    'BTC': 'Bitcoin',
+                    'ETH': 'Ethereum'
+                };
+                
+                const baseName = currencyNames[base] || base;
+                const quoteName = currencyNames[quote] || quote;
+                description.value = `${baseName} to ${quoteName}`;
+            }
+            
+            // Show currency pair preview
+            showCurrencyPairPreview(pairDisplay);
+        }
+    }
+    
+    function showCurrencyPairPreview(pair) {
+        // Remove existing preview
+        const existingPreview = document.querySelector('.currency-pair-preview');
+        if (existingPreview) {
+            existingPreview.remove();
+        }
+        
+        // Create new preview
+        const preview = document.createElement('div');
+        preview.className = 'currency-pair-preview alert alert-info mt-3';
+        preview.innerHTML = `
+            <strong>Currency Pair:</strong> ${pair}
+            <small class="d-block mt-1">This will be automatically saved as the currency pair identifier.</small>
+        `;
+        
+        // Insert after quote currency field
+        quoteCurrency.parentElement.appendChild(preview);
+    }
+    
+    // Event listeners
+    if (baseCurrency && quoteCurrency) {
+        baseCurrency.addEventListener('input', updateCurrencyPairInfo);
+        baseCurrency.addEventListener('blur', function() {
+            this.value = this.value.toUpperCase();
+            updateCurrencyPairInfo();
+        });
+        
+        quoteCurrency.addEventListener('input', updateCurrencyPairInfo);
+        quoteCurrency.addEventListener('blur', function() {
+            this.value = this.value.toUpperCase();
+            updateCurrencyPairInfo();
+        });
+        
+        // Initial update
+        updateCurrencyPairInfo();
+    }
+    
+    // Form validation
+    const form = document.querySelector('form');
+    form.addEventListener('submit', function(e) {
+        const currentRate = document.getElementById('{{ form.current_rate.id_for_label }}').value;
+        
+        if (!baseCurrency.value) {
+            e.preventDefault();
+            alert('Please enter a base currency.');
+            baseCurrency.focus();
+            return false;
+        }
+        
+        if (!quoteCurrency.value) {
+            e.preventDefault();
+            alert('Please enter a quote currency.');
+            quoteCurrency.focus();
+            return false;
+        }
+        
+        if (baseCurrency.value.toUpperCase() === quoteCurrency.value.toUpperCase()) {
+            e.preventDefault();
+            alert('Base currency and quote currency must be different.');
+            quoteCurrency.focus();
+            return false;
+        }
+        
+        if (!currentRate || parseFloat(currentRate) <= 0) {
+            e.preventDefault();
+            alert('Please enter a valid current rate greater than 0.');
+            document.getElementById('{{ form.current_rate.id_for_label }}').focus();
+            return false;
+        }
+    });
+    
+    // Auto-calculate percentage change if rate change is provided
+    const currentRateField = document.getElementById('{{ form.current_rate.id_for_label }}');
+    const rateChangeField = document.getElementById('{{ form.rate_change.id_for_label }}');
+    const percentageChangeField = document.getElementById('{{ form.percentage_change.id_for_label }}');
+    
+    function calculatePercentageChange() {
+        const currentRate = parseFloat(currentRateField.value);
+        const rateChange = parseFloat(rateChangeField.value);
+        
+        if (currentRate && rateChange) {
+            const previousRate = currentRate - rateChange;
+            if (previousRate > 0) {
+                const percentage = (rateChange / previousRate) * 100;
+                percentageChangeField.value = percentage.toFixed(2);
+            }
+        }
+    }
+    
+    if (rateChangeField && currentRateField && percentageChangeField) {
+        rateChangeField.addEventListener('input', calculatePercentageChange);
+        currentRateField.addEventListener('input', calculatePercentageChange);
+    }
+});
+</script>
+{% endblock %}

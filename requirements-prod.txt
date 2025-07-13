@@ -1,0 +1,47 @@
+# Production Requirements
+# Use this file for production deployment
+
+# Core Django and dependencies
+Django==5.1.6
+python-decouple==3.8
+whitenoise==6.8.2
+
+# Database drivers
+psycopg2==2.9.10  # For PostgreSQL
+mysqlclient==2.2.7  # For MySQL
+
+# Web server and deployment
+gunicorn==23.0.0
+dj-database-url==2.2.0
+
+# Caching and background tasks
+redis==5.2.1
+celery==5.4.0
+
+# HTTP requests and API integration
+requests==2.32.3
+urllib3==2.3.0
+
+# Image processing
+Pillow==11.0.0
+
+# API framework (if using API endpoints)
+djangorestframework==3.16.0
+django-cors-headers==4.7.0
+
+# Task scheduling
+python-crontab==3.2.0
+
+# Security and monitoring
+django-extensions==3.2.3
+sentry-sdk==2.21.0  # For error tracking (optional)
+cryptography==44.0.1
+
+# Production optimization
+django-compressor==4.5.1  # CSS/JS compression
+django-storages==1.14.4   # Cloud storage support
+
+# Optional: Remove development tools from production
+# pytest==8.3.4
+# pytest-django==4.9.0
+# coverage==7.6.9

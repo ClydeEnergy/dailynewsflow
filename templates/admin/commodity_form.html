@@ -1,0 +1,172 @@
+{% extends 'admin/base.html' %}
+{% load static %}
+
+{% block title %}{{ title }} - Admin{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="mb-0">
+                        <i class="fas fa-coins me-2"></i>{{ title }}
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <form method="post" novalidate>
+                        {% csrf_token %}
+                        
+                        <div class="row">
+                            <!-- Basic Information -->
+                            <div class="col-md-6">
+                                <h6 class="text-muted mb-3">Basic Information</h6>
+                                
+                                <div class="mb-3">
+                                    <label for="{{ form.name.id_for_label }}" class="form-label">
+                                        Name <span class="text-danger">*</span>
+                                    </label>
+                                    {{ form.name }}
+                                    {% if form.name.errors %}
+                                        <div class="text-danger small mt-1">{{ form.name.errors.0 }}</div>
+                                    {% endif %}
+                                    <div class="form-text">e.g., Gold, Silver, Crude Oil</div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="{{ form.symbol.id_for_label }}" class="form-label">
+                                        Symbol <span class="text-danger">*</span>
+                                    </label>
+                                    {{ form.symbol }}
+                                    {% if form.symbol.errors %}
+                                        <div class="text-danger small mt-1">{{ form.symbol.errors.0 }}</div>
+                                    {% endif %}
+                                    <div class="form-text">Trading symbol (e.g., XAU, XAG, WTI)</div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="{{ form.unit.id_for_label }}" class="form-label">
+                                        Unit <span class="text-danger">*</span>
+                                    </label>
+                                    {{ form.unit }}
+                                    {% if form.unit.errors %}
+                                        <div class="text-danger small mt-1">{{ form.unit.errors.0 }}</div>
+                                    {% endif %}
+                                    <div class="form-text">Unit of measurement (e.g., oz, barrel, lb)</div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="{{ form.exchange.id_for_label }}" class="form-label">Exchange</label>
+                                    {{ form.exchange }}
+                                    {% if form.exchange.errors %}
+                                        <div class="text-danger small mt-1">{{ form.exchange.errors.0 }}</div>
+                                    {% endif %}
+                                    <div class="form-text">e.g., COMEX, NYMEX</div>
+                                </div>
+                            </div>
+
+                            <!-- Pricing Information -->
+                            <div class="col-md-6">
+                                <h6 class="text-muted mb-3">Pricing Information</h6>
+                                
+                                <div class="mb-3">
+                                    <label for="{{ form.current_price.id_for_label }}" class="form-label">
+                                        Current Price <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">$</span>
+                                        {{ form.current_price }}
+                                    </div>
+                                    {% if form.current_price.errors %}
+                                        <div class="text-danger small mt-1">{{ form.current_price.errors.0 }}</div>
+                                    {% endif %}
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-6">
+                                        <div class="mb-3">
+                                            <label for="{{ form.price_change.id_for_label }}" class="form-label">
+                                                Price Change <span class="text-danger">*</span>
+                                            </label>
+                                            <div class="input-group">
+                                                <span class="input-group-text">$</span>
+                                                {{ form.price_change }}
+                                            </div>
+                                            {% if form.price_change.errors %}
+                                                <div class="text-danger small mt-1">{{ form.price_change.errors.0 }}</div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="mb-3">
+                                            <label for="{{ form.percentage_change.id_for_label }}" class="form-label">
+                                                % Change <span class="text-danger">*</span>
+                                            </label>
+                                            <div class="input-group">
+                                                {{ form.percentage_change }}
+                                                <span class="input-group-text">%</span>
+                                            </div>
+                                            {% if form.percentage_change.errors %}
+                                                <div class="text-danger small mt-1">{{ form.percentage_change.errors.0 }}</div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- 52-Week Range -->
+                                <h6 class="text-muted mb-3 mt-4">52-Week Range</h6>
+                                
+                                <div class="mb-3">
+                                    <label for="{{ form.high_52_week.id_for_label }}" class="form-label">52-Week High</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">$</span>
+                                        {{ form.high_52_week }}
+                                    </div>
+                                    {% if form.high_52_week.errors %}
+                                        <div class="text-danger small mt-1">{{ form.high_52_week.errors.0 }}</div>
+                                    {% endif %}
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="{{ form.low_52_week.id_for_label }}" class="form-label">52-Week Low</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">$</span>
+                                        {{ form.low_52_week }}
+                                    </div>
+                                    {% if form.low_52_week.errors %}
+                                        <div class="text-danger small mt-1">{{ form.low_52_week.errors.0 }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <!-- Status -->
+                        <div class="mb-4">
+                            <h6 class="text-muted mb-3">Status</h6>
+                            <div class="form-check">
+                                {{ form.is_active }}
+                                <label class="form-check-label" for="{{ form.is_active.id_for_label }}">
+                                    Active
+                                </label>
+                                <div class="form-text">Uncheck to hide this commodity from displays</div>
+                            </div>
+                        </div>
+
+                        <!-- Form Actions -->
+                        <div class="d-flex justify-content-between">
+                            <a href="{% url 'news:admin_commodities' %}" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left me-2"></i>Back to List
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-2"></i>{{ submit_text }}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,438 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Social Media Updates - Daily News Flow{% endblock %}
+
+{% block description %}Stay updated with the latest social media posts and trending topics from various platforms including Twitter, Facebook, Instagram, and LinkedIn.{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Page Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="page-header bg-gradient rounded p-4">
+                <h1 class="page-title mb-2">
+                    <i class="fas fa-share-alt me-2"></i>Social Media Updates
+                </h1>
+                <p class="page-subtitle">
+                    {{ total_results }} social media posts from various platforms
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Platform Statistics -->
+    {% if platform_stats %}
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="platform-stats bg-white rounded shadow-sm p-4">
+                <h5 class="mb-3">
+                    <i class="fas fa-chart-bar me-2"></i>Platform Overview
+                </h5>
+                <div class="row g-3">
+                    {% for stat in platform_stats %}
+                    <div class="col-6 col-md-3">
+                        <div class="stat-card text-center p-3 rounded">
+                            <div class="stat-icon mb-2">
+                                <i class="fab fa-{{ stat.code|lower }} fa-2x text-primary"></i>
+                            </div>
+                            <h4 class="stat-number">{{ stat.count }}</h4>
+                            <small class="stat-label text-muted">{{ stat.name }}</small>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Filters -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="filter-section bg-white rounded shadow-sm p-4">
+                <h5 class="mb-3">
+                    <i class="fas fa-filter me-2"></i>Filter Posts
+                </h5>
+                
+                <form method="get" class="row g-3" id="socialFilterForm">
+                    <!-- Search Query -->
+                    <div class="col-md-6">
+                        <label class="form-label">
+                            <i class="fas fa-search me-1"></i>Search Posts
+                        </label>
+                        <input type="text" name="q" class="form-control" 
+                               value="{{ current_filters.q }}" 
+                               placeholder="Search posts or authors...">
+                    </div>
+                    
+                    <!-- Platform Filter -->
+                    <div class="col-md-4">
+                        <label class="form-label">
+                            <i class="fas fa-globe me-1"></i>Platform
+                        </label>
+                        <select name="platform" class="form-select">
+                            <option value="">All Platforms</option>
+                            {% for platform_code, platform_name in platforms %}
+                            <option value="{{ platform_code }}" 
+                                    {% if current_filters.platform == platform_code %}selected{% endif %}>
+                                {{ platform_name }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <!-- Filter Actions -->
+                    <div class="col-md-2">
+                        <label class="form-label">&nbsp;</label>
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary w-100">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+                
+                {% if current_filters.q or current_filters.platform %}
+                <div class="mt-3">
+                    <a href="{% url 'news:social_media' %}" class="btn btn-outline-secondary btn-sm">
+                        <i class="fas fa-times me-1"></i>Clear Filters
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Results Section -->
+    <div class="row">
+        <div class="col-12">
+            <!-- Results Count -->
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="mb-0">
+                    {{ total_results }} Post{{ total_results|pluralize }} Found
+                </h5>
+                {% if page_obj.has_other_pages %}
+                <span class="text-muted">
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                </span>
+                {% endif %}
+            </div>
+            
+            <!-- Social Media Posts Grid -->
+            {% if posts %}
+            <div class="row g-4">
+                {% for post in posts %}
+                <div class="col-md-6 col-lg-4">
+                    <div class="card social-post-card h-100 shadow-sm border-0 rounded-3 overflow-hidden">
+                        <div class="card-body p-4">
+                            <!-- Post Header -->
+                            <div class="d-flex align-items-start mb-3">
+                                {% if post.author_avatar %}
+                                <img src="{{ post.author_avatar }}" alt="{{ post.author_name }}" 
+                                     class="rounded-circle me-3 border" style="width: 48px; height: 48px; object-fit: cover;">
+                                {% else %}
+                                <div class="rounded-circle bg-gradient d-flex align-items-center justify-content-center me-3 border" 
+                                     style="width: 48px; height: 48px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                                    <i class="fas fa-user text-white"></i>
+                                </div>
+                                {% endif %}
+                                <div class="flex-grow-1">
+                                    <div class="d-flex align-items-start justify-content-between mb-2">
+                                        <div class="d-flex align-items-center flex-wrap">
+                                            <strong class="me-2 mb-1">{{ post.author_name }}</strong>
+                                            <div class="d-flex align-items-center">
+                                                <i class="fab fa-{{ post.platform|lower }} me-2 platform-icon-{{ post.platform|lower }}"></i>
+                                                <span class="badge bg-light text-dark rounded-pill px-2 py-1 me-2">{{ post.get_platform_display }}</span>
+                                            </div>
+                                        </div>
+                                        <small class="text-muted text-nowrap">{{ post.created_at|timesince }} ago</small>
+                                    </div>
+                                    {% if post.author_handle %}
+                                    <small class="text-muted">{{ post.author_handle }}</small>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <!-- Post Content -->
+                            <p class="mb-3 lh-base text-dark" style="font-size: 0.95rem;">
+                                {{ post.content|truncatechars:200 }}
+                            </p>
+                            
+                            <!-- Post Image -->
+                            {% if post.image %}
+                            <div class="position-relative mb-3">
+                                <img src="{{ post.image }}" alt="Post image" class="img-fluid rounded-3" 
+                                     style="max-height: 250px; width: 100%; object-fit: cover;">
+                            </div>
+                            {% endif %}
+                            
+                            <!-- Post Engagement -->
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="social-engagement d-flex align-items-center">
+                                    <span class="me-3 d-flex align-items-center">
+                                        <i class="fas fa-heart text-danger me-1"></i>
+                                        <small class="fw-semibold">{{ post.likes|floatformat:0 }}</small>
+                                    </span>
+                                    <span class="me-3 d-flex align-items-center">
+                                        <i class="fas fa-share text-primary me-1"></i>
+                                        <small class="fw-semibold">{{ post.shares|floatformat:0 }}</small>
+                                    </span>
+                                    <span class="me-3 d-flex align-items-center">
+                                        <i class="fas fa-comment text-info me-1"></i>
+                                        <small class="fw-semibold">{{ post.comments|floatformat:0 }}</small>
+                                    </span>
+                                </div>
+                                <div class="social-actions d-flex align-items-center">
+                                    {% if post.external_url %}
+                                    <a href="{{ post.external_url }}" target="_blank" 
+                                       class="btn btn-sm btn-outline-primary me-2 rounded-pill px-3" title="View Source">
+                                        <i class="fas fa-external-link-alt me-1"></i>View
+                                    </a>
+                                    {% endif %}
+                                    <button class="btn btn-sm btn-outline-secondary rounded-pill px-3" 
+                                            onclick="sharePost('{{ post.id }}')" title="Share Post">
+                                        <i class="fas fa-share-alt me-1"></i>Share
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <!-- Pagination -->
+            {% if page_obj.has_other_pages %}
+            <nav class="mt-5" aria-label="Social media pagination">
+                <ul class="pagination justify-content-center">
+                    {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?{% for key, value in current_filters.items %}{% if value %}{{ key }}={{ value }}&{% endif %}{% endfor %}page=1">
+                            <i class="fas fa-angle-double-left"></i>
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?{% for key, value in current_filters.items %}{% if value %}{{ key }}={{ value }}&{% endif %}{% endfor %}page={{ page_obj.previous_page_number }}">
+                            <i class="fas fa-angle-left"></i>
+                        </a>
+                    </li>
+                    {% endif %}
+                    
+                    {% for num in page_obj.paginator.page_range %}
+                    {% if page_obj.number == num %}
+                    <li class="page-item active">
+                        <span class="page-link">{{ num }}</span>
+                    </li>
+                    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                    <li class="page-item">
+                        <a class="page-link" href="?{% for key, value in current_filters.items %}{% if value %}{{ key }}={{ value }}&{% endif %}{% endfor %}page={{ num }}">{{ num }}</a>
+                    </li>
+                    {% endif %}
+                    {% endfor %}
+                    
+                    {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?{% for key, value in current_filters.items %}{% if value %}{{ key }}={{ value }}&{% endif %}{% endfor %}page={{ page_obj.next_page_number }}">
+                            <i class="fas fa-angle-right"></i>
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?{% for key, value in current_filters.items %}{% if value %}{{ key }}={{ value }}&{% endif %}{% endfor %}page={{ page_obj.paginator.num_pages }}">
+                            <i class="fas fa-angle-double-right"></i>
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+            {% endif %}
+            
+            {% else %}
+            <!-- No Results -->
+            <div class="text-center py-5">
+                <i class="fas fa-comments fa-4x text-muted mb-3"></i>
+                <h4 class="text-muted">No social media posts found</h4>
+                <p class="text-muted">Try adjusting your filters or check back later for new content.</p>
+                <a href="{% url 'news:social_media' %}" class="btn btn-primary">
+                    <i class="fas fa-undo me-2"></i>Clear Filters
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript for social media functionality -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Auto-submit on platform filter change
+    const filterForm = document.getElementById('socialFilterForm');
+    const platformSelect = filterForm.querySelector('select[name="platform"]');
+    
+    platformSelect.addEventListener('change', function() {
+        filterForm.submit();
+    });
+    
+    // Add loading state to form submission
+    filterForm.addEventListener('submit', function() {
+        const submitBtn = this.querySelector('button[type="submit"]');
+        const originalText = submitBtn.innerHTML;
+        
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+        submitBtn.disabled = true;
+        
+        // Reset button after 5 seconds in case of slow loading
+        setTimeout(() => {
+            submitBtn.innerHTML = originalText;
+            submitBtn.disabled = false;
+        }, 5000);
+    });
+    
+    // Add hover effects to social media cards
+    document.querySelectorAll('.social-post-card').forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-5px)';
+            this.style.boxShadow = '0 10px 25px rgba(0,0,0,0.15)';
+        });
+        
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0)';
+            this.style.boxShadow = '';
+        });
+    });
+});
+
+// Share post functionality
+function sharePost(postId) {
+    if (navigator.share) {
+        navigator.share({
+            title: 'Check out this social media post',
+            text: 'Interesting social media post from Daily News Flow',
+            url: window.location.href + '#post-' + postId
+        }).catch(console.error);
+    } else {
+        // Fallback for browsers that don't support Web Share API
+        const url = window.location.href + '#post-' + postId;
+        navigator.clipboard.writeText(url).then(() => {
+            alert('Link copied to clipboard!');
+        }).catch(() => {
+            // Final fallback
+            const textArea = document.createElement('textarea');
+            textArea.value = url;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textArea);
+            alert('Link copied to clipboard!');
+        });
+    }
+}
+</script>
+
+<style>
+.social-post-card {
+    transition: all 0.3s ease;
+    border: 1px solid #e9ecef;
+}
+
+.social-post-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.page-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.page-title {
+    color: white;
+    margin: 0;
+}
+
+.page-subtitle {
+    color: rgba(255, 255, 255, 0.8);
+    margin: 0;
+}
+
+.stat-card {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border: 1px solid #dee2e6;
+    transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.stat-number {
+    color: #007bff;
+    font-weight: 700;
+    margin: 0;
+}
+
+.platform-icon-twitter { color: #1da1f2; }
+.platform-icon-facebook { color: #4267b2; }
+.platform-icon-instagram { color: #e4405f; }
+.platform-icon-linkedin { color: #0077b5; }
+.platform-icon-youtube { color: #ff0000; }
+.platform-icon-tiktok { color: #000000; }
+
+.social-engagement span {
+    font-size: 0.875rem;
+}
+
+.social-actions .btn {
+    font-size: 0.8rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    border: 1.5px solid;
+}
+
+.social-actions .btn:hover {
+    transform: translateY(-1px);
+}
+
+.social-actions .btn-outline-primary {
+    border-color: #007bff;
+    color: #007bff;
+}
+
+.social-actions .btn-outline-primary:hover {
+    background-color: #007bff;
+    color: white;
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+}
+
+.social-actions .btn-outline-secondary {
+    border-color: #6c757d;
+    color: #6c757d;
+}
+
+.social-actions .btn-outline-secondary:hover {
+    background-color: #6c757d;
+    color: white;
+    box-shadow: 0 4px 12px rgba(108, 117, 125, 0.3);
+}
+
+.filter-section {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+}
+
+.pagination .page-link {
+    border-radius: 50%;
+    margin: 0 2px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: #667eea;
+    border-color: #667eea;
+}
+</style>
+{% endblock %}

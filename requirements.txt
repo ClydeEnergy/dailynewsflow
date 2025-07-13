@@ -1,0 +1,34 @@
+# Daily News Flow - Requirements
+# Single file with all necessary packages
+
+# Core Django Framework
+Django==5.1.6
+djangorestframework==3.16.0
+
+# Database
+mysqlclient==2.2.7
+
+# HTTP Requests
+requests==2.32.3
+
+# Configuration Management
+python-decouple==3.8
+
+# CORS Headers for API
+django-cors-headers==4.7.0
+
+# Image Processing
+Pillow==11.0.0
+
+# Task Queue (if using background tasks)
+celery==5.4.0
+redis==5.2.1
+
+# Cron Job Management
+python-crontab==3.2.0
+
+# Production Web Server
+gunicorn==23.0.0
+
+# Static Files
+whitenoise==6.8.2

@@ -1,0 +1,239 @@
+{% extends 'admin/base.html' %}
+{% load static %}
+
+{% block title %}{{ title }} - Admin{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="mb-0">
+                        <i class="fas fa-chart-line me-2"></i>{{ title }}
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <form method="post" novalidate>
+                        {% csrf_token %}
+                        <div class="row">
+                            <!-- Basic Information -->
+                            <div class="col-md-6">
+                                <h6 class="text-muted mb-3">Basic Information</h6>
+                                <div class="mb-3">
+                                    <label for="id_symbol" class="form-label">
+                                        Symbol <span class="text-danger">*</span>
+                                    </label>
+                                    <input type="text" name="symbol" id="id_symbol" 
+                                           class="form-control" 
+                                           value="{{ form.symbol.value|default_if_none:'' }}"
+                                           required>
+                                    {% if form.symbol.errors %}
+                                        <div class="text-danger small mt-1">{{ form.symbol.errors.0 }}</div>
+                                    {% endif %}
+                                    <div class="form-text">Stock symbol (e.g., AAPL, TSLA)</div>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="id_company_name" class="form-label">
+                                        Company Name <span class="text-danger">*</span>
+                                    </label>
+                                    <input type="text" name="company_name" id="id_company_name"
+                                           class="form-control"
+                                           value="{{ form.company_name.value|default_if_none:'' }}"
+                                           required>
+                                    {% if form.company_name.errors %}
+                                        <div class="text-danger small mt-1">{{ form.company_name.errors.0 }}</div>
+                                    {% endif %}
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="id_exchange" class="form-label">
+                                        Exchange <span class="text-danger">*</span>
+                                    </label>
+                                    <input type="text" name="exchange" id="id_exchange"
+                                           class="form-control"
+                                           value="{{ form.exchange.value|default_if_none:'' }}"
+                                           required>
+                                    {% if form.exchange.errors %}
+                                        <div class="text-danger small mt-1">{{ form.exchange.errors.0 }}</div>
+                                    {% endif %}
+                                    <div class="form-text">e.g., NYSE, NASDAQ</div>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="id_currency" class="form-label">
+                                        Currency <span class="text-danger">*</span>
+                                    </label>
+                                    <input type="text" name="currency" id="id_currency" class="form-control" value="{{ form.currency.value|default_if_none:'' }}" required>
+                                    {% if form.currency.errors %}
+                                        <div class="text-danger small mt-1">{{ form.currency.errors.0 }}</div>
+                                    {% endif %}
+                                    <div class="form-text">Enter currency code (e.g., USD, EUR, GBP)</div>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="id_details_link" class="form-label">
+                                        Details Link
+                                    </label>
+                                    <input type="url" name="details_link" id="id_details_link"
+                                           class="form-control"
+                                           value="{{ form.details_link.value|default_if_none:'' }}">
+                                    {% if form.details_link.errors %}
+                                        <div class="text-danger small mt-1">{{ form.details_link.errors.0 }}</div>
+                                    {% endif %}
+                                    <div class="form-text">URL to view more details about this ticker</div>
+                                </div>
+                            </div>
+                            
+                            <!-- Pricing Information -->
+                            <div class="col-md-6">
+                                <h6 class="text-muted mb-3">Pricing Information</h6>
+                                <div class="mb-3">
+                                    <label for="id_current_price" class="form-label">
+                                        Current Price <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">{{ form.currency.value|default:"$" }}</span>
+                                        <input type="number" name="current_price" id="id_current_price"
+                                               class="form-control" step="0.01"
+                                               value="{{ form.current_price.value|default_if_none:'' }}"
+                                               required>
+                                    </div>
+                                    {% if form.current_price.errors %}
+                                        <div class="text-danger small mt-1">{{ form.current_price.errors.0 }}</div>
+                                    {% endif %}
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-6">
+                                        <div class="mb-3">
+                                            <label for="id_price_change" class="form-label">
+                                                Price Change <span class="text-danger">*</span>
+                                            </label>
+                                            <div class="input-group">
+                                                <span class="input-group-text">{{ form.currency.value|default:"$" }}</span>
+                                                <input type="number" name="price_change" id="id_price_change"
+                                                       class="form-control" step="0.01"
+                                                       value="{{ form.price_change.value|default_if_none:'' }}"
+                                                       required>
+                                            </div>
+                                            {% if form.price_change.errors %}
+                                                <div class="text-danger small mt-1">{{ form.price_change.errors.0 }}</div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="mb-3">
+                                            <label for="id_percentage_change" class="form-label">
+                                                % Change <span class="text-danger">*</span>
+                                            </label>
+                                            <div class="input-group">
+                                                <input type="number" name="percentage_change" id="id_percentage_change"
+                                                       class="form-control" step="0.01"
+                                                       value="{{ form.percentage_change.value|default_if_none:'' }}"
+                                                       required>
+                                                <span class="input-group-text">%</span>
+                                            </div>
+                                            {% if form.percentage_change.errors %}
+                                                <div class="text-danger small mt-1">{{ form.percentage_change.errors.0 }}</div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <hr class="my-4">
+                        
+                        <div class="row">
+                            <!-- Trading Information -->
+                            <div class="col-md-6">
+                                <h6 class="text-muted mb-3">Trading Information</h6>
+                                <div class="mb-3">
+                                    <label for="id_volume" class="form-label">Volume</label>
+                                    <input type="number" name="volume" id="id_volume"
+                                           class="form-control"
+                                           value="{{ form.volume.value|default_if_none:0 }}">
+                                    {% if form.volume.errors %}
+                                        <div class="text-danger small mt-1">{{ form.volume.errors.0 }}</div>
+                                    {% endif %}
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="id_market_cap" class="form-label">Market Cap</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">{{ form.currency.value|default:"$" }}</span>
+                                        <input type="number" name="market_cap" id="id_market_cap"
+                                               class="form-control"
+                                               value="{{ form.market_cap.value|default_if_none:'' }}">
+                                    </div>
+                                    {% if form.market_cap.errors %}
+                                        <div class="text-danger small mt-1">{{ form.market_cap.errors.0 }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <!-- 52-Week Range -->
+                            <div class="col-md-6">
+                                <h6 class="text-muted mb-3">52-Week Range</h6>
+                                <div class="mb-3">
+                                    <label for="id_high_52_week" class="form-label">52-Week High</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">{{ form.currency.value|default:"$" }}</span>
+                                        <input type="number" name="high_52_week" id="id_high_52_week"
+                                               class="form-control" step="0.01"
+                                               value="{{ form.high_52_week.value|default_if_none:'' }}">
+                                    </div>
+                                    {% if form.high_52_week.errors %}
+                                        <div class="text-danger small mt-1">{{ form.high_52_week.errors.0 }}</div>
+                                    {% endif %}
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="id_low_52_week" class="form-label">52-Week Low</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">{{ form.currency.value|default:"$" }}</span>
+                                        <input type="number" name="low_52_week" id="id_low_52_week"
+                                               class="form-control" step="0.01"
+                                               value="{{ form.low_52_week.value|default_if_none:'' }}">
+                                    </div>
+                                    {% if form.low_52_week.errors %}
+                                        <div class="text-danger small mt-1">{{ form.low_52_week.errors.0 }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <hr class="my-4">
+                        
+                        <!-- Status -->
+                        <div class="mb-4">
+                            <h6 class="text-muted mb-3">Status</h6>
+                            <div class="form-check">
+                                <input type="checkbox" name="is_active" id="id_is_active"
+                                       class="form-check-input"
+                                       {% if form.is_active.value %}checked{% endif %}>
+                                <label class="form-check-label" for="id_is_active">
+                                    Active
+                                </label>
+                                <div class="form-text">Uncheck to hide this ticker from displays</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Form Actions -->
+                        <div class="d-flex justify-content-between">
+                            <a href="{% url 'news:admin_market_tickers' %}" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left me-2"></i>Back to List
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-2"></i>{{ submit_text }}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

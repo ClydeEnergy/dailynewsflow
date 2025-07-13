@@ -1,0 +1,955 @@
+{% extends 'admin/base.html' %}
+{% load static %}
+
+{% block title %}{{ title }} - Daily News Flow Admin{% endblock %}
+
+{% block extra_css %}
+<!-- TinyMCE Rich Text Editor -->
+<script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+<style>
+    .rich-text-container {
+        border: 1px solid #dee2e6;
+        border-radius: 0.375rem;
+        overflow: hidden;
+        background: white;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        transition: all 0.3s ease;
+    }
+    
+    .rich-text-container:focus-within {
+        border-color: #007bff;
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    }
+    
+    .rich-text-toolbar {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        border-bottom: 1px solid #dee2e6;
+        padding: 0.75rem;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        align-items: center;
+    }
+    
+    .rich-text-btn {
+        background: white;
+        border: 1px solid #dee2e6;
+        border-radius: 0.375rem;
+        padding: 0.5rem 0.75rem;
+        cursor: pointer;
+        font-size: 0.875rem;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        min-width: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    
+    .rich-text-btn:hover {
+        background: #e9ecef;
+        border-color: #adb5bd;
+        transform: translateY(-1px);
+        box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    }
+    
+    .rich-text-btn.active {
+        background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+        color: white;
+        border-color: #007bff;
+        box-shadow: 0 2px 6px rgba(0, 123, 255, 0.3);
+    }
+    
+    .rich-text-btn i {
+        font-size: 14px;
+    }
+    
+    #rich-editor {
+        min-height: 250px;
+        padding: 1.5rem;
+        outline: none;
+        background: white;
+        font-size: 1rem;
+        line-height: 1.6;
+        color: #333;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+    
+    #rich-editor:focus {
+        background: #fafbfc;
+    }
+    
+    #rich-editor ul, #rich-editor ol {
+        margin: 1rem 0;
+        padding-left: 2rem;
+    }
+    
+    #rich-editor li {
+        margin: 0.5rem 0;
+    }
+    
+    #rich-editor p {
+        margin: 1rem 0;
+    }
+    
+    #rich-editor strong {
+        font-weight: 600;
+    }
+    
+    .category-preview {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.5rem 1rem;
+        border-radius: 2rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+        margin-top: 0.75rem;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        animation: fadeInUp 0.3s ease;
+    }
+    
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .form-admin {
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        padding: 2.5rem;
+        margin: 1rem 0;
+        border: 1px solid rgba(255,255,255,0.2);
+        backdrop-filter: blur(10px);
+    }
+    
+    .form-section {
+        background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+        border-radius: 12px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        border-left: 5px solid #007bff;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.05);
+        transition: all 0.3s ease;
+    }
+    
+    .form-section:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 24px rgba(0,0,0,0.1);
+    }
+    
+    .form-section h6 {
+        color: #007bff;
+        font-weight: 700;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        font-size: 1.1rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .form-section h6 i {
+        margin-right: 0.75rem;
+        font-size: 1.2rem;
+        background: linear-gradient(135deg, #007bff, #0056b3);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    
+    .preview-card {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        border: none;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+    }
+    
+    .preview-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 32px rgba(0,0,0,0.15);
+    }
+    
+    .preview-image {
+        height: 200px;
+        object-fit: cover;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+    }
+    
+    .preview-image:hover {
+        transform: scale(1.02);
+    }
+    
+    #image-preview {
+        margin-top: 1rem;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+    }
+    
+    .form-control {
+        border-radius: 8px;
+        border: 2px solid #e9ecef;
+        padding: 0.75rem 1rem;
+        transition: all 0.3s ease;
+        font-size: 0.95rem;
+    }
+    
+    .form-control:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        transform: translateY(-1px);
+    }
+    
+    .form-label {
+        font-weight: 600;
+        color: #495057;
+        margin-bottom: 0.75rem;
+        font-size: 0.95rem;
+    }
+    
+    .form-label i {
+        color: #007bff;
+        margin-right: 0.5rem;
+    }
+    
+    .btn-admin {
+        background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+        border: none;
+        color: white;
+        font-weight: 600;
+        padding: 0.75rem 2rem;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .btn-admin:hover {
+        background: linear-gradient(135deg, #0056b3 0%, #003f7f 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 123, 255, 0.4);
+        color: white;
+    }
+    
+    .btn-lg {
+        padding: 1rem 2rem;
+        font-size: 1rem;
+        border-radius: 10px;
+    }
+    
+    .badge {
+        font-size: 0.8rem;
+        padding: 0.5rem 1rem;
+        border-radius: 1rem;
+        font-weight: 500;
+    }
+    
+    .form-text {
+        font-size: 0.85rem;
+        color: #6c757d;
+        margin-top: 0.5rem;
+    }
+    
+    .form-text i {
+        color: #007bff;
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .form-admin {
+            padding: 1.5rem;
+            margin: 0.5rem;
+        }
+        
+        .form-section {
+            padding: 1.5rem;
+        }
+        
+        .rich-text-toolbar {
+            padding: 0.5rem;
+            gap: 0.25rem;
+        }
+        
+        .rich-text-btn {
+            padding: 0.4rem 0.6rem;
+            min-width: 36px;
+        }
+        
+        #rich-editor {
+            padding: 1rem;
+            min-height: 200px;
+        }
+        
+        .btn-lg {
+            padding: 0.75rem 1.5rem;
+            font-size: 0.9rem;
+        }
+    }
+    
+    /* Loading State */
+    .loading {
+        opacity: 0.7;
+        pointer-events: none;
+    }
+    
+    .loading .btn {
+        opacity: 0.6;
+    }
+    
+    /* Error States */
+    .is-invalid {
+        border-color: #dc3545 !important;
+        box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25) !important;
+    }
+    
+    .text-danger {
+        color: #dc3545 !important;
+        font-size: 0.875rem;
+        font-weight: 500;
+    }
+    
+    /* Success States */
+    .is-valid {
+        border-color: #28a745 !important;
+        box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25) !important;
+    }
+</style>
+{% endblock %}
+
+{% block breadcrumbs %}
+    <li class="breadcrumb-item"><a href="{% url 'news:admin_dashboard' %}">Admin</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'news:admin_articles' %}">Articles</a></li>
+    <li class="breadcrumb-item active">{{ title }}</li>
+{% endblock %}
+
+{% block page_title %}{{ title }}{% endblock %}
+
+{% block content %}
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="form-admin">
+                <form method="POST" novalidate>
+                    {% csrf_token %}
+                    
+                    <!-- Basic Information Section -->
+                    <div class="form-section">
+                        <h6><i class="fas fa-newspaper me-2"></i>Article Information</h6>
+                        <div class="row">
+                            <!-- Title -->
+                            <div class="col-12 mb-3">
+                                <label for="{{ form.title.id_for_label }}" class="form-label">
+                                    <i class="fas fa-heading me-2"></i>Article Title *
+                                </label>
+                                {{ form.title }}
+                                {% if form.title.errors %}
+                                    <div class="text-danger small mt-1">
+                                        {% for error in form.title.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+                            <!-- Category -->
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.category.id_for_label }}" class="form-label">
+                                    <i class="fas fa-tags me-2"></i>Category
+                                </label>
+                                {{ form.category }}
+                                {% if form.category.errors %}
+                                    <div class="text-danger small mt-1">
+                                        {% for error in form.category.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                                <div id="category-preview"></div>
+                            </div>
+                            
+                            <!-- Country -->
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.country.id_for_label }}" class="form-label">
+                                    <i class="fas fa-flag me-2"></i>Country *
+                                </label>
+                                {{ form.country }}
+                                {% if form.country.errors %}
+                                    <div class="text-danger small mt-1">
+                                        {% for error in form.country.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+                            <!-- News Provider -->
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.news_provider.id_for_label }}" class="form-label">
+                                    <i class="fas fa-rss me-2"></i>News Provider *
+                                </label>
+                                {{ form.news_provider }}
+                                {% if form.news_provider.errors %}
+                                    <div class="text-danger small mt-1">
+                                        {% for error in form.news_provider.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+                            <!-- Date Posted and Status -->
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.date_posted.id_for_label }}" class="form-label">
+                                    <i class="fas fa-calendar me-2"></i>Publication Date
+                                </label>
+                                {{ form.date_posted }}
+                                {% if form.date_posted.errors %}
+                                    <div class="text-danger small mt-1">
+                                        {% for error in form.date_posted.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Media Section -->
+                    <div class="form-section">
+                        <h6><i class="fas fa-image me-2"></i>Media & Links</h6>
+                        <div class="row">
+                            <!-- Image URL -->
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.image.id_for_label }}" class="form-label">
+                                    <i class="fas fa-image me-2"></i>Featured Image URL *
+                                </label>
+                                {{ form.image }}
+                                {% if form.image.errors %}
+                                    <div class="text-danger small mt-1">
+                                        {% for error in form.image.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                                <div class="form-text">
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    Enter a direct URL to the article's main image
+                                </div>
+                                <!-- Image Preview -->
+                                <div id="image-preview" class="mt-2" style="display: none;">
+                                    <img id="preview-img" src="" alt="Image preview" 
+                                         class="img-fluid preview-image" style="max-width: 100%; height: 150px;">
+                                </div>
+                            </div>
+                            
+                            <!-- Article Link -->
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.link.id_for_label }}" class="form-label">
+                                    <i class="fas fa-external-link-alt me-2"></i>Source Article URL *
+                                </label>
+                                {{ form.link }}
+                                {% if form.link.errors %}
+                                    <div class="text-danger small mt-1">
+                                        {% for error in form.link.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                                <div class="form-text">
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    Full URL to the original article source
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Content Section -->
+                    <div class="form-section">
+                        <h6><i class="fas fa-edit me-2"></i>Article Content</h6>
+                        
+                        <!-- Rich Text Description -->
+                        <div class="col-12 mb-3">
+                            <label for="{{ form.description.id_for_label }}" class="form-label">
+                                <i class="fas fa-align-left me-2"></i>Article Description
+                            </label>
+                            
+                            <!-- Rich Text Editor Container -->
+                            <div class="rich-text-container">
+                                <!-- Toolbar -->
+                                <div class="rich-text-toolbar">
+                                    <button type="button" class="rich-text-btn" data-command="bold" title="Bold">
+                                        <i class="fas fa-bold"></i>
+                                    </button>
+                                    <button type="button" class="rich-text-btn" data-command="italic" title="Italic">
+                                        <i class="fas fa-italic"></i>
+                                    </button>
+                                    <button type="button" class="rich-text-btn" data-command="underline" title="Underline">
+                                        <i class="fas fa-underline"></i>
+                                    </button>
+                                    <div style="border-left: 1px solid #dee2e6; margin: 0 0.5rem;"></div>
+                                    <button type="button" class="rich-text-btn" data-command="insertUnorderedList" title="Bullet Points">
+                                        <i class="fas fa-list-ul"></i>
+                                    </button>
+                                    <button type="button" class="rich-text-btn" data-command="insertOrderedList" title="Numbered List">
+                                        <i class="fas fa-list-ol"></i>
+                                    </button>
+                                    <div style="border-left: 1px solid #dee2e6; margin: 0 0.5rem;"></div>
+                                    <button type="button" class="rich-text-btn" data-command="justifyLeft" title="Align Left">
+                                        <i class="fas fa-align-left"></i>
+                                    </button>
+                                    <button type="button" class="rich-text-btn" data-command="justifyCenter" title="Align Center">
+                                        <i class="fas fa-align-center"></i>
+                                    </button>
+                                    <button type="button" class="rich-text-btn" data-command="justifyRight" title="Align Right">
+                                        <i class="fas fa-align-right"></i>
+                                    </button>
+                                    <div style="border-left: 1px solid #dee2e6; margin: 0 0.5rem;"></div>
+                                    <button type="button" class="rich-text-btn" data-command="removeFormat" title="Clear Formatting">
+                                        <i class="fas fa-remove-format"></i>
+                                    </button>
+                                </div>
+                                
+                                <!-- Editor Area -->
+                                <div id="rich-editor" contenteditable="true" 
+                                     style="min-height: 200px; padding: 1rem; outline: none; background: white;">
+                                    {{ form.description.value|default:"Click here to start writing your article description. You can use the toolbar above to format your text with bold, italic, bullet points, and more..." }}
+                                </div>
+                            </div>
+                            
+                            <!-- Hidden textarea for form submission -->
+                            <textarea id="{{ form.description.id_for_label }}" 
+                                      name="{{ form.description.name }}" 
+                                      style="display: none;">{{ form.description.value|default:"" }}</textarea>
+                            
+                            {% if form.description.errors %}
+                                <div class="text-danger small mt-1">
+                                    {% for error in form.description.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            <div class="form-text mt-2">
+                                <i class="fas fa-magic me-1"></i>
+                                Use the rich text editor to format your description with bullet points, bold text, lists, and more
+                            </div>
+                        </div>
+                        
+                        <!-- Active Status -->
+                        <div class="col-12 mb-3">
+                            <div class="form-check form-switch">
+                                {{ form.is_active }}
+                                <label class="form-check-label" for="{{ form.is_active.id_for_label }}">
+                                    <i class="fas fa-eye me-2"></i>
+                                    <strong>Publish Article</strong>
+                                    <small class="text-muted d-block">Make this article visible on the website</small>
+                                </label>
+                            </div>
+                            {% if form.is_active.errors %}
+                                <div class="text-danger small mt-1">
+                                    {% for error in form.is_active.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <!-- Enhanced Preview Section -->
+                    {% if article %}
+                    <div class="form-section">
+                        <h6><i class="fas fa-eye me-2"></i>Live Preview</h6>
+                        <div class="preview-card p-4">
+                            <div class="row">
+                                {% if article.image %}
+                                <div class="col-md-4">
+                                    <img src="{{ article.image }}" alt="{{ article.title }}" 
+                                         class="img-fluid preview-image">
+                                </div>
+                                {% endif %}
+                                <div class="col-md-8">
+                                    <div class="d-flex align-items-center mb-2">
+                                        {% if article.category %}
+                                        <span class="badge me-2" 
+                                              style="background-color: {{ article.category.color|default:'#007bff' }}; color: white;">
+                                            {% if article.category.icon %}
+                                            <i class="{{ article.category.icon }} me-1"></i>
+                                            {% endif %}
+                                            {{ article.category.name }}
+                                        </span>
+                                        {% endif %}
+                                        <span class="badge bg-info me-2">{{ article.country.name }}</span>
+                                        <span class="badge bg-secondary">{{ article.news_provider.name }}</span>
+                                    </div>
+                                    <h5 class="mb-3">{{ article.title }}</h5>
+                                    <div class="mb-3" style="color: #666;">
+                                        {{ article.description|safe|truncatewords:30 }}
+                                    </div>
+                                    <div class="small text-muted">
+                                        <i class="fas fa-clock me-1"></i>{{ article.date_posted|date:"M d, Y H:i" }}
+                                        {% if article.is_active %}
+                                        <span class="badge bg-success ms-2">
+                                            <i class="fas fa-eye me-1"></i>Published
+                                        </span>
+                                        {% else %}
+                                        <span class="badge bg-warning text-dark ms-2">
+                                            <i class="fas fa-eye-slash me-1"></i>Draft
+                                        </span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    <!-- Form Actions -->
+                    <div class="d-flex justify-content-between align-items-center pt-3 border-top">
+                        <div>
+                            <a href="{% url 'news:admin_articles' %}" class="btn btn-outline-secondary btn-lg">
+                                <i class="fas fa-arrow-left me-2"></i>
+                                Back to Articles
+                            </a>
+                        </div>
+                        <div class="d-flex gap-2">
+                            {% if article %}
+                            <a href="{% url 'news:admin_delete_article' article.pk %}" 
+                               class="btn btn-outline-danger btn-lg"
+                               onclick="return confirm('Are you sure you want to delete this article? This action cannot be undone.')">
+                                <i class="fas fa-trash me-2"></i>
+                                Delete Article
+                            </a>
+                            <a href="{% url 'news:article_detail' article.pk %}" 
+                               class="btn btn-outline-info btn-lg" target="_blank">
+                                <i class="fas fa-external-link-alt me-2"></i>
+                                View Live
+                            </a>
+                            {% endif %}
+                            <button type="submit" class="btn btn-admin btn-lg">
+                                <i class="fas fa-save me-2"></i>
+                                {{ submit_text }}
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Rich Text Editor Functionality
+    const editor = document.getElementById('rich-editor');
+    const hiddenTextarea = document.getElementById('{{ form.description.id_for_label }}');
+    const toolbar = document.querySelector('.rich-text-toolbar');
+    
+    // Initialize editor with existing content
+    if (hiddenTextarea.value) {
+        editor.innerHTML = hiddenTextarea.value;
+    }
+    
+    // Toolbar button functionality
+    toolbar.addEventListener('click', function(e) {
+        if (e.target.classList.contains('rich-text-btn') || e.target.parentElement.classList.contains('rich-text-btn')) {
+            e.preventDefault();
+            const button = e.target.classList.contains('rich-text-btn') ? e.target : e.target.parentElement;
+            const command = button.getAttribute('data-command');
+            
+            if (command) {
+                // Focus editor first
+                editor.focus();
+                
+                // Execute command
+                document.execCommand(command, false, null);
+                
+                // Update button state
+                updateToolbarState();
+                
+                // Update hidden textarea
+                updateHiddenTextarea();
+            }
+        }
+    });
+    
+    // Update toolbar button states based on current selection
+    function updateToolbarState() {
+        const buttons = toolbar.querySelectorAll('.rich-text-btn[data-command]');
+        buttons.forEach(button => {
+            const command = button.getAttribute('data-command');
+            if (document.queryCommandState(command)) {
+                button.classList.add('active');
+            } else {
+                button.classList.remove('active');
+            }
+        });
+    }
+    
+    // Update hidden textarea with editor content
+    function updateHiddenTextarea() {
+        hiddenTextarea.value = editor.innerHTML;
+    }
+    
+    // Listen for content changes
+    editor.addEventListener('input', updateHiddenTextarea);
+    editor.addEventListener('keyup', function() {
+        updateToolbarState();
+        updateHiddenTextarea();
+    });
+    
+    editor.addEventListener('mouseup', updateToolbarState);
+    
+    // Handle paste events to clean up formatting
+    editor.addEventListener('paste', function(e) {
+        e.preventDefault();
+        const text = e.clipboardData.getData('text/plain');
+        document.execCommand('insertText', false, text);
+        updateHiddenTextarea();
+    });
+    
+    // Keyboard shortcuts
+    editor.addEventListener('keydown', function(e) {
+        if (e.ctrlKey || e.metaKey) {
+            switch (e.key) {
+                case 'b':
+                    e.preventDefault();
+                    document.execCommand('bold');
+                    updateToolbarState();
+                    updateHiddenTextarea();
+                    break;
+                case 'i':
+                    e.preventDefault();
+                    document.execCommand('italic');
+                    updateToolbarState();
+                    updateHiddenTextarea();
+                    break;
+                case 'u':
+                    e.preventDefault();
+                    document.execCommand('underline');
+                    updateToolbarState();
+                    updateHiddenTextarea();
+                    break;
+            }
+        }
+    });
+    
+    // Image Preview Functionality
+    const imageInput = document.getElementById('{{ form.image.id_for_label }}');
+    const imagePreview = document.getElementById('image-preview');
+    const previewImg = document.getElementById('preview-img');
+    
+    function updateImagePreview() {
+        const imageUrl = imageInput.value.trim();
+        if (imageUrl && (imageUrl.startsWith('http://') || imageUrl.startsWith('https://'))) {
+            previewImg.src = imageUrl;
+            imagePreview.style.display = 'block';
+            
+            // Handle image load errors
+            previewImg.onerror = function() {
+                imagePreview.style.display = 'none';
+            };
+        } else {
+            imagePreview.style.display = 'none';
+        }
+    }
+    
+    imageInput.addEventListener('input', updateImagePreview);
+    imageInput.addEventListener('blur', updateImagePreview);
+    
+    // Initialize image preview
+    updateImagePreview();
+    
+    // Category Preview Functionality
+    const categorySelect = document.getElementById('{{ form.category.id_for_label }}');
+    const categoryPreview = document.getElementById('category-preview');
+    
+    function updateCategoryPreview() {
+        const selectedOption = categorySelect.options[categorySelect.selectedIndex];
+        if (selectedOption && selectedOption.value) {
+            const categoryName = selectedOption.text;
+            const categoryColor = selectedOption.getAttribute('data-color') || '#007bff';
+            const categoryIcon = selectedOption.getAttribute('data-icon') || 'fas fa-tag';
+            
+            categoryPreview.innerHTML = `
+                <span class="category-preview" style="background-color: ${categoryColor}; color: white;">
+                    <i class="${categoryIcon} me-1"></i>${categoryName}
+                </span>
+            `;
+        } else {
+            categoryPreview.innerHTML = '';
+        }
+    }
+    
+    categorySelect.addEventListener('change', updateCategoryPreview);
+    
+    // Initialize category preview
+    updateCategoryPreview();
+    
+    // Auto-update datetime field to current time if empty
+    const dateField = document.getElementById('{{ form.date_posted.id_for_label }}');
+    if (dateField && !dateField.value) {
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const day = String(now.getDate()).padStart(2, '0');
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        dateField.value = `${year}-${month}-${day}T${hours}:${minutes}`;
+    }
+    
+    // Enhanced Form validation
+    const form = document.querySelector('form');
+    form.addEventListener('submit', function(e) {
+        let isValid = true;
+        const errors = [];
+        
+        // Check required fields
+        const requiredFields = [
+            { id: '{{ form.title.id_for_label }}', name: 'Title' },
+            { id: '{{ form.country.id_for_label }}', name: 'Country' },
+            { id: '{{ form.news_provider.id_for_label }}', name: 'News Provider' },
+            { id: '{{ form.image.id_for_label }}', name: 'Image URL' },
+            { id: '{{ form.link.id_for_label }}', name: 'Article URL' }
+        ];
+        
+        requiredFields.forEach(field => {
+            const element = document.getElementById(field.id);
+            if (element && !element.value.trim()) {
+                element.classList.add('is-invalid');
+                errors.push(field.name);
+                isValid = false;
+            } else if (element) {
+                element.classList.remove('is-invalid');
+            }
+        });
+        
+        // Validate URLs
+        const urlFields = [
+            { id: '{{ form.image.id_for_label }}', name: 'Image URL' },
+            { id: '{{ form.link.id_for_label }}', name: 'Article URL' }
+        ];
+        
+        urlFields.forEach(field => {
+            const element = document.getElementById(field.id);
+            if (element && element.value.trim()) {
+                const urlPattern = /^https?:\/\/.+/;
+                if (!urlPattern.test(element.value.trim())) {
+                    element.classList.add('is-invalid');
+                    errors.push(field.name + ' must be a valid URL');
+                    isValid = false;
+                }
+            }
+        });
+        
+        // Update hidden textarea before submission
+        updateHiddenTextarea();
+        
+        if (!isValid) {
+            e.preventDefault();
+            alert('Please fix the following errors:\\n\\n• ' + errors.join('\\n• '));
+            
+            // Scroll to first error
+            const firstError = document.querySelector('.is-invalid');
+            if (firstError) {
+                firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                firstError.focus();
+            }
+        } else {
+            // Show loading state
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Saving...';
+            submitBtn.disabled = true;
+            
+            // Reset button after 5 seconds (fallback)
+            setTimeout(() => {
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            }, 5000);
+        }
+    });
+    
+    // Real-time validation feedback
+    const allInputs = form.querySelectorAll('input, select, textarea');
+    allInputs.forEach(input => {
+        input.addEventListener('blur', function() {
+            if (this.hasAttribute('required') || this.classList.contains('required')) {
+                if (!this.value.trim()) {
+                    this.classList.add('is-invalid');
+                } else {
+                    this.classList.remove('is-invalid');
+                }
+            }
+        });
+        
+        input.addEventListener('input', function() {
+            if (this.classList.contains('is-invalid') && this.value.trim()) {
+                this.classList.remove('is-invalid');
+            }
+        });
+    });
+    
+    // Auto-save functionality (optional)
+    let autoSaveTimer;
+    const autoSaveDelay = 30000; // 30 seconds
+    
+    function autoSave() {
+        // Clear existing timer
+        clearTimeout(autoSaveTimer);
+        
+        // Set new timer
+        autoSaveTimer = setTimeout(() => {
+            // Only auto-save if form has been modified and is valid
+            updateHiddenTextarea();
+            
+            // You can implement actual auto-save functionality here
+            console.log('Auto-save triggered (implement as needed)');
+        }, autoSaveDelay);
+    }
+    
+    // Listen for changes to trigger auto-save
+    editor.addEventListener('input', autoSave);
+    allInputs.forEach(input => {
+        input.addEventListener('input', autoSave);
+    });
+    
+    // Prevent accidental navigation away from unsaved changes
+    let formModified = false;
+    
+    allInputs.forEach(input => {
+        input.addEventListener('input', () => formModified = true);
+    });
+    
+    editor.addEventListener('input', () => formModified = true);
+    
+    form.addEventListener('submit', () => formModified = false);
+    
+    window.addEventListener('beforeunload', function(e) {
+        if (formModified) {
+            e.preventDefault();
+            e.returnValue = 'You have unsaved changes. Are you sure you want to leave?';
+            return e.returnValue;
+        }
+    });
+    
+    // Initialize tooltips
+    const tooltips = document.querySelectorAll('[title]');
+    tooltips.forEach(element => {
+        if (typeof bootstrap !== 'undefined') {
+            new bootstrap.Tooltip(element);
+        }
+    });
+});
+</script>
+{% endblock %}

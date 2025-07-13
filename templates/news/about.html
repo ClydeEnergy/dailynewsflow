@@ -1,0 +1,259 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}About Us - Daily News Flow{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="about-hero">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto text-center">
+                <h1 class="display-4 fw-bold mb-4">About Daily News Flow</h1>
+                <p class="lead">Your trusted source for comprehensive news coverage from around the world</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Main Content -->
+<section class="py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <div class="about-content">
+                    <h2 class="section-title mb-4">Our Mission</h2>
+                    <p class="lead">
+                        Daily News Flow is dedicated to bringing you the most important news stories from around the globe. 
+                        We aggregate content from trusted news sources across multiple countries and categories to ensure 
+                        you stay informed about the events that matter most.
+                    </p>
+                    
+                    <h3 class="mt-5 mb-3">What We Do</h3>
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <div class="feature-item">
+                                <div class="feature-icon mb-3">
+                                    <i class="fas fa-globe-americas fa-2x text-primary"></i>
+                                </div>
+                                <h5>Global Coverage</h5>
+                                <p>We collect news from multiple countries and regions to provide comprehensive international coverage.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6 mb-4">
+                            <div class="feature-item">
+                                <div class="feature-icon mb-3">
+                                    <i class="fas fa-tags fa-2x text-primary"></i>
+                                </div>
+                                <h5>Categorized Content</h5>
+                                <p>Our news is organized into clear categories including Technology, Business, Sports, Health, and more.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6 mb-4">
+                            <div class="feature-item">
+                                <div class="feature-icon mb-3">
+                                    <i class="fas fa-clock fa-2x text-primary"></i>
+                                </div>
+                                <h5>Real-time Updates</h5>
+                                <p>We continuously update our content to ensure you get the latest news as it happens.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6 mb-4">
+                            <div class="feature-item">
+                                <div class="feature-icon mb-3">
+                                    <i class="fas fa-search fa-2x text-primary"></i>
+                                </div>
+                                <h5>Easy Discovery</h5>
+                                <p>Our search and filtering tools make it easy to find the news stories that interest you most.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <h3 class="mt-5 mb-3">Our Commitment</h3>
+                    <p>
+                        We are committed to providing accurate, timely, and relevant news coverage. While we aggregate content 
+                        from various sources, we always provide clear attribution and direct links to the original articles. 
+                        Our goal is to be your central hub for staying informed about global events.
+                    </p>
+                    
+                    <h3 class="mt-5 mb-3">Technology</h3>
+                    <p>
+                        Daily News Flow is built using modern web technologies including Django, MySQL, and responsive web design 
+                        to ensure a fast, reliable, and user-friendly experience across all devices.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Statistics Section -->
+<section class="stats-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center mb-5">
+                <h2 class="section-title">Our Impact</h2>
+                <p class="text-muted">Real-time statistics about our news coverage</p>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="stat-card">
+                    <span class="stat-number" data-stat="total_articles">{{ total_articles }}</span>
+                    <h5>Total Articles</h5>
+                    <p class="text-muted">News articles collected and curated</p>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="stat-card">
+                    <span class="stat-number" data-stat="total_countries">{{ total_countries }}</span>
+                    <h5>Countries Covered</h5>
+                    <p class="text-muted">Different countries represented</p>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="stat-card">
+                    <span class="stat-number" data-stat="total_providers">{{ total_providers }}</span>
+                    <h5>News Sources</h5>
+                    <p class="text-muted">Trusted news providers</p>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="stat-card">
+                    <span class="stat-number">24/7</span>
+                    <h5>Continuous Updates</h5>
+                    <p class="text-muted">Round-the-clock news monitoring</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Team Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center mb-5">
+                <h2 class="section-title">Our Values</h2>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-lg-4 mb-4">
+                <div class="value-card text-center">
+                    <div class="value-icon mb-3">
+                        <i class="fas fa-shield-alt fa-3x text-primary"></i>
+                    </div>
+                    <h4>Reliability</h4>
+                    <p class="text-muted">
+                        We source our content from established, credible news organizations to ensure accuracy and reliability.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="col-lg-4 mb-4">
+                <div class="value-card text-center">
+                    <div class="value-icon mb-3">
+                        <i class="fas fa-eye fa-3x text-primary"></i>
+                    </div>
+                    <h4>Transparency</h4>
+                    <p class="text-muted">
+                        We clearly identify our sources and provide direct links to original articles for full transparency.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="col-lg-4 mb-4">
+                <div class="value-card text-center">
+                    <div class="value-icon mb-3">
+                        <i class="fas fa-users fa-3x text-primary"></i>
+                    </div>
+                    <h4>Community</h4>
+                    <p class="text-muted">
+                        We serve a global community of readers who value staying informed about world events.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action -->
+<section class="py-5 bg-primary text-white">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto text-center">
+                <h2 class="mb-4">Stay Connected</h2>
+                <p class="lead mb-4">
+                    Join thousands of readers who rely on Daily News Flow for their daily news updates.
+                </p>
+                <div class="d-flex justify-content-center gap-3 flex-wrap">
+                    <a href="{% url 'news:home' %}" class="btn btn-light btn-lg">
+                        <i class="fas fa-newspaper me-2"></i>Browse News
+                    </a>
+                    <a href="{% url 'news:contact' %}" class="btn btn-outline-light btn-lg">
+                        <i class="fas fa-envelope me-2"></i>Contact Us
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.about-hero {
+    background: linear-gradient(135deg, var(--primary-color) 0%, #0056b3 100%);
+    color: white;
+    padding: 4rem 0;
+}
+
+.feature-item {
+    text-align: center;
+    padding: 1.5rem;
+}
+
+.value-card {
+    padding: 2rem 1rem;
+}
+
+.stat-card {
+    text-align: center;
+    padding: 2rem;
+    background: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    transition: var(--transition);
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+.stat-number {
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    display: block;
+}
+
+@media (max-width: 768px) {
+    .about-hero {
+        padding: 2rem 0;
+    }
+    
+    .stat-number {
+        font-size: 2rem;
+    }
+}
+</style>
+{% endblock %}

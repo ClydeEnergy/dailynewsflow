@@ -1,0 +1,87 @@
+{% extends 'admin/base.html' %}
+
+{% block title %}{{ title }} - Daily News Flow Admin{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-6">
+        <div class="card border-danger">
+            <div class="card-header bg-danger text-white">
+                <h4 class="mb-0">
+                    <i class="fas fa-exclamation-triangle me-2"></i>{{ title }}
+                </h4>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-warning">
+                    <i class="fas fa-warning me-2"></i>
+                    <strong>Warning:</strong> This action cannot be undone. All data associated with this user will be permanently deleted.
+                </div>
+                
+                <div class="mb-4">
+                    <h5>User Details:</h5>
+                    <table class="table table-borderless">
+                        <tr>
+                            <td><strong>Username:</strong></td>
+                            <td>{{ user_obj.username }}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Name:</strong></td>
+                            <td>
+                                {% if user_obj.get_full_name %}
+                                    {{ user_obj.get_full_name }}
+                                {% else %}
+                                    <em class="text-muted">No name set</em>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Email:</strong></td>
+                            <td>
+                                {% if user_obj.email %}
+                                    {{ user_obj.email }}
+                                {% else %}
+                                    <em class="text-muted">No email set</em>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Role:</strong></td>
+                            <td>
+                                {% if user_obj.is_superuser %}
+                                    <span class="badge bg-danger">Superuser</span>
+                                {% elif user_obj.is_staff %}
+                                    <span class="badge bg-warning">Staff</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">User</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Last Login:</strong></td>
+                            <td>
+                                {% if user_obj.last_login %}
+                                    {{ user_obj.last_login|date:"M d, Y H:i" }}
+                                {% else %}
+                                    <em class="text-muted">Never</em>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="d-flex justify-content-between">
+                        <a href="{% url 'news:admin_users' %}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left me-2"></i>Cancel
+                        </a>
+                        <button type="submit" class="btn btn-danger">
+                            <i class="fas fa-trash me-2"></i>Delete User
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

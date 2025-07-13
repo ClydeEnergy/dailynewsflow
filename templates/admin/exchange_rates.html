@@ -1,0 +1,305 @@
+{% extends 'admin/base.html' %}
+
+{% block title %}Exchange Rates - Daily News Flow Admin{% endblock %}
+
+{% block breadcrumbs %}
+    <li class="breadcrumb-item active">Exchange Rates</li>
+{% endblock %}
+
+{% block page_title %}Exchange Rates{% endblock %}
+
+{% block content %}
+    <!-- Header Section -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="mb-0">
+                <i class="fas fa-exchange-alt me-2"></i>
+                Exchange Rates
+            </h2>
+            <p class="text-muted mb-0">Manage currency exchange rates and forex data</p>
+        </div>
+        <a href="{% url 'news:admin_add_exchange_rate' %}" class="btn btn-primary">
+            <i class="fas fa-plus me-2"></i>Add Exchange Rate
+        </a>
+    </div>
+
+    <!-- Search and Filter Section -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="GET" class="row g-3">
+                <div class="col-md-4">
+                    <label for="search" class="form-label">Search</label>
+                    <input type="text" class="form-control" id="search" name="search" 
+                           value="{{ request.GET.search }}" placeholder="Search by currency pair...">
+                </div>
+                <div class="col-md-3">
+                    <label for="market" class="form-label">Market</label>
+                    <select class="form-select" id="market" name="market">
+                        <option value="">All Markets</option>
+                        <option value="forex" {% if request.GET.market == 'forex' %}selected{% endif %}>Forex</option>
+                        <option value="crypto" {% if request.GET.market == 'crypto' %}selected{% endif %}>Crypto</option>
+                        <option value="commodities" {% if request.GET.market == 'commodities' %}selected{% endif %}>Commodities</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label for="status" class="form-label">Status</label>
+                    <select class="form-select" id="status" name="status">
+                        <option value="">All Status</option>
+                        <option value="active" {% if request.GET.status == 'active' %}selected{% endif %}>Active</option>
+                        <option value="inactive" {% if request.GET.status == 'inactive' %}selected{% endif %}>Inactive</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">&nbsp;</label>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-outline-primary">
+                            <i class="fas fa-search me-1"></i>Filter
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="stats-card">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h3 class="mb-0">{{ total_exchange_rates }}</h3>
+                        <p class="mb-0">Total Rates</p>
+                    </div>
+                    <div class="fs-1">
+                        <i class="fas fa-exchange-alt"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="stats-card success">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h3 class="mb-0">{{ active_exchange_rates }}</h3>
+                        <p class="mb-0">Active Rates</p>
+                    </div>
+                    <div class="fs-1">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="stats-card info">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h3 class="mb-0">{{ forex_rates }}</h3>
+                        <p class="mb-0">Forex Pairs</p>
+                    </div>
+                    <div class="fs-1">
+                        <i class="fas fa-coins"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="stats-card warning">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h3 class="mb-0">{{ crypto_rates }}</h3>
+                        <p class="mb-0">Crypto Pairs</p>
+                    </div>
+                    <div class="fs-1">
+                        <i class="fab fa-bitcoin"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Exchange Rates Table -->
+    <div class="card">
+        <div class="card-header">
+            <h5 class="card-title mb-0">Exchange Rates Management</h5>
+        </div>
+        <div class="card-body p-0">
+            {% if exchange_rates %}
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Currency Pair</th>
+                                <th>Market</th>
+                                <th>Current Rate</th>
+                                <th>Change</th>
+                                <th>Last Updated</th>
+                                <th>Status</th>
+                                <th width="200">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for rate in exchange_rates %}
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div>
+                                                <h6 class="mb-0">{{ rate.currency_pair }}</h6>
+                                                <small class="text-muted">{{ rate.base_currency }} to {{ rate.quote_currency }}</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-secondary">{{ rate.market|upper }}</span>
+                                    </td>
+                                    <td>
+                                        <strong>{{ rate.current_rate|floatformat:4 }}</strong>
+                                    </td>
+                                    <td>
+                                        {% if rate.percentage_change >= 0 %}
+                                            <span class="badge bg-success">+{{ rate.percentage_change }}%</span>
+                                        {% else %}
+                                            <span class="badge bg-danger">{{ rate.percentage_change }}%</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <small class="text-muted">{{ rate.updated_at|date:"M d, Y H:i" }}</small>
+                                    </td>
+                                    <td>
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input status-toggle" type="checkbox" 
+                                                   data-id="{{ rate.id }}" 
+                                                   {% if rate.is_active %}checked{% endif %}>
+                                            <label class="form-check-label">
+                                                {% if rate.is_active %}Active{% else %}Inactive{% endif %}
+                                            </label>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="btn-group" role="group">
+                                            <a href="{% url 'news:admin_edit_exchange_rate' rate.pk %}" 
+                                               class="btn btn-sm btn-outline-primary">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <a href="{% url 'news:admin_delete_exchange_rate' rate.pk %}" 
+                                               class="btn btn-sm btn-outline-danger">
+                                                <i class="fas fa-trash"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="text-center py-5">
+                    <div class="mb-3">
+                        <i class="fas fa-exchange-alt fa-3x text-muted"></i>
+                    </div>
+                    <h5>No exchange rates found</h5>
+                    <p>Start by adding your first exchange rate.</p>
+                    <a href="{% url 'news:admin_add_exchange_rate' %}" class="btn btn-primary">
+                        <i class="fas fa-plus me-2"></i>Add Exchange Rate
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Pagination -->
+    {% if exchange_rates.has_other_pages %}
+        <nav aria-label="Exchange rates pagination" class="mt-4">
+            <ul class="pagination justify-content-center">
+                {% if exchange_rates.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?{% if request.GET.search %}search={{ request.GET.search }}&{% endif %}{% if request.GET.market %}market={{ request.GET.market }}&{% endif %}{% if request.GET.status %}status={{ request.GET.status }}&{% endif %}page={{ exchange_rates.previous_page_number }}">Previous</a>
+                    </li>
+                {% endif %}
+
+                {% for num in exchange_rates.paginator.page_range %}
+                    {% if exchange_rates.number == num %}
+                        <li class="page-item active">
+                            <span class="page-link">{{ num }}</span>
+                        </li>
+                    {% elif num > exchange_rates.number|add:'-3' and num < exchange_rates.number|add:'3' %}
+                        <li class="page-item">
+                            <a class="page-link" href="?{% if request.GET.search %}search={{ request.GET.search }}&{% endif %}{% if request.GET.market %}market={{ request.GET.market }}&{% endif %}{% if request.GET.status %}status={{ request.GET.status }}&{% endif %}page={{ num }}">{{ num }}</a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+
+                {% if exchange_rates.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?{% if request.GET.search %}search={{ request.GET.search }}&{% endif %}{% if request.GET.market %}market={{ request.GET.market }}&{% endif %}{% if request.GET.status %}status={{ request.GET.status }}&{% endif %}page={{ exchange_rates.next_page_number }}">Next</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+    {% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Status toggle functionality
+    document.querySelectorAll('.status-toggle').forEach(function(toggle) {
+        toggle.addEventListener('change', function() {
+            const rateId = this.dataset.id;
+            const isActive = this.checked;
+            
+            fetch(`{% url 'news:admin_toggle_exchange_rate_status' 0 %}`.replace('0', rateId), {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    'is_active': isActive
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Update label
+                    const label = this.nextElementSibling;
+                    label.textContent = isActive ? 'Active' : 'Inactive';
+                    
+                    // Show success message
+                    showAlert('Status updated successfully!', 'success');
+                } else {
+                    // Revert toggle if failed
+                    this.checked = !isActive;
+                    showAlert('Failed to update status.', 'danger');
+                }
+            })
+            .catch(error => {
+                // Revert toggle if error
+                this.checked = !isActive;
+                showAlert('An error occurred.', 'danger');
+            });
+        });
+    });
+});
+
+function showAlert(message, type) {
+    const alertDiv = document.createElement('div');
+    alertDiv.className = `alert alert-${type} alert-dismissible fade show`;
+    alertDiv.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    
+    const container = document.querySelector('.container-fluid');
+    container.insertBefore(alertDiv, container.firstChild);
+    
+    setTimeout(() => {
+        alertDiv.remove();
+    }, 3000);
+}
+</script>
+
+{% csrf_token %}
+{% endblock %}

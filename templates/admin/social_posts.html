@@ -1,0 +1,313 @@
+{% extends 'admin/base.html' %}
+
+{% block title %}Social Media Posts - Daily News Flow Admin{% endblock %}
+
+{% block breadcrumbs %}
+    <li class="breadcrumb-item active">Social Media Posts</li>
+{% endblock %}
+
+{% block page_title %}Social Media Posts{% endblock %}
+
+{% block content %}
+    <!-- Header with Add Button and Filters -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="mb-0">
+            <i class="fas fa-share-alt me-2"></i>
+            Social Media Posts
+            <span class="badge bg-primary ms-2">{{ total_posts }}</span>
+        </h2>
+        <a href="{% url 'news:admin_add_social_post' %}" class="btn btn-admin">
+            <i class="fas fa-plus me-2"></i>
+            Add New Post
+        </a>
+    </div>
+
+    <!-- Search and Filter Bar -->
+    <div class="admin-card p-3 mb-4">
+        <form method="get" class="row g-3">
+            <div class="col-md-4">
+                <label for="search" class="form-label">Search</label>
+                <input type="text" class="form-control" id="search" name="search" 
+                       value="{{ search_query }}" placeholder="Search posts...">
+            </div>
+            <div class="col-md-3">
+                <label for="platform" class="form-label">Platform</label>
+                <select class="form-select" id="platform" name="platform">
+                    <option value="">All Platforms</option>
+                    {% for value, label in platform_choices %}
+                    <option value="{{ value }}" {% if platform_filter == value %}selected{% endif %}>
+                        {{ label }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label for="active" class="form-label">Status</label>
+                <select class="form-select" id="active" name="active">
+                    <option value="">All Posts</option>
+                    <option value="true" {% if active_filter == 'true' %}selected{% endif %}>Active</option>
+                    <option value="false" {% if active_filter == 'false' %}selected{% endif %}>Inactive</option>
+                </select>
+            </div>
+            <div class="col-md-2 d-flex align-items-end">
+                <button type="submit" class="btn btn-outline-primary me-2">Filter</button>
+                <a href="{% url 'news:admin_social_posts' %}" class="btn btn-outline-secondary">Clear</a>
+            </div>
+        </form>
+    </div>
+
+    <!-- Stats -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="stats-card">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h4 class="mb-0">{{ total_posts }}</h4>
+                        <p class="mb-0">Total Posts</p>
+                    </div>
+                    <div class="fs-2">
+                        <i class="fas fa-share-alt"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="stats-card success">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h4 class="mb-0">{{ active_posts }}</h4>
+                        <p class="mb-0">Active Posts</p>
+                    </div>
+                    <div class="fs-2">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Posts Table -->
+    <div class="admin-card">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th>Post</th>
+                        <th>Platform</th>
+                        <th>Author</th>
+                        <th>Engagement</th>
+                        <th>Status</th>
+                        <th>Posted</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for post in posts %}
+                    <tr id="post-{{ post.id }}">
+                        <td>
+                            <div class="d-flex align-items-start">
+                                {% if post.image_url %}
+                                <img src="{{ post.image_url }}" alt="Post image" 
+                                     class="rounded me-3" style="width: 50px; height: 50px; object-fit: cover;">
+                                {% else %}
+                                <div class="bg-light rounded me-3 d-flex align-items-center justify-content-center"
+                                     style="width: 50px; height: 50px;">
+                                    <i class="fas fa-image text-muted"></i>
+                                </div>
+                                {% endif %}
+                                <div>
+                                    <h6 class="mb-1">{{ post.title|truncatechars:50 }}</h6>
+                                    <p class="mb-0 text-muted small">{{ post.content|truncatechars:80 }}</p>
+                                    {% if post.is_featured %}
+                                    <span class="badge bg-warning mt-1">
+                                        <i class="fas fa-star me-1"></i>Featured
+                                    </span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="d-flex align-items-center">
+                                <i class="{{ post.platform_icon }} me-2 platform-{{ post.platform|lower }}"></i>
+                                {{ post.get_platform_display }}
+                            </span>
+                        </td>
+                        <td>
+                            <div>
+                                <strong>{{ post.author_name }}</strong>
+                                {% if post.author_handle %}
+                                <br><span class="text-muted small">{{ post.author_handle }}</span>
+                                {% endif %}
+                            </div>
+                        </td>
+                        <td>
+                            <div class="small">
+                                <div><i class="fas fa-heart text-danger me-1"></i>{{ post.likes }}</div>
+                                <div><i class="fas fa-share text-primary me-1"></i>{{ post.shares }}</div>
+                                <div><i class="fas fa-comment text-info me-1"></i>{{ post.comments }}</div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input toggle-status" type="checkbox" 
+                                       data-id="{{ post.id }}" {% if post.is_active %}checked{% endif %}>
+                                <label class="form-check-label small">
+                                    <span class="status-text">{{ post.is_active|yesno:"Active,Inactive" }}</span>
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            <small>{{ post.posted_at|date:"M d, Y" }}<br>{{ post.posted_at|time:"H:i" }}</small>
+                        </td>
+                        <td>
+                            <div class="btn-group btn-group-sm" role="group">
+                                {% if post.post_url %}
+                                <a href="{{ post.post_url }}" target="_blank" class="btn btn-outline-info" 
+                                   title="View Original Post">
+                                    <i class="fas fa-external-link-alt"></i>
+                                </a>
+                                {% endif %}
+                                <button type="button" class="btn btn-outline-warning toggle-featured" 
+                                        data-id="{{ post.id }}" title="Toggle Featured">
+                                    <i class="fas fa-star{% if not post.is_featured %}-o{% endif %}"></i>
+                                </button>
+                                <a href="{% url 'news:admin_edit_social_post' post.id %}" 
+                                   class="btn btn-outline-primary" title="Edit">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <a href="{% url 'news:admin_delete_social_post' post.id %}" 
+                                   class="btn btn-outline-danger" title="Delete">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="7" class="text-center py-4">
+                            <div class="text-muted">
+                                <i class="fas fa-share-alt fa-3x mb-3"></i>
+                                <h5>No social media posts found</h5>
+                                <p>Start by adding your first social media post.</p>
+                                <a href="{% url 'news:admin_add_social_post' %}" class="btn btn-admin">
+                                    <i class="fas fa-plus me-2"></i>Add Social Media Post
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Pagination -->
+    {% if page_obj.has_other_pages %}
+    <div class="d-flex justify-content-center mt-4">
+        <nav aria-label="Social media posts pagination">
+            <ul class="pagination">
+                {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page=1{% if search_query %}&search={{ search_query }}{% endif %}{% if platform_filter %}&platform={{ platform_filter }}{% endif %}{% if active_filter %}&active={{ active_filter }}{% endif %}">First</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if platform_filter %}&platform={{ platform_filter }}{% endif %}{% if active_filter %}&active={{ active_filter }}{% endif %}">Previous</a>
+                    </li>
+                {% endif %}
+
+                {% for num in page_obj.paginator.page_range %}
+                    {% if page_obj.number == num %}
+                        <li class="page-item active">
+                            <span class="page-link">{{ num }}</span>
+                        </li>
+                    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ num }}{% if search_query %}&search={{ search_query }}{% endif %}{% if platform_filter %}&platform={{ platform_filter }}{% endif %}{% if active_filter %}&active={{ active_filter }}{% endif %}">{{ num }}</a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+
+                {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if platform_filter %}&platform={{ platform_filter }}{% endif %}{% if active_filter %}&active={{ active_filter }}{% endif %}">Next</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if search_query %}&search={{ search_query }}{% endif %}{% if platform_filter %}&platform={{ platform_filter }}{% endif %}{% if active_filter %}&active={{ active_filter }}{% endif %}">Last</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+    {% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+$(document).ready(function() {
+    // Toggle post status
+    $('.toggle-status').change(function() {
+        const postId = $(this).data('id');
+        const isChecked = $(this).is(':checked');
+        const $statusText = $(this).siblings('label').find('.status-text');
+        
+        $.ajax({
+            url: `{% url 'news:admin_toggle_social_post_status' 0 %}`.replace('0', postId),
+            type: 'POST',
+            headers: {
+                'X-CSRFToken': $('[name=csrfmiddlewaretoken]').val()
+            },
+            success: function(response) {
+                if (response.success) {
+                    $statusText.text(response.is_active ? 'Active' : 'Inactive');
+                    showAlert('success', response.message);
+                }
+            },
+            error: function() {
+                // Revert checkbox state on error
+                $(this).prop('checked', !isChecked);
+                showAlert('error', 'Failed to update status');
+            }
+        });
+    });
+
+    // Toggle featured status
+    $('.toggle-featured').click(function() {
+        const postId = $(this).data('id');
+        const $button = $(this);
+        const $icon = $button.find('i');
+        
+        $.ajax({
+            url: `{% url 'news:admin_toggle_social_post_featured' 0 %}`.replace('0', postId),
+            type: 'POST',
+            headers: {
+                'X-CSRFToken': $('[name=csrfmiddlewaretoken]').val()
+            },
+            success: function(response) {
+                if (response.success) {
+                    if (response.is_featured) {
+                        $icon.removeClass('fa-star-o').addClass('fa-star');
+                    } else {
+                        $icon.removeClass('fa-star').addClass('fa-star-o');
+                    }
+                    showAlert('success', response.message);
+                }
+            },
+            error: function() {
+                showAlert('error', 'Failed to update featured status');
+            }
+        });
+    });
+
+    function showAlert(type, message) {
+        const alertClass = type === 'success' ? 'alert-success' : 'alert-danger';
+        const alertHtml = `
+            <div class="alert ${alertClass} alert-dismissible fade show" role="alert">
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        `;
+        $('.admin-content').prepend(alertHtml);
+    }
+});
+</script>
+{% endblock %}

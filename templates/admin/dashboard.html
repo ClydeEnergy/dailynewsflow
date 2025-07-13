@@ -1,0 +1,878 @@
+{% extends 'admin/base.html' %}
+
+{% block title %}Dashboard - Daily News Flow Admin{% endblock %}
+
+{% block breadcrumbs %}
+    <li class="breadcrumb-item active">Dashboard</li>
+{% endblock %}
+
+{% block page_title %}Dashboard{% endblock %}
+
+{% block content %}
+    <!-- Dashboard Header -->
+    <div class="dashboard-header mb-4">
+        <h2 class="mb-1">Welcome back, Admin</h2>
+        <p class="text-muted">Overview of your news platform analytics</p>
+    </div>
+
+    <!-- ========== STATS CARDS SECTION ========== -->
+    <div class="row g-4 mb-4">
+        <!-- Core Stats -->
+        <div class="col-xxl-3 col-lg-6">
+            <div class="card stat-card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-uppercase text-muted mb-2">Total Articles</h6>
+                            <h3 class="mb-0">{{ total_articles }}</h3>
+                        </div>
+                        <div class="icon-shape bg-primary-light text-primary rounded-3">
+                            <i class="fas fa-newspaper fs-3"></i>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <span class="text-success fw-semibold">
+                            <i class="fas fa-caret-up me-1"></i> 12.5%
+                        </span>
+                        <span class="text-muted ms-2">vs last week</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-xxl-3 col-lg-6">
+            <div class="card stat-card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-uppercase text-muted mb-2">Active Articles</h6>
+                            <h3 class="mb-0">{{ active_articles }}</h3>
+                        </div>
+                        <div class="icon-shape bg-success-light text-success rounded-3">
+                            <i class="fas fa-check-circle fs-3"></i>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <span class="text-success fw-semibold">
+                            <i class="fas fa-caret-up me-1"></i> 8.3%
+                        </span>
+                        <span class="text-muted ms-2">vs last week</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-xxl-3 col-lg-6">
+            <div class="card stat-card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-uppercase text-muted mb-2">Countries</h6>
+                            <h3 class="mb-0">{{ total_countries }}</h3>
+                        </div>
+                        <div class="icon-shape bg-warning-light text-warning rounded-3">
+                            <i class="fas fa-flag fs-3"></i>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <span class="text-success fw-semibold">
+                            <i class="fas fa-caret-up me-1"></i> 3.2%
+                        </span>
+                        <span class="text-muted ms-2">vs last month</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-xxl-3 col-lg-6">
+            <div class="card stat-card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-uppercase text-muted mb-2">News Providers</h6>
+                            <h3 class="mb-0">{{ total_providers }}</h3>
+                        </div>
+                        <div class="icon-shape bg-danger-light text-danger rounded-3">
+                            <i class="fas fa-rss fs-3"></i>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <span class="text-success fw-semibold">
+                            <i class="fas fa-caret-up me-1"></i> 5.7%
+                        </span>
+                        <span class="text-muted ms-2">vs last month</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== SECONDARY STATS ROW ========== -->
+    <div class="row g-4 mb-4">
+        <!-- Social Media Stats -->
+        <div class="col-xxl-3 col-lg-6">
+            <div class="card stat-card bg-gradient-social">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-uppercase text-white-50 mb-2">Social Posts</h6>
+                            <h3 class="mb-0 text-white">{{ total_social_posts|default:"0" }}</h3>
+                        </div>
+                        <div class="icon-shape bg-white-10 text-white rounded-3">
+                            <i class="fas fa-share-alt fs-3"></i>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <span class="text-white fw-semibold">
+                            <i class="fas fa-caret-up me-1"></i> 22.1%
+                        </span>
+                        <span class="text-white-50 ms-2">vs last week</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-xxl-3 col-lg-6">
+            <div class="card stat-card bg-gradient-social">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-uppercase text-white-50 mb-2">Active Posts</h6>
+                            <h3 class="mb-0 text-white">{{ active_social_posts|default:"0" }}</h3>
+                        </div>
+                        <div class="icon-shape bg-white-10 text-white rounded-3">
+                            <i class="fas fa-eye fs-3"></i>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <span class="text-white fw-semibold">
+                            <i class="fas fa-caret-up me-1"></i> 18.4%
+                        </span>
+                        <span class="text-white-50 ms-2">vs last week</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-xxl-3 col-lg-6">
+            <div class="card stat-card bg-gradient-featured">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-uppercase text-white-50 mb-2">Featured Posts</h6>
+                            <h3 class="mb-0 text-white">{{ featured_social_posts|default:"0" }}</h3>
+                        </div>
+                        <div class="icon-shape bg-white-10 text-white rounded-3">
+                            <i class="fas fa-star fs-3"></i>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <span class="text-white fw-semibold">
+                            <i class="fas fa-caret-up me-1"></i> 9.2%
+                        </span>
+                        <span class="text-white-50 ms-2">vs last month</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-xxl-3 col-lg-6">
+            <div class="card stat-card bg-gradient-today">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-uppercase text-white-50 mb-2">Posts Today</h6>
+                            <h3 class="mb-0 text-white">{{ posts_today|default:"0" }}</h3>
+                        </div>
+                        <div class="icon-shape bg-white-10 text-white rounded-3">
+                            <i class="fas fa-calendar-day fs-3"></i>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <span class="text-white fw-semibold">
+                            <i class="fas fa-caret-up me-1"></i> 14.6%
+                        </span>
+                        <span class="text-white-50 ms-2">vs yesterday</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== MARKET DATA STATS ========== -->
+    <div class="row g-4 mb-4">
+        <div class="col-xxl-3 col-lg-6">
+            <div class="card stat-card bg-gradient-market">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-uppercase text-white-50 mb-2">Market Tickers</h6>
+                            <h3 class="mb-0 text-white">{{ total_market_tickers|default:"0" }}</h3>
+                        </div>
+                        <div class="icon-shape bg-white-10 text-white rounded-3">
+                            <i class="fas fa-chart-line fs-3"></i>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <span class="text-white fw-semibold">
+                            <i class="fas fa-caret-up me-1"></i> 6.8%
+                        </span>
+                        <span class="text-white-50 ms-2">vs last week</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-xxl-3 col-lg-6">
+            <div class="card stat-card bg-gradient-commodity">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-uppercase text-white-50 mb-2">Commodities</h6>
+                            <h3 class="mb-0 text-white">{{ total_commodities|default:"0" }}</h3>
+                        </div>
+                        <div class="icon-shape bg-white-10 text-white rounded-3">
+                            <i class="fas fa-coins fs-3"></i>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <span class="text-white fw-semibold">
+                            <i class="fas fa-caret-up me-1"></i> 4.2%
+                        </span>
+                        <span class="text-white-50 ms-2">vs last month</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-xxl-3 col-lg-6">
+            <div class="card stat-card bg-gradient-crypto">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-uppercase text-white-50 mb-2">Cryptocurrencies</h6>
+                            <h3 class="mb-0 text-white">{{ total_cryptocurrencies|default:"0" }}</h3>
+                        </div>
+                        <div class="icon-shape bg-white-10 text-white rounded-3">
+                            <i class="fab fa-bitcoin fs-3"></i>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <span class="text-white fw-semibold">
+                            <i class="fas fa-caret-up me-1"></i> 15.3%
+                        </span>
+                        <span class="text-white-50 ms-2">vs last week</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-xxl-3 col-lg-6">
+            <div class="card stat-card bg-gradient-exchange">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-uppercase text-white-50 mb-2">Exchange Rates</h6>
+                            <h3 class="mb-0 text-white">{{ active_exchange_rates|default:"0" }}</h3>
+                        </div>
+                        <div class="icon-shape bg-white-10 text-white rounded-3">
+                            <i class="fas fa-exchange-alt fs-3"></i>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <span class="text-white fw-semibold">
+                            <i class="fas fa-caret-up me-1"></i> 7.9%
+                        </span>
+                        <span class="text-white-50 ms-2">vs yesterday</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== QUICK ACTIONS SECTION ========== -->
+    <div class="card mb-4">
+        <div class="card-header border-0 bg-white">
+            <h5 class="mb-0">
+                <i class="fas fa-bolt text-warning me-2"></i>
+                Quick Actions
+            </h5>
+        </div>
+        <div class="card-body pt-0">
+            <div class="row g-3">
+                <!-- News Management -->
+                <div class="col-xxl-3 col-md-4 col-sm-6">
+                    <a href="{% url 'news:admin_add_article' %}" class="btn btn-action w-100">
+                        <div class="d-flex align-items-center">
+                            <div class="icon-shape bg-primary-light text-primary rounded-2 me-3">
+                                <i class="fas fa-plus"></i>
+                            </div>
+                            <div class="text-start">
+                                <span class="d-block">Add New</span>
+                                <small class="d-block text-muted">Article</small>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                
+                <div class="col-xxl-3 col-md-4 col-sm-6">
+                    <a href="{% url 'news:admin_add_country' %}" class="btn btn-action w-100">
+                        <div class="d-flex align-items-center">
+                            <div class="icon-shape bg-primary-light text-primary rounded-2 me-3">
+                                <i class="fas fa-plus"></i>
+                            </div>
+                            <div class="text-start">
+                                <span class="d-block">Add New</span>
+                                <small class="d-block text-muted">Country</small>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                
+                <div class="col-xxl-3 col-md-4 col-sm-6">
+                    <a href="{% url 'news:admin_add_provider' %}" class="btn btn-action w-100">
+                        <div class="d-flex align-items-center">
+                            <div class="icon-shape bg-primary-light text-primary rounded-2 me-3">
+                                <i class="fas fa-plus"></i>
+                            </div>
+                            <div class="text-start">
+                                <span class="d-block">Add New</span>
+                                <small class="d-block text-muted">Provider</small>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                
+                <div class="col-xxl-3 col-md-4 col-sm-6">
+                    <a href="{% url 'news:admin_add_market_ticker' %}" class="btn btn-action w-100">
+                        <div class="d-flex align-items-center">
+                            <div class="icon-shape bg-primary-light text-primary rounded-2 me-3">
+                                <i class="fas fa-plus"></i>
+                            </div>
+                            <div class="text-start">
+                                <span class="d-block">Add Market</span>
+                                <small class="d-block text-muted">Ticker</small>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                
+                <!-- Market Data Management -->
+                <div class="col-xxl-3 col-md-4 col-sm-6">
+                    <a href="{% url 'news:admin_add_commodity' %}" class="btn btn-action w-100">
+                        <div class="d-flex align-items-center">
+                            <div class="icon-shape bg-primary-light text-primary rounded-2 me-3">
+                                <i class="fas fa-plus"></i>
+                            </div>
+                            <div class="text-start">
+                                <span class="d-block">Add</span>
+                                <small class="d-block text-muted">Commodity</small>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                
+                <div class="col-xxl-3 col-md-4 col-sm-6">
+                    <a href="{% url 'news:admin_add_cryptocurrency' %}" class="btn btn-action w-100">
+                        <div class="d-flex align-items-center">
+                            <div class="icon-shape bg-primary-light text-primary rounded-2 me-3">
+                                <i class="fas fa-plus"></i>
+                            </div>
+                            <div class="text-start">
+                                <span class="d-block">Add</span>
+                                <small class="d-block text-muted">Cryptocurrency</small>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                
+                <div class="col-xxl-3 col-md-4 col-sm-6">
+                    <a href="{% url 'news:admin_market_tickers' %}" class="btn btn-action w-100">
+                        <div class="d-flex align-items-center">
+                            <div class="icon-shape bg-info-light text-info rounded-2 me-3">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <div class="text-start">
+                                <span class="d-block">Manage</span>
+                                <small class="d-block text-muted">Tickers</small>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                
+                <div class="col-xxl-3 col-md-4 col-sm-6">
+                    <a href="{% url 'news:admin_commodities' %}" class="btn btn-action w-100">
+                        <div class="d-flex align-items-center">
+                            <div class="icon-shape bg-info-light text-info rounded-2 me-3">
+                                <i class="fas fa-coins"></i>
+                            </div>
+                            <div class="text-start">
+                                <span class="d-block">Manage</span>
+                                <small class="d-block text-muted">Commodities</small>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                
+                <div class="col-xxl-3 col-md-4 col-sm-6">
+                    <a href="{% url 'news:admin_cryptocurrencies' %}" class="btn btn-action w-100">
+                        <div class="d-flex align-items-center">
+                            <div class="icon-shape bg-info-light text-info rounded-2 me-3">
+                                <i class="fab fa-bitcoin"></i>
+                            </div>
+                            <div class="text-start">
+                                <span class="d-block">Manage</span>
+                                <small class="d-block text-muted">Cryptocurrencies</small>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                
+                <div class="col-xxl-3 col-md-4 col-sm-6">
+                    <a href="{% url 'news:admin_exchange_rates' %}" class="btn btn-action w-100">
+                        <div class="d-flex align-items-center">
+                            <div class="icon-shape bg-info-light text-info rounded-2 me-3">
+                                <i class="fas fa-exchange-alt"></i>
+                            </div>
+                            <div class="text-start">
+                                <span class="d-block">Manage</span>
+                                <small class="d-block text-muted">Exchange Rates</small>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== MAIN CONTENT GRID ========== -->
+    <div class="row g-4">
+        <!-- Recent Articles -->
+        <div class="col-lg-8">
+            <div class="card h-100">
+                <div class="card-header border-0 bg-white d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="fas fa-newspaper text-primary me-2"></i>
+                        Recent Articles
+                    </h5>
+                    <div>
+                        <a href="{% url 'news:admin_add_article' %}" class="btn btn-sm btn-primary me-2">
+                            <i class="fas fa-plus me-1"></i> Add New
+                        </a>
+                        <a href="{% url 'news:admin_articles' %}" class="btn btn-sm btn-outline-primary">
+                            View All
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    {% if recent_articles %}
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Title</th>
+                                        <th>Country</th>
+                                        <th>Provider</th>
+                                        <th>Status</th>
+                                        <th>Created</th>
+                                        <th class="text-end">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for article in recent_articles %}
+                                    <tr>
+                                        <td>
+                                            <a href="{% url 'news:admin_edit_article' article.pk %}" 
+                                               class="text-decoration-none fw-semibold">
+                                                {{ article.title|truncatechars:40 }}
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-primary bg-opacity-10 text-primary">
+                                                {{ article.country.name }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span class="text-muted">{{ article.news_provider.name }}</span>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-{% if article.is_active %}success{% else %}secondary{% endif %} bg-opacity-10 text-{% if article.is_active %}success{% else %}secondary{% endif %}">
+                                                {% if article.is_active %}Active{% else %}Inactive{% endif %}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <small class="text-muted">{{ article.created_at|timesince }} ago</small>
+                                        </td>
+                                        <td class="text-end">
+                                            <div class="btn-group">
+                                                <a href="{% url 'news:admin_edit_article' article.pk %}" class="btn btn-sm btn-outline-secondary">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                                <a href="#" class="btn btn-sm btn-outline-danger">
+                                                    <i class="fas fa-trash"></i>
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-5">
+                            <div class="mb-4">
+                                <i class="fas fa-newspaper fa-4x text-muted opacity-25"></i>
+                            </div>
+                            <h5 class="text-muted mb-3">No articles yet</h5>
+                            <a href="{% url 'news:admin_add_article' %}" class="btn btn-primary">
+                                <i class="fas fa-plus me-2"></i>Create your first article
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <!-- Right Sidebar Stats -->
+        <div class="col-lg-4">
+            <!-- Today's Stats -->
+            <div class="card mb-4">
+                <div class="card-header border-0 bg-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-calendar-day text-success me-2"></i>
+                        Today's Activity
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="text-center py-3">
+                        <h2 class="text-success mb-2">{{ articles_today }}</h2>
+                        <p class="text-muted mb-3">Articles Created Today</p>
+                        <div class="mx-auto" style="max-width: 200px;">
+                            <div class="progress bg-success bg-opacity-10" style="height: 8px;">
+                                <div class="progress-bar bg-success" role="progressbar" 
+                                     style="width: {% widthratio articles_today total_articles 100 %}%" 
+                                     aria-valuenow="{{ articles_today }}" 
+                                     aria-valuemin="0" 
+                                     aria-valuemax="{{ total_articles }}">
+                                </div>
+                            </div>
+                            <small class="text-muted">{{ articles_today }} of {{ total_articles }} total articles</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Top Countries -->
+            <div class="card mb-4">
+                <div class="card-header border-0 bg-white d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="fas fa-globe text-warning me-2"></i>
+                        Top Countries
+                    </h5>
+                    <a href="{% url 'news:admin_countries' %}" class="btn btn-sm btn-outline-warning">
+                        View All
+                    </a>
+                </div>
+                <div class="card-body">
+                    {% if top_countries %}
+                        <div class="list-group list-group-flush">
+                            {% for country in top_countries %}
+                            <div class="list-group-item border-0 px-0 py-2 d-flex justify-content-between align-items-center">
+                                <div class="d-flex align-items-center">
+                                    <span class="flag-icon flag-icon-{{ country.code|lower }} me-3 fs-5"></span>
+                                    <span>{{ country.name }}</span>
+                                </div>
+                                <span class="badge bg-primary rounded-pill">{{ country.article_count }}</span>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="fas fa-globe fa-3x text-muted opacity-25 mb-3"></i>
+                            <p class="text-muted">No country data available</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- Top Providers -->
+            <div class="card">
+                <div class="card-header border-0 bg-white d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="fas fa-rss text-info me-2"></i>
+                        Top Providers
+                    </h5>
+                    <a href="{% url 'news:admin_providers' %}" class="btn btn-sm btn-outline-info">
+                        View All
+                    </a>
+                </div>
+                <div class="card-body">
+                    {% if top_providers %}
+                        <div class="list-group list-group-flush">
+                            {% for provider in top_providers %}
+                            <div class="list-group-item border-0 px-0 py-2 d-flex justify-content-between align-items-center">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-rss text-secondary me-3 fs-5"></i>
+                                    <span>{{ provider.name }}</span>
+                                </div>
+                                <span class="badge bg-secondary rounded-pill">{{ provider.article_count }}</span>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="fas fa-rss fa-3x text-muted opacity-25 mb-3"></i>
+                            <p class="text-muted">No provider data available</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== EXCHANGE RATES & SOCIAL MEDIA SECTION ========== -->
+    <div class="row g-4 mt-4">
+        <!-- Active Exchange Rates -->
+        <div class="col-lg-6">
+            <div class="card h-100">
+                <div class="card-header border-0 bg-white d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="fas fa-exchange-alt text-success me-2"></i>
+                        Active Exchange Rates
+                    </h5>
+                    <div>
+                        <a href="{% url 'news:admin_add_exchange_rate' %}" class="btn btn-sm btn-success me-2">
+                            <i class="fas fa-plus me-1"></i> Add New
+                        </a>
+                        <a href="{% url 'news:admin_exchange_rates' %}" class="btn btn-sm btn-outline-success">
+                            View All
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    {% if recent_exchange_rates %}
+                        <div class="table-responsive">
+                            <table class="table table-sm table-hover align-middle">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Currency Pair</th>
+                                        <th>Rate</th>
+                                        <th>Change</th>
+                                        <th class="text-end">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for rate in recent_exchange_rates %}
+                                    <tr>
+                                        <td>
+                                            <strong>{{ rate.base_currency }}/{{ rate.quote_currency }}</strong>
+                                            <div class="text-muted small">{{ rate.market }}</div>
+                                        </td>
+                                        <td>
+                                            <span class="fw-semibold">{{ rate.current_rate|floatformat:4 }}</span>
+                                        </td>
+                                        <td>
+                                            {% if rate.percentage_change >= 0 %}
+                                                <span class="badge bg-success bg-opacity-10 text-success">
+                                                    <i class="fas fa-caret-up me-1"></i>{{ rate.percentage_change }}%
+                                                </span>
+                                            {% else %}
+                                                <span class="badge bg-danger bg-opacity-10 text-danger">
+                                                    <i class="fas fa-caret-down me-1"></i>{{ rate.percentage_change }}%
+                                                </span>
+                                            {% endif %}
+                                        </td>
+                                        <td class="text-end">
+                                            <div class="btn-group">
+                                                <a href="{% url 'news:admin_edit_exchange_rate' rate.pk %}" class="btn btn-sm btn-outline-secondary">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                                <a href="#" class="btn btn-sm btn-outline-danger">
+                                                    <i class="fas fa-trash"></i>
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-5">
+                            <div class="mb-4">
+                                <i class="fas fa-exchange-alt fa-4x text-muted opacity-25"></i>
+                            </div>
+                            <h5 class="text-muted mb-3">No exchange rates</h5>
+                            <a href="{% url 'news:admin_add_exchange_rate' %}" class="btn btn-success">
+                                <i class="fas fa-plus me-2"></i>Add exchange rate
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Social Media Posts -->
+        <div class="col-lg-6">
+            <div class="card h-100">
+                <div class="card-header border-0 bg-white d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="fas fa-share-alt text-primary me-2"></i>
+                        Recent Social Posts
+                    </h5>
+                    <div>
+                        <a href="{% url 'news:admin_add_social_post' %}" class="btn btn-sm btn-primary me-2">
+                            <i class="fas fa-plus me-1"></i> Add New
+                        </a>
+                        <a href="{% url 'news:admin_social_posts' %}" class="btn btn-sm btn-outline-primary">
+                            View All
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    {% if recent_social_posts %}
+                        <div class="list-group list-group-flush">
+                            {% for post in recent_social_posts %}
+                            <div class="list-group-item border-0 px-0 py-3 mb-2">
+                                <div class="d-flex align-items-start">
+                                    <div class="flex-shrink-0">
+                                        <div class="icon-shape bg-primary-light text-primary rounded-3 p-2 me-3">
+                                            <i class="fab fa-{{ post.platform|lower }} fs-4"></i>
+                                        </div>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <div class="d-flex justify-content-between align-items-center mb-1">
+                                            <h6 class="mb-0">{{ post.title|truncatechars:40 }}</h6>
+                                            <span class="badge bg-{% if post.is_active %}success{% else %}secondary{% endif %} bg-opacity-10 text-{% if post.is_active %}success{% else %}secondary{% endif %}">
+                                                {% if post.is_active %}Active{% else %}Inactive{% endif %}
+                                            </span>
+                                        </div>
+                                        <p class="mb-2 text-muted small">{{ post.content|truncatechars:80 }}</p>
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <small class="text-muted">
+                                                <i class="fas fa-user me-1"></i>{{ post.author_name }}
+                                            </small>
+                                            <small class="text-muted">
+                                                <i class="fas fa-clock me-1"></i>{{ post.created_at|timesince }} ago
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mt-3 d-flex justify-content-end">
+                                    <a href="{% url 'news:admin_edit_social_post' post.pk %}" class="btn btn-sm btn-outline-secondary me-2">
+                                        <i class="fas fa-edit me-1"></i> Edit
+                                    </a>
+                                    <a href="{{ post.post_url }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                                        <i class="fas fa-external-link-alt me-1"></i> View
+                                    </a>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="text-center py-5">
+                            <div class="mb-4">
+                                <i class="fas fa-share-alt fa-4x text-muted opacity-25"></i>
+                            </div>
+                            <h5 class="text-muted mb-3">No social posts</h5>
+                            <a href="{% url 'news:admin_add_social_post' %}" class="btn btn-primary">
+                                <i class="fas fa-plus me-2"></i>Add social post
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add this CSS in your stylesheet or style tag -->
+    <style>
+        /* Custom Card Styles */
+        .stat-card {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.03);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+        }
+        
+        .icon-shape {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* Gradient Backgrounds */
+        .bg-gradient-social {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .bg-gradient-featured {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+        }
+        
+        .bg-gradient-today {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            color: white;
+        }
+        
+        .bg-gradient-market {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+        }
+        
+        .bg-gradient-commodity {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+            color: white;
+        }
+        
+        .bg-gradient-crypto {
+            background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%);
+            color: white;
+        }
+        
+        .bg-gradient-exchange {
+            background: linear-gradient(135deg, #ffc3a0 0%, #ffafbd 100%);
+            color: white;
+        }
+        
+        /* Action Buttons */
+        .btn-action {
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 12px;
+            text-align: left;
+            transition: all 0.2s ease;
+        }
+        
+        .btn-action:hover {
+            background-color: #f8f9fa;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+        }
+        
+        /* Table Improvements */
+        .table thead th {
+            border-bottom-width: 1px;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.5px;
+            color: #6c757d;
+        }
+        
+        /* Badge Improvements */
+        .badge {
+            font-weight: 500;
+            padding: 0.35em 0.65em;
+        }
+    </style>
+{% endblock %}

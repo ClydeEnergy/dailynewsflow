@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Daily News Flow Admin{% endblock %}</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --admin-primary: #2c3e50;
+            --admin-secondary: #3498db;
+            --admin-success: #27ae60;
+            --admin-warning: #f39c12;
+            --admin-danger: #e74c3c;
+            --admin-sidebar: #34495e;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .admin-sidebar {
+            background: linear-gradient(180deg, var(--admin-primary) 0%, var(--admin-sidebar) 100%);
+            min-height: 100vh;
+            color: white;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+        }
+        
+        .admin-sidebar .nav-link {
+            color: rgba(255,255,255,0.8);
+            padding: 12px 20px;
+            border-radius: 8px;
+            margin: 2px 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .admin-sidebar .nav-link:hover {
+            color: white;
+            background-color: rgba(255,255,255,0.1);
+            transform: translateX(5px);
+        }
+        
+        .admin-sidebar .nav-link.active {
+            color: white;
+            background-color: var(--admin-secondary);
+        }
+        
+        .admin-header {
+            background: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 15px 30px;
+            margin-bottom: 30px;
+        }
+        
+        .admin-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border: none;
+            transition: transform 0.2s ease;
+        }
+        
+        .admin-card:hover {
+            transform: translateY(-2px);
+        }
+        
+        .stats-card {
+            background: linear-gradient(135deg, var(--admin-secondary), #5dade2);
+            color: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .stats-card.success {
+            background: linear-gradient(135deg, var(--admin-success), #58d68d);
+        }
+        
+        .stats-card.warning {
+            background: linear-gradient(135deg, var(--admin-warning), #f7dc6f);
+        }
+        
+        .stats-card.danger {
+            background: linear-gradient(135deg, var(--admin-danger), #ec7063);
+        }
+        
+        .btn-admin {
+            background: var(--admin-secondary);
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            color: white;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-admin:hover {
+            background: #2980b9;
+            color: white;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        .table-admin {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .table-admin th {
+            background: var(--admin-primary);
+            color: white;
+            border: none;
+            padding: 15px;
+            font-weight: 600;
+        }
+        
+        .table-admin td {
+            padding: 15px;
+            border-color: #e9ecef;
+            vertical-align: middle;
+        }
+        
+        .form-admin {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .breadcrumb-admin {
+            background: transparent;
+            padding: 0;
+            margin-bottom: 20px;
+        }
+        
+        .breadcrumb-admin .breadcrumb-item a {
+            color: var(--admin-secondary);
+            text-decoration: none;
+        }
+        
+        .alert-admin {
+            border-radius: 8px;
+            border: none;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .pagination-admin .page-link {
+            color: var(--admin-secondary);
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            margin: 0 2px;
+        }
+        
+        .pagination-admin .page-link:hover {
+            background-color: var(--admin-secondary);
+            border-color: var(--admin-secondary);
+            color: white;
+        }
+        
+        .pagination-admin .page-item.active .page-link {
+            background-color: var(--admin-secondary);
+            border-color: var(--admin-secondary);
+        }
+    </style>
+    
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-2 admin-sidebar p-0">
+                <div class="p-4">
+                    <h4 class="text-white mb-4">
+                        <i class="fas fa-newspaper me-2"></i>
+                        News Admin
+                    </h4>
+                    
+                    <nav class="nav flex-column">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'admin_dashboard' %}active{% endif %}" 
+                           href="{% url 'news:admin_dashboard' %}">
+                            <i class="fas fa-chart-bar me-2"></i>
+                            Dashboard
+                        </a>
+                        
+                        <a class="nav-link {% if 'article' in request.resolver_match.url_name %}active{% endif %}" 
+                           href="{% url 'news:admin_articles' %}">
+                            <i class="fas fa-newspaper me-2"></i>
+                            Articles
+                        </a>
+                        
+                        <a class="nav-link {% if 'countr' in request.resolver_match.url_name %}active{% endif %}" 
+                           href="{% url 'news:admin_countries' %}">
+                            <i class="fas fa-flag me-2"></i>
+                            Countries
+                        </a>
+                        
+                        <a class="nav-link {% if 'provider' in request.resolver_match.url_name %}active{% endif %}" 
+                           href="{% url 'news:admin_providers' %}">
+                            <i class="fas fa-rss me-2"></i>
+                            Providers
+                        </a>
+                        
+                        <a class="nav-link {% if 'social_post' in request.resolver_match.url_name %}active{% endif %}" 
+                           href="{% url 'news:admin_social_posts' %}">
+                            <i class="fas fa-share-alt me-2"></i>
+                            Social Media Posts
+                        </a>
+                        
+                        <hr class="my-3" style="border-color: rgba(255,255,255,0.2);">
+                        
+                        <h6 class="text-light opacity-75 text-uppercase px-3 mb-2" style="font-size: 0.75rem;">Market Data</h6>
+                        
+                        <a class="nav-link {% if 'market_ticker' in request.resolver_match.url_name or 'market-ticker' in request.resolver_match.url_name %}active{% endif %}" 
+                           href="{% url 'news:admin_market_tickers' %}">
+                            <i class="fas fa-chart-line me-2"></i>
+                            Market Tickers
+                        </a>
+                        
+                        <a class="nav-link {% if 'commodit' in request.resolver_match.url_name %}active{% endif %}" 
+                           href="{% url 'news:admin_commodities' %}">
+                            <i class="fas fa-coins me-2"></i>
+                            Commodities
+                        </a>
+                        
+                        <a class="nav-link {% if 'cryptocurren' in request.resolver_match.url_name %}active{% endif %}" 
+                           href="{% url 'news:admin_cryptocurrencies' %}">
+                            <i class="fab fa-bitcoin me-2"></i>
+                            Cryptocurrencies
+                        </a>
+                        
+                        <a class="nav-link {% if 'exchange_rate' in request.resolver_match.url_name or 'exchange-rate' in request.resolver_match.url_name %}active{% endif %}" 
+                           href="{% url 'news:admin_exchange_rates' %}">
+                            <i class="fas fa-exchange-alt me-2"></i>
+                            Exchange Rates
+                        </a>
+                        
+                        {% if user.is_superuser %}
+                        <hr class="my-3" style="border-color: rgba(255,255,255,0.2);">
+                        <a class="nav-link {% if 'user' in request.resolver_match.url_name and 'admin' in request.resolver_match.url_name %}active{% endif %}" 
+                           href="{% url 'news:admin_users' %}">
+                            <i class="fas fa-users me-2"></i>
+                            Admin Users
+                        </a>
+                        {% endif %}
+                        
+                        <hr class="my-3" style="border-color: rgba(255,255,255,0.2);">
+                        
+                        <a class="nav-link" href="{% url 'news:home' %}" target="_blank">
+                            <i class="fas fa-external-link-alt me-2"></i>
+                            View Site
+                        </a>
+                        
+                        <a class="nav-link" href="{% url 'news:admin_logout' %}">
+                            <i class="fas fa-sign-out-alt me-2"></i>
+                            Logout
+                        </a>
+                    </nav>
+                </div>
+            </div>
+            
+            <!-- Main Content -->
+            <div class="col-md-10">
+                <!-- Header -->
+                <div class="admin-header d-flex justify-content-between align-items-center">
+                    <div>
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb breadcrumb-admin">
+                                {% block breadcrumbs %}
+                                <li class="breadcrumb-item"><a href="{% url 'news:admin_dashboard' %}">Admin</a></li>
+                                {% endblock %}
+                            </ol>
+                        </nav>
+                        <h2 class="mb-0">{% block page_title %}Dashboard{% endblock %}</h2>
+                    </div>
+                    
+                    <div>
+                        <span class="text-muted">Welcome, {{ user.username }}</span>
+                    </div>
+                </div>
+                
+                <!-- Messages -->
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} alert-admin alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+                
+                <!-- Page Content -->
+                <div class="px-4 pb-4">
+                    {% block content %}{% endblock %}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

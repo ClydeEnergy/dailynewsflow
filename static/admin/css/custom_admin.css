@@ -1,0 +1,132 @@
+/* Custom Admin CSS for Daily News Flow */
+
+/* Enhanced admin header */
+#header {
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    color: white;
+}
+
+#header h1 a {
+    color: white;
+}
+
+/* Enhanced form styling for news posting */
+.form-row {
+    margin-bottom: 20px;
+    padding: 10px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border-left: 4px solid #007bff;
+}
+
+.form-row label {
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 5px;
+    display: block;
+}
+
+/* Main fieldset styling */
+fieldset.module h2 {
+    background: #007bff;
+    color: white;
+    padding: 12px 15px;
+    border-radius: 8px 8px 0 0;
+    margin: 0;
+    font-size: 16px;
+}
+
+fieldset.module {
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+}
+
+/* Image preview styling */
+.field-image_preview img {
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: transform 0.2s;
+}
+
+.field-image_preview img:hover {
+    transform: scale(1.1);
+}
+
+/* Link styling in admin list */
+.field-link_display a {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: 500;
+    padding: 4px 8px;
+    background: #e7f3ff;
+    border-radius: 4px;
+    transition: all 0.2s;
+}
+
+.field-link_display a:hover {
+    color: #0056b3;
+    background: #cce7ff;
+    text-decoration: none;
+}
+
+/* Title display styling */
+.field-title_display {
+    font-weight: 600;
+    color: #333;
+    line-height: 1.4;
+}
+
+/* Custom button styling */
+.button.default, input[type=submit].default {
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    border-color: #007bff;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.button.default:hover, input[type=submit].default:hover {
+    background: linear-gradient(135deg, #0056b3, #004085);
+    border-color: #0056b3;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+/* Save buttons styling */
+.submit-row {
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    margin-top: 20px;
+}
+
+.submit-row input {
+    margin-right: 10px;
+}
+
+/* Enhanced table styling */
+#result_list {
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+#result_list th {
+    background: #f8f9fa;
+    font-weight: 600;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .field-image_preview img {
+        max-width: 40px;
+        max-height: 30px;
+    }
+    
+    .field-title_display {
+        font-size: 0.9rem;
+    }
+}
