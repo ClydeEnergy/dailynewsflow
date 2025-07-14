@@ -2,7 +2,7 @@ from django.urls import path
 from .views import (HomeView, about_view, contact_view, ArticleDetailView, 
                    CategoryView, SearchView, MarketDetailView, CountryView, 
                    ProviderView, filter_articles, get_article_stats, AllNewsView, 
-                   SocialMediaView, AllSocialPostsView)
+                   SocialMediaView, AllSocialPostsView, MarketsView)
 from . import admin_views
 
 app_name = 'news'
@@ -14,6 +14,7 @@ urlpatterns = [
     path('contact/', contact_view, name='contact'),
     path('search/', SearchView.as_view(), name='search'),
     path('news/', AllNewsView.as_view(), name='all_news'),
+    path('markets/', MarketsView.as_view(), name='markets'),
     path('social/', SocialMediaView.as_view(), name='social_media'),
     path('social/all/', AllSocialPostsView.as_view(), name='all_social_posts'),
     

@@ -1233,238 +1233,46 @@ body {
 
         <!-- Sidebar -->
         <div class="col-lg-4 col-md-12">
-            <!-- Market Overview -->
-            <div class="sidebar-widget" id="market-overview">
+            <!-- Quick Market Link -->
+            <div class="sidebar-widget">
                 <h5 class="widget-title">
-                    <i class="fas fa-chart-line me-2"></i>Market Overview
+                    <i class="fas fa-chart-line me-2"></i>Financial Markets
                 </h5>
-                <div id="stockmarket">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h6 class="text-muted mb-0">Major Indices</h6>
+                <div class="text-center py-4">
+                    <div class="mb-3">
+                        <i class="fas fa-chart-pie fa-3x text-primary mb-3"></i>
+                        <h6 class="text-dark">Real-time Market Data</h6>
+                        <p class="text-muted">Track stocks, forex, commodities and cryptocurrencies</p>
                     </div>
-                    
-                    <!-- Enhanced Market Table with Currency -->
-                    <div class="market-table">
-                        <div class="market-header">
-                            <div class="col-symbol">Symbol</div>
-                            <div class="col-exchange d-none d-md-block">Exchange</div>
-                            <div class="col-currency d-none d-lg-block">Currency</div>
-                            <div class="col-price">Price</div>
-                            <div class="col-change">Change</div>
-                            <div class="col-action d-none d-md-block"></div>
-                        </div>
-                        
-                        {% for ticker in market_tickers %}
-                        <div class="market-row">
-                            <div class="col-symbol">
-                                <div class="market-symbol">{{ ticker.company_name|truncatechars:15 }}</div>
-                                <small class="text-muted">{{ ticker.symbol }}</small>
-                            </div>
-                            <div class="col-exchange d-none d-md-block">
-                                <span class="exchange-badge">{{ ticker.exchange }}</span>
-                            </div>
-                            <div class="col-currency d-none d-lg-block">
-                                <span class="currency-badge">{{ ticker.currency }}</span>
-                            </div>
-                            <div class="col-price">
-                                <div class="market-price">
-                                    {{ ticker.current_price|floatformat:2 }}
-                                </div>
-                            </div>
-                            <div class="col-change">
-                                <div class="market-change {% if ticker.is_positive_change %}change-positive{% else %}change-negative{% endif %}">
-                                    {{ ticker.formatted_percentage_change }}
-                                </div>
-                            </div>
-                            <div class="col-action d-none d-md-block">
-                                {% if ticker.details_link %}
-                                <a href="{{ ticker.details_link }}" class="action-link" title="View details" target="_blank" rel="noopener">
-                                    <i class="fas fa-chevron-right"></i>
-                                </a>
-                                {% else %}
-                                <span class="action-link text-muted" title="No details available">
-                                    <i class="fas fa-chevron-right"></i>
-                                </span>
-                                {% endif %}
-                            </div>
-                        </div>
-                        {% empty %}
-                        <div class="market-row">
-                            <div class="col-12 text-center text-muted">
-                                <p>No market tickers available.</p>
-                            </div>
-                        </div>
-                        {% endfor %}
-                    </div>
-                </div>
-                <div class="mt-3 text-center">
-                    <a href="#" class="btn btn-sm btn-outline-primary">
-                        <i class="fas fa-chart-bar me-1"></i>View Detailed Charts
+                    <a href="{% url 'news:markets' %}" class="btn btn-primary btn-lg">
+                        <i class="fas fa-chart-line me-2"></i>View Markets
                     </a>
                 </div>
-            </div>
-
-            <!-- Currency Exchange Rates -->
-            <div class="sidebar-widget" id="currencies">
-                <h5 class="widget-title">
-                    <i class="fas fa-coins me-2"></i>Exchange Rates
-                </h5>
-                <div class="market-table">
-                    <div class="market-header">
-                        <div class="col-symbol">Pair</div>
-                        <div class="col-exchange d-none d-md-block">Market</div>
-                        <div class="col-price">Rate</div>
-                        <div class="col-change">Change</div>
-                    </div>
-                    
-                    {% for rate in exchange_rates %}
-                    <div class="market-row">
-                        <div class="col-symbol">
-                            <div class="market-symbol">{{ rate.currency_pair }}</div>
-                            <small class="text-muted">{{ rate.base_currency }} to {{ rate.quote_currency }}</small>
-                        </div>
-                        <div class="col-exchange d-none d-md-block">
-                            <span class="exchange-badge" style="background: linear-gradient(45deg, #f39c12, #e67e22);">{{ rate.market|upper }}</span>
-                        </div>
-                        <div class="col-price">
-                            <div class="market-price">{{ rate.current_rate|floatformat:4 }}</div>
-                        </div>
-                        <div class="col-change">
-                            {% if rate.percentage_change >= 0 %}
-                                <div class="market-change change-positive">+{{ rate.percentage_change }}%</div>
-                            {% else %}
-                                <div class="market-change change-negative">{{ rate.percentage_change }}%</div>
-                            {% endif %}
+                <div class="row text-center mt-3">
+                    <div class="col-3">
+                        <div class="text-primary">
+                            <i class="fas fa-chart-line fa-lg"></i>
+                            <small class="d-block text-muted">Stocks</small>
                         </div>
                     </div>
-                    {% empty %}
-                    <div class="market-row">
-                        <div class="col-symbol">
-                            <div class="market-symbol">EUR/USD</div>
-                            <small class="text-muted">Euro to Dollar</small>
-                        </div>
-                        <div class="col-exchange d-none d-md-block">
-                            <span class="exchange-badge" style="background: linear-gradient(45deg, #f39c12, #e67e22);">FOREX</span>
-                        </div>
-                        <div class="col-price">
-                            <div class="market-price">1.0842</div>
-                        </div>
-                        <div class="col-change">
-                            <div class="market-change change-positive">+0.15%</div>
+                    <div class="col-3">
+                        <div class="text-warning">
+                            <i class="fas fa-coins fa-lg"></i>
+                            <small class="d-block text-muted">Forex</small>
                         </div>
                     </div>
-                    <div class="market-row">
-                        <div class="col-symbol">
-                            <div class="market-symbol">GBP/USD</div>
-                            <small class="text-muted">Pound to Dollar</small>
-                        </div>
-                        <div class="col-exchange d-none d-md-block">
-                            <span class="exchange-badge" style="background: linear-gradient(45deg, #f39c12, #e67e22);">FOREX</span>
-                        </div>
-                        <div class="col-price">
-                            <div class="market-price">1.2745</div>
-                        </div>
-                        <div class="col-change">
-                            <div class="market-change change-negative">-0.23%</div>
+                    <div class="col-3">
+                        <div class="text-success">
+                            <i class="fas fa-gem fa-lg"></i>
+                            <small class="d-block text-muted">Commodities</small>
                         </div>
                     </div>
-                    {% endfor %}
-                </div>
-                <div class="mt-3 text-center">
-                    <a href="#" class="btn btn-sm btn-outline-primary">Currency Converter</a>
-                </div>
-            </div>
-
-            <!-- Commodities -->
-            <div class="sidebar-widget" id="commodities">
-                <h5 class="widget-title">
-                    <i class="fas fa-gem me-2"></i>Commodities
-                </h5>
-                <div class="market-table">
-                    <div class="market-header">
-                        <div class="col-symbol">Asset</div>
-                        <div class="col-exchange d-none d-md-block">Market</div>
-                        <div class="col-price">Price</div>
-                        <div class="col-change">Change</div>
-                    </div>
-                    
-                    {% for commodity in commodities %}
-                    <div class="market-row">
-                        <div class="col-symbol">
-                            <div class="market-symbol">{{ commodity.name }}</div>
-                            <small class="text-muted">{{ commodity.symbol }}</small>
-                        </div>
-                        <div class="col-exchange d-none d-md-block">
-                            <span class="exchange-badge" style="background: linear-gradient(45deg, #f1c40f, #f39c12);">
-                                {{ commodity.exchange|default:"SPOT" }}
-                            </span>
-                        </div>
-                        <div class="col-price">
-                            <div class="market-price">${{ commodity.current_price|floatformat:2 }}</div>
-                        </div>
-                        <div class="col-change">
-                            <div class="market-change {% if commodity.is_positive_change %}change-positive{% else %}change-negative{% endif %}">
-                                {{ commodity.formatted_percentage_change }}
-                            </div>
+                    <div class="col-3">
+                        <div class="text-info">
+                            <i class="fab fa-bitcoin fa-lg"></i>
+                            <small class="d-block text-muted">Crypto</small>
                         </div>
                     </div>
-                    {% empty %}
-                    <div class="market-row">
-                        <div class="col-12 text-center text-muted">
-                            <p>No commodities available. <a href="/admin/commodities/add/">Add commodity data</a></p>
-                        </div>
-                    </div>
-                    {% endfor %}
-                </div>
-            </div>
-
-            <!-- Cryptocurrency -->
-            <div class="sidebar-widget" id="crypto">
-                <h5 class="widget-title">
-                    <i class="fab fa-bitcoin me-2"></i>Cryptocurrency
-                </h5>
-                <div class="market-table">
-                    <div class="market-header">
-                        <div class="col-symbol">Crypto</div>
-                        <div class="col-exchange d-none d-md-block">Exchange</div>
-                        <div class="col-price">Price</div>
-                        <div class="col-change">Change</div>
-                    </div>
-                    
-                    {% for crypto in cryptocurrencies %}
-                    <div class="market-row">
-                        <div class="col-symbol">
-                            <div class="market-symbol">{{ crypto.name }}</div>
-                            <small class="text-muted">{{ crypto.symbol }}</small>
-                        </div>
-                        <div class="col-exchange d-none d-md-block">
-                            <span class="exchange-badge" style="background: linear-gradient(45deg, #f7931e, #f7931e);">CRYPTO</span>
-                        </div>
-                        <div class="col-price">
-                            <div class="market-price">
-                                {% if crypto.current_price >= 1 %}
-                                    ${{ crypto.current_price|floatformat:2 }}
-                                {% else %}
-                                    ${{ crypto.current_price|floatformat:6 }}
-                                {% endif %}
-                            </div>
-                        </div>
-                        <div class="col-change">
-                            <div class="market-change {% if crypto.is_positive_change %}change-positive{% else %}change-negative{% endif %}">
-                                {{ crypto.formatted_percentage_change }}
-                            </div>
-                        </div>
-                    </div>
-                    {% empty %}
-                    <div class="market-row">
-                        <div class="col-12 text-center text-muted">
-                            <p>No cryptocurrencies available. <a href="/admin/cryptocurrencies/add/">Add crypto data</a></p>
-                        </div>
-                    </div>
-                    {% endfor %}
-                </div>
-                <div class="mt-3 text-center">
-                    <a href="#" class="btn btn-sm btn-outline-primary">Crypto Dashboard</a>
                 </div>
             </div>
 

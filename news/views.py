@@ -40,6 +40,36 @@ class MarketDetailView(DetailView):
         return context
 
 
+class MarketsView(ListView):
+    """Markets page view displaying all financial market data"""
+    model = MarketTicker
+    template_name = 'news/markets.html'
+    context_object_name = 'market_tickers'
+
+    def get_queryset(self):
+        return MarketTicker.objects.filter(is_active=True).order_by('symbol')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        # Get exchange rates
+        context['exchange_rates'] = ExchangeRate.objects.filter(
+            is_active=True
+        ).order_by('currency_pair')
+        
+        # Get commodities
+        context['commodities'] = Commodity.objects.filter(
+            is_active=True
+        ).order_by('name')
+        
+        # Get cryptocurrencies
+        context['cryptocurrencies'] = Cryptocurrency.objects.filter(
+            is_active=True
+        ).order_by('name')
+        
+        return context
+
+
 class HomeView(ListView):
     """Home page view displaying news articles with professional dashboard"""
     model = NewsArticle

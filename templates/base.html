@@ -1004,14 +1004,26 @@
                     </li>
                     
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="marketsDropdown" role="button" data-bs-toggle="dropdown">
-                            <i class="fas fa-chart-bar me-1"></i>Markets
+                        <a class="nav-link dropdown-toggle {% if request.resolver_match.url_name == 'markets' %}active{% endif %}" href="{% url 'news:markets' %}" id="marketsDropdown" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-chart-line me-1"></i>Markets
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#stockmarket">Stock Market</a></li>
-                            <li><a class="dropdown-item" href="#currencies">Currencies</a></li>
-                            <li><a class="dropdown-item" href="#commodities">Commodities</a></li>
-                            <li><a class="dropdown-item" href="#crypto">Cryptocurrency</a></li>
+                            <li><a class="dropdown-item" href="{% url 'news:markets' %}">
+                                <i class="fas fa-chart-line me-2"></i>All Markets
+                            </a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="{% url 'news:markets' %}#stocks">
+                                <i class="fas fa-chart-bar me-2"></i>Stock Indices
+                            </a></li>
+                            <li><a class="dropdown-item" href="{% url 'news:markets' %}#forex">
+                                <i class="fas fa-coins me-2"></i>Foreign Exchange
+                            </a></li>
+                            <li><a class="dropdown-item" href="{% url 'news:markets' %}#commodities">
+                                <i class="fas fa-gem me-2"></i>Commodities
+                            </a></li>
+                            <li><a class="dropdown-item" href="{% url 'news:markets' %}#crypto">
+                                <i class="fab fa-bitcoin me-2"></i>Cryptocurrency
+                            </a></li>
                         </ul>
                     </li>
                     
