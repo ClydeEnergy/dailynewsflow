@@ -211,7 +211,7 @@
 </section>
 
 <!-- Executive Content Section -->
-<section class="executive-content">
+<section class="executive-content" style="padding-bottom: 5rem;">
     <div class="container">
         <div class="row">
             <!-- Primary Intelligence Feed -->
@@ -226,15 +226,16 @@
                             <p class="intelligence-subtitle">Curated insights for executive decision-making</p>
                         </div>
                         <a href="{% url 'news:all_news' %}" class="btn-intelligence-view">
-                            <span>Full Intelligence Hub</span>
+                            <span>Full News Hub</span>
                             <i class="fas fa-arrow-right ms-2"></i>
                         </a>
                     </div>
 
                     {% if recent_articles %}
-                    <div class="executive-news-grid">
+                    <div class="row g-4 equal-height-cards">
                         {% for article in recent_articles %}
-                        <article class="executive-news-item">
+                        <div class="col-lg-6 col-md-6 col-12">
+                        <article class="executive-news-item h-100">
                             <div class="news-priority-bar"></div>
                             
                             <div class="news-visual-section">
@@ -264,12 +265,6 @@
                             
                             <div class="news-intelligence-content">
                                 <div class="intelligence-meta">
-                                    <div class="meta-priority">
-                                        <span class="priority-indicator high">
-                                            <i class="fas fa-exclamation-triangle"></i>
-                                            High Priority
-                                        </span>
-                                    </div>
                                     <div class="meta-details">
                                         <span class="meta-time">
                                             <i class="fas fa-clock"></i>
@@ -316,6 +311,7 @@
                                 </div>
                             </div>
                         </article>
+                        </div>
                         {% endfor %}
                     </div>
                     {% else %}
@@ -351,9 +347,10 @@
                         </div>
                     </div>
 
-                    <div class="market-intelligence-grid">
+                    <div class="row g-4 equal-height-cards">
                         {% for post in social_posts|slice:":4" %}
-                        <div class="market-intelligence-item">
+                        <div class="col-lg-6 col-md-6 col-12">
+                        <div class="market-intelligence-item h-100">
                             <div class="intelligence-source">
                                 <div class="source-avatar">
                                     {% if post.author_avatar %}
@@ -408,6 +405,7 @@
                                     <span>{{ post.comments|floatformat:0 }}</span>
                                 </div>
                             </div>
+                        </div>
                         </div>
                         {% endfor %}
                     </div>
@@ -572,10 +570,62 @@ document.addEventListener('DOMContentLoaded', function() {
         updateFilterCount();
     }
     
+    // Enhanced mobile touch support for filter interactions
+    const filterInputs = document.querySelectorAll('.input-executive, .select-executive');
+    
+    // Improve mobile interaction
+    filterInputs.forEach(input => {
+        // Add visual feedback for touch devices
+        input.addEventListener('touchstart', function() {
+            this.style.transform = 'scale(0.98)';
+        }, { passive: true });
+        
+        input.addEventListener('touchend', function() {
+            this.style.transform = 'scale(1)';
+        }, { passive: true });
+        
+        // Improve focus visibility on mobile
+        input.addEventListener('focus', function() {
+            this.scrollIntoView({ 
+                behavior: 'smooth', 
+                block: 'center',
+                inline: 'nearest'
+            });
+        });
+    });
+    
+    // Enhanced responsive filter behavior
+    const filterCard = document.querySelector('.executive-filter-card');
+    if (filterCard) {
+        // Add swipe gesture support for mobile
+        let startY = 0;
+        let currentY = 0;
+        
+        filterCard.addEventListener('touchstart', function(e) {
+            startY = e.touches[0].clientY;
+        }, { passive: true });
+        
+        filterCard.addEventListener('touchmove', function(e) {
+            currentY = e.touches[0].clientY;
+        }, { passive: true });
+    }
+    
+    // Improve button accessibility and touch targets
+    const filterButtons = document.querySelectorAll('.btn-apply-filters, .btn-reset-filters, .quick-filter-executive');
+    filterButtons.forEach(button => {
+        button.addEventListener('touchstart', function() {
+            this.style.transform = 'scale(0.95)';
+        }, { passive: true });
+        
+        button.addEventListener('touchend', function() {
+            setTimeout(() => {
+                this.style.transform = '';
+            }, 150);
+        }, { passive: true });
+    });
+    
     // Executive news cards animation with staggered effect
     const executiveNewsCards = document.querySelectorAll('.executive-news-item, .market-intelligence-item');
-    
-    // Intersection Observer for sophisticated animations
     const executiveObserver = new IntersectionObserver((entries) => {
         entries.forEach((entry, index) => {
             if (entry.isIntersecting) {
@@ -788,6 +838,101 @@ document.addEventListener('DOMContentLoaded', function() {
     --exec-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
     --exec-shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
     --exec-shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+/* Enhanced 2-Cards-Per-Row Grid System */
+.equal-height-cards {
+    display: flex;
+    flex-wrap: wrap;
+    margin: -0.75rem;
+}
+
+.equal-height-cards > [class*="col-"] {
+    padding: 0.75rem;
+    display: flex;
+}
+
+.equal-height-cards .executive-news-item,
+.equal-height-cards .market-intelligence-item {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    min-height: 400px;
+    max-height: 650px; /* Set maximum height for cards */
+    overflow: hidden; /* Prevent content overflow */
+}
+
+.equal-height-cards .news-intelligence-content,
+.equal-height-cards .intelligence-content {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    overflow: hidden; /* Prevent content overflow */
+    max-height: 400px; /* Limit content height */
+}
+
+.equal-height-cards .intelligence-footer {
+    margin-top: auto;
+    padding-top: 1rem;
+}
+
+/* Prevent card content overflow */
+.equal-height-cards .intelligence-summary,
+.equal-height-cards .intelligence-content > p {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.equal-height-cards .intelligence-title-link h3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.4;
+}
+
+/* Responsive Grid Enhancements */
+@media (min-width: 768px) {
+    .equal-height-cards > .col-md-6 {
+        flex: 0 0 50%;
+        max-width: 50%;
+    }
+}
+
+@media (min-width: 992px) {
+    .equal-height-cards > .col-lg-6 {
+        flex: 0 0 50%;
+        max-width: 50%;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .equal-height-cards > [class*="col-"] {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+    
+    .equal-height-cards .executive-news-item,
+    .equal-height-cards .market-intelligence-item {
+        min-height: 350px;
+        max-height: 550px; /* Reduce max height on mobile */
+    }
+}
+
+/* Global page spacing to prevent footer overlap */
+.main-content {
+    min-height: calc(100vh - 200px);
+    padding-bottom: 3rem;
+}
+
+/* Ensure proper spacing for all content sections */
+section:last-child {
+    margin-bottom: 3rem;
 }
 
 /* Executive Hero Section */
@@ -1095,11 +1240,106 @@ document.addEventListener('DOMContentLoaded', function() {
     font-weight: 700;
 }
 
+/* Responsive Executive Filter Section */
+@media (max-width: 992px) {
+    .executive-filter-section {
+        padding: 2rem 0;
+    }
+    
+    .executive-filter-card {
+        padding: 2rem;
+    }
+    
+    .filter-title-group h2.filter-executive-title {
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .executive-filter-section {
+        padding: 1.5rem 0;
+    }
+    
+    .executive-filter-card {
+        padding: 1.5rem;
+        border-radius: 16px;
+    }
+    
+    .filter-executive-header {
+        margin-bottom: 2rem;
+        padding-bottom: 1rem;
+    }
+    
+    .filter-title-group h2.filter-executive-title {
+        font-size: 1.375rem;
+    }
+    
+    .filter-executive-subtitle {
+        font-size: 0.875rem;
+    }
+}
+
 .filter-controls-grid {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr auto;
     gap: 2rem;
     align-items: end;
+}
+
+/* Responsive Filter Grid */
+@media (max-width: 1200px) {
+    .filter-controls-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem;
+    }
+    
+    .filter-actions-group {
+        grid-column: 1 / -1;
+        justify-content: center;
+        margin-top: 1rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .filter-controls-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    
+    .filter-actions-group {
+        grid-column: 1;
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .btn-apply-filters,
+    .btn-reset-filters {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .btn-reset-filters {
+        width: 100%;
+        height: auto;
+        padding: 1rem 1.5rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .executive-filter-card {
+        padding: 1.5rem;
+        margin: 0 1rem;
+    }
+    
+    .filter-executive-header {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+    }
+    
+    .filter-status {
+        text-align: center;
+    }
 }
 
 .filter-group {
@@ -1137,6 +1377,7 @@ document.addEventListener('DOMContentLoaded', function() {
     background: white;
     transition: all 0.3s ease;
     font-weight: 500;
+    min-height: 48px; /* Ensure minimum touch target size */
 }
 
 .input-executive:focus, .select-executive:focus {
@@ -1150,6 +1391,7 @@ document.addEventListener('DOMContentLoaded', function() {
     appearance: none;
     cursor: pointer;
     padding-right: 3rem;
+    background-image: none;
 }
 
 .select-arrow {
@@ -1160,6 +1402,7 @@ document.addEventListener('DOMContentLoaded', function() {
     color: var(--exec-gray-400);
     pointer-events: none;
     transition: all 0.3s ease;
+    font-size: 0.875rem;
 }
 
 .select-executive:focus + .select-arrow {
@@ -1167,9 +1410,45 @@ document.addEventListener('DOMContentLoaded', function() {
     transform: translateY(-50%) rotate(180deg);
 }
 
+/* Responsive Form Inputs */
+@media (max-width: 768px) {
+    .input-executive, .select-executive {
+        padding: 0.875rem 1rem;
+        font-size: 1rem;
+        min-height: 44px;
+    }
+    
+    .select-executive {
+        padding-right: 2.5rem;
+    }
+    
+    .select-arrow {
+        right: 0.75rem;
+        font-size: 0.75rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .input-executive, .select-executive {
+        padding: 1rem;
+        border-radius: 8px;
+        font-size: 1rem;
+    }
+    
+    .executive-label {
+        font-size: 0.75rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .filter-group {
+        margin-bottom: 1rem;
+    }
+}
+
 .filter-actions-group {
     display: flex;
     gap: 0.75rem;
+    align-items: center;
 }
 
 .btn-apply-filters {
@@ -1183,9 +1462,11 @@ document.addEventListener('DOMContentLoaded', function() {
     cursor: pointer;
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 0.5rem;
     transition: all 0.3s ease;
     white-space: nowrap;
+    min-width: 180px;
 }
 
 .btn-apply-filters:hover {
@@ -1207,6 +1488,7 @@ document.addEventListener('DOMContentLoaded', function() {
     align-items: center;
     justify-content: center;
     text-decoration: none;
+    flex-shrink: 0;
 }
 
 .btn-reset-filters:hover {
@@ -1235,6 +1517,7 @@ document.addEventListener('DOMContentLoaded', function() {
     text-transform: uppercase;
     letter-spacing: 0.5px;
     white-space: nowrap;
+    margin-bottom: 0.5rem;
 }
 
 .quick-filter-label i {
@@ -1245,6 +1528,72 @@ document.addEventListener('DOMContentLoaded', function() {
     display: flex;
     flex-wrap: wrap;
     gap: 0.75rem;
+    flex: 1;
+}
+
+.quick-filter-executive {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    background: var(--exec-gray-100);
+    color: var(--exec-gray-700);
+    text-decoration: none;
+    border-radius: 20px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    border: 2px solid transparent;
+}
+
+.quick-filter-executive:hover {
+    background: var(--exec-blue-50);
+    color: var(--exec-blue-700);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
+}
+
+.quick-filter-executive.active {
+    background: var(--exec-blue-600);
+    color: white;
+    border-color: var(--exec-blue-700);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+}
+
+.quick-filter-executive.active:hover {
+    background: var(--exec-blue-700);
+    transform: translateY(-2px);
+}
+
+/* Responsive Quick Filters */
+@media (max-width: 768px) {
+    .executive-quick-filters {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+    
+    .quick-filter-label {
+        margin-bottom: 0;
+    }
+    
+    .quick-filter-options {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 576px) {
+    .quick-filter-options {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .quick-filter-executive {
+        width: 100%;
+        justify-content: center;
+        padding: 0.75rem 1rem;
+    }
 }
 
 .quick-filter-executive {
@@ -1449,27 +1798,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
 .intelligence-meta {
     margin-bottom: 1rem;
-}
-
-.meta-priority {
-    margin-bottom: 0.5rem;
-}
-
-.priority-indicator {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.375rem;
-    padding: 0.25rem 0.75rem;
-    border-radius: 12px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.priority-indicator.high {
-    background: #fef3c7;
-    color: #92400e;
 }
 
 .meta-details {

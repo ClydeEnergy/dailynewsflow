@@ -5,19 +5,460 @@
 
 {% block description %}Stay ahead with professional news coverage, real-time market data, currency exchange rates, and stock market updates. Your trusted source for global financial insights.{% endblock %}
 
+{% block extra_css %}
+<style>
+/* Deployment-Ready Responsive Styles */
+.hero-section {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+    padding: 4rem 0 3rem;
+    position: relative;
+    overflow: hidden;
+    min-height: 70vh;
+    display: flex;
+    align-items: center;
+}
+
+.hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        radial-gradient(circle at 20% 20%, rgba(59, 130, 246, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(6, 182, 212, 0.15) 0%, transparent 50%);
+    z-index: 1;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+}
+
+.hero-title {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 800;
+    color: white;
+    margin-bottom: 1.5rem;
+    line-height: 1.2;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.hero-subtitle {
+    font-size: clamp(1rem, 2.5vw, 1.25rem);
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 2rem;
+    line-height: 1.6;
+    max-width: 600px;
+}
+
+.hero-stats {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 2rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.stat-item h3 {
+    font-size: clamp(1.5rem, 3vw, 2.5rem);
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+/* Container and Layout Fixes */
+.container-fluid {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.main-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 15px;
+    padding-bottom: 3rem; /* Added padding to prevent footer overlap */
+}
+
+/* Enhanced Grid Spacing */
+.row.g-4 {
+    --bs-gutter-x: 2rem;
+    --bs-gutter-y: 2rem;
+}
+
+@media (max-width: 768px) {
+    .row.g-4 {
+        --bs-gutter-x: 1rem;
+        --bs-gutter-y: 1.5rem;
+    }
+}
+
+/* Professional Section Titles */
+.section-title {
+    font-size: clamp(1.75rem, 3vw, 2.25rem);
+    font-weight: 700;
+    color: #1f2937;
+    margin-bottom: 2rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 3px solid #e5e7eb;
+    position: relative;
+}
+
+.section-title::after {
+    content: '';
+    position: absolute;
+    bottom: -3px;
+    left: 0;
+    width: 80px;
+    height: 3px;
+    background: linear-gradient(90deg, #3b82f6, #06b6d4);
+    border-radius: 2px;
+}
+
+/* Professional Cards */
+.card-professional {
+    background: white;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 16px;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    height: 100%;
+    position: relative;
+    display: flex;
+    flex-direction: column; /* Ensure card content stacks properly */
+}
+
+.card-professional::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, transparent 98%, rgba(59, 130, 246, 0.05) 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.card-professional:hover::before {
+    opacity: 1;
+}
+
+.card-professional:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    border-color: rgba(59, 130, 246, 0.2);
+}
+
+.news-image-container {
+    position: relative;
+    overflow: hidden;
+    height: 220px;
+    background: linear-gradient(45deg, #f8fafc, #e2e8f0);
+}
+
+.news-image {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.news-card:hover .news-image {
+    transform: scale(1.02);
+}
+
+/* Enhanced News Card Body */
+.news-card .card-body {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1; /* Allow card body to grow and fill space */
+}
+
+.news-title {
+    font-weight: 700;
+    line-height: 1.4;
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+    color: #1f2937;
+    transition: color 0.2s ease;
+}
+
+.news-title a:hover {
+    color: #3b82f6;
+}
+
+.news-meta {
+    margin-bottom: 1rem;
+}
+
+.news-meta .badge {
+    font-size: 0.7rem;
+    padding: 0.25rem 0.6rem;
+    font-weight: 600;
+    border-radius: 6px;
+}
+
+/* Professional Badge Styling */
+.badge.bg-danger {
+    background: linear-gradient(135deg, #dc2626, #ef4444) !important;
+    box-shadow: 0 2px 4px rgba(220, 38, 38, 0.2);
+}
+
+.badge.bg-primary {
+    background: linear-gradient(135deg, #3b82f6, #60a5fa) !important;
+    box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2);
+}
+
+/* Professional Read More Button */
+.btn-outline-primary {
+    border-width: 2px;
+    font-weight: 600;
+    padding: 0.375rem 1rem;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    font-size: 0.875rem;
+}
+
+.btn-outline-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(59, 130, 246, 0.2);
+}
+
+/* Sidebar Widgets */
+.sidebar-widget {
+    background: white;
+    border-radius: 16px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+}
+
+.sidebar-widget:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+/* Market Items */
+.market-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    transition: all 0.2s ease;
+}
+
+.market-item:last-child {
+    border-bottom: none;
+}
+
+.market-item:hover {
+    background: rgba(59, 130, 246, 0.02);
+    border-radius: 8px;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+}
+
+.market-symbol {
+    font-weight: 600;
+    color: #1f2937;
+    font-size: 0.9rem;
+}
+
+.market-price {
+    font-weight: 700;
+    color: #1f2937;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+}
+
+/* Responsive Improvements */
+@media (max-width: 768px) {
+    .hero-section {
+        padding: 2rem 0;
+        min-height: 60vh;
+        text-align: center;
+    }
+    
+    .hero-stats {
+        margin-top: 2rem;
+        padding: 1.5rem;
+    }
+    
+    .btn-professional {
+        display: block;
+        width: 100%;
+        margin-bottom: 1rem;
+    }
+    
+    .btn-professional.me-3 {
+        margin-right: 0 !important;
+    }
+    
+    /* Stack cards vertically on mobile - 1 card per row */
+    .col-lg-6.col-md-6.col-12 {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+    
+    .news-image-container {
+        height: 200px;
+    }
+    
+    .news-card .card-body {
+        min-height: auto;
+        padding: 1.25rem;
+    }
+    
+    .main-container {
+        padding-bottom: 2rem;
+    }
+}
+
+@media (min-width: 769px) {
+    /* Ensure exactly 2 cards per row on desktop and tablet */
+    .col-lg-6.col-md-6.col-12 {
+        flex: 0 0 50%;
+        max-width: 50%;
+    }
+}
+
+@media (max-width: 576px) {
+    .container {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+    
+    .news-image-container {
+        height: 180px;
+    }
+    
+    .sidebar-widget {
+        margin-bottom: 1.5rem;
+        padding: 1rem;
+    }
+    
+    .news-title {
+        font-size: 1rem;
+    }
+}
+
+/* Tablet and Medium Screen Optimizations */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .news-image-container {
+        height: 200px;
+    }
+}
+
+/* Loading States */
+.loading-skeleton {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+/* Footer spacing */
+footer {
+    margin-top: auto; /* Pushes footer to bottom */
+    padding-top: 3rem;
+    padding-bottom: 2rem;
+    background-color: #f8f9fa;
+    border-top: 1px solid #e9ecef;
+}
+
+/* Print Styles */
+@media print {
+    .sidebar-widget,
+    .hero-section,
+    .btn {
+        display: none;
+    }
+}
+
+/* Enhanced Grid System for Perfect 2-Card Layout */
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    margin-right: calc(-0.5 * var(--bs-gutter-x));
+    margin-left: calc(-0.5 * var(--bs-gutter-x));
+}
+
+.row > * {
+    flex-shrink: 0;
+    width: 100%;
+    max-width: 100%;
+    padding-right: calc(var(--bs-gutter-x) * 0.5);
+    padding-left: calc(var(--bs-gutter-x) * 0.5);
+    margin-top: var(--bs-gutter-y);
+}
+
+/* Equal height cards in the same row */
+.row.equal-height {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+}
+
+.row.equal-height > [class*='col-'] {
+    display: flex;
+    flex-direction: column;
+}
+
+.row.equal-height > [class*='col-'] > .card-professional {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Ensure card body grows to fill space */
+.equal-height .card-professional .card-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.equal-height .card-professional .news-title {
+    flex-grow: 1;
+}
+
+/* Fix for image container when no image */
+.no-image-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: #6c757d;
+    background: linear-gradient(45deg, #f8fafc, #e2e8f0);
+}
+</style>
+{% endblock %}
+
 {% block content %}
 <!-- Hero Section -->
 <section class="hero-section">
     <div class="container">
-        <div class="row align-items-center">
+        <div class="row align-items-center hero-content">
             <div class="col-lg-8">
                 <h1 class="hero-title">Global News & Market Intelligence</h1>
                 <p class="hero-subtitle">
                     Stay informed with real-time news, market data, and financial insights from trusted sources worldwide. 
                     Professional coverage for the modern investor.
                 </p>
-                <div class="mt-4">
-                    <a href="#breaking-news" class="btn btn-primary-pro btn-professional me-3">
+                <div class="mt-4 d-flex flex-column flex-md-row gap-3">
+                    <a href="#breaking-news" class="btn btn-primary-pro btn-professional">
                         <i class="fas fa-bolt me-2"></i>Breaking News
                     </a>
                     <a href="#market-overview" class="btn btn-outline-light btn-professional">
@@ -25,19 +466,19 @@
                     </a>
                 </div>
             </div>
-            <div class="col-lg-4 text-center">
-                <div class="hero-stats">
+            <div class="col-lg-4">
+                <div class="hero-stats text-center">
                     <div class="stat-item mb-3">
                         <h3 class="text-white">{{ total_articles|default:"0" }}</h3>
-                        <p class="text-light opacity-75">News Articles</p>
+                        <p class="text-light opacity-75 mb-0">News Articles</p>
                     </div>
                     <div class="stat-item mb-3">
                         <h3 class="text-white">{{ total_countries|default:"0" }}</h3>
-                        <p class="text-light opacity-75">Countries Covered</p>
+                        <p class="text-light opacity-75 mb-0">Countries Covered</p>
                     </div>
                     <div class="stat-item">
                         <h3 class="text-white">Real-time</h3>
-                        <p class="text-light opacity-75">Market Data</p>
+                        <p class="text-light opacity-75 mb-0">Market Data</p>
                     </div>
                 </div>
             </div>
@@ -45,58 +486,70 @@
     </div>
 </section>
 
-<div class="container">
-    <div class="row">
+<!-- Main Content Section -->
+<div class="main-container py-5">
+    <div class="row g-4">
         <!-- Main Content -->
-        <div class="col-lg-8">
+        <div class="col-xl-8 col-lg-8 col-md-12">
             <!-- Breaking News Section -->
             <section id="breaking-news" class="mb-5">
-                <h2 class="section-title">
-                    <i class="fas fa-bolt text-danger me-2"></i>Breaking News
+                <h2 class="section-title d-flex align-items-center">
+                    <i class="fas fa-bolt text-danger me-3"></i>Breaking News
                 </h2>
                 
                 {% if featured_articles %}
-                <div class="row">
+                <div class="row g-4 equal-height">
                     {% for article in featured_articles %}
-                    <div class="col-md-6 mb-4">
-                        <div class="card news-card card-professional">
+                    <div class="col-lg-6 col-md-6 col-12">
+                        <article class="card news-card card-professional h-100">
                             {% if article.image %}
-                            <img src="{{ article.image }}" class="news-image" alt="{{ article.title }}">
+                            <div class="news-image-container">
+                                <img src="{{ article.image }}" class="news-image" alt="{{ article.title }}" loading="lazy">
+                                <div class="position-absolute top-0 start-0 m-3">
+                                    <span class="badge bg-danger">Breaking</span>
+                                </div>
+                            </div>
                             {% else %}
-                            <div class="news-image bg-light d-flex align-items-center justify-content-center">
-                                <i class="fas fa-newspaper fa-3x text-muted"></i>
+                            <div class="news-image-container">
+                                <div class="no-image-placeholder">
+                                    <i class="fas fa-newspaper fa-3x text-muted"></i>
+                                </div>
                             </div>
                             {% endif %}
-                            <div class="card-body">
-                                <div class="news-meta mb-2">
-                                    <i class="fas fa-clock me-1"></i>
-                                    {{ article.date_posted|timesince }} ago
-                                    <span class="mx-2">•</span>
-                                    <i class="fas fa-map-marker-alt me-1"></i>
-                                    {{ article.country.name }}
+                            <div class="card-body d-flex flex-column">
+                                <div class="news-meta mb-3">
+                                    <div class="d-flex align-items-center text-muted small">
+                                        <i class="fas fa-clock me-2"></i>
+                                        <span>{{ article.date_posted|timesince }} ago</span>
+                                        <span class="mx-2">•</span>
+                                        <i class="fas fa-map-marker-alt me-2"></i>
+                                        <span>{{ article.country.name }}</span>
+                                    </div>
                                 </div>
-                                <h5 class="news-title mb-3">
-                                    <a href="{% url 'news:article_detail' article.pk %}" class="text-decoration-none news-title">
+                                <h5 class="news-title mb-3 flex-grow-1">
+                                    <a href="{% url 'news:article_detail' article.pk %}" class="text-decoration-none text-dark">
                                         {{ article.title|truncatechars:80 }}
                                     </a>
                                 </h5>
                                 {% if article.description %}
-                                <p class="card-text text-muted mb-3">{{ article.description|truncatechars:120 }}</p>
+                                <p class="card-text text-muted mb-3 small">{{ article.description|truncatechars:120 }}</p>
                                 {% endif %}
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <small class="text-muted">{{ article.news_provider.name }}</small>
-                                    <a href="{{ article.link }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                                <div class="d-flex justify-content-between align-items-center mt-auto">
+                                    <small class="text-muted fw-medium">{{ article.news_provider.name|truncatechars:20 }}</small>
+                                    <a href="{{ article.link }}" target="_blank" rel="noopener" class="btn btn-sm btn-outline-primary">
                                         Read More <i class="fas fa-external-link-alt ms-1"></i>
                                     </a>
                                 </div>
                             </div>
-                        </div>
+                        </article>
                     </div>
                     {% endfor %}
                 </div>
                 {% else %}
                 <div class="text-center py-5">
-                    <i class="fas fa-newspaper fa-4x text-muted mb-3"></i>
+                    <div class="mb-4">
+                        <i class="fas fa-newspaper fa-4x text-muted opacity-50"></i>
+                    </div>
                     <h4 class="text-muted">No breaking news available</h4>
                     <p class="text-muted">Check back later for the latest updates.</p>
                 </div>
@@ -106,51 +559,59 @@
             <!-- Latest News Grid -->
             <section class="mb-5">
                 <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h2 class="section-title mb-0">
-                        <i class="fas fa-newspaper me-2"></i>Latest News
+                    <h2 class="section-title mb-0 d-flex align-items-center">
+                        <i class="fas fa-newspaper me-3"></i>Latest News
                     </h2>
                 </div>
                 
                 {% if recent_articles %}
-                <div class="row">
+                <div class="row g-4 equal-height">
                     {% for article in recent_articles %}
-                    <div class="col-md-6 col-lg-4 mb-4">
-                        <div class="card news-card card-professional h-100">
+                    <div class="col-lg-6 col-md-6 col-12">
+                        <article class="card news-card card-professional h-100">
                             {% if article.image %}
-                            <img src="{{ article.image }}" class="news-image" alt="{{ article.title }}">
+                            <div class="news-image-container">
+                                <img src="{{ article.image }}" class="news-image" alt="{{ article.title }}" loading="lazy">
+                            </div>
                             {% else %}
-                            <div class="news-image bg-light d-flex align-items-center justify-content-center">
-                                <i class="fas fa-newspaper fa-2x text-muted"></i>
+                            <div class="news-image-container">
+                                <div class="no-image-placeholder">
+                                    <i class="fas fa-newspaper fa-2x text-muted"></i>
+                                </div>
                             </div>
                             {% endif %}
                             <div class="card-body d-flex flex-column">
-                                <div class="news-meta mb-2">
-                                    <i class="fas fa-clock me-1"></i>
-                                    {{ article.date_posted|timesince }} ago
-                                    <span class="mx-2">•</span>
-                                    <span class="badge bg-primary">{{ article.country.code }}</span>
+                                <div class="news-meta mb-3">
+                                    <div class="d-flex align-items-center text-muted small">
+                                        <i class="fas fa-clock me-2"></i>
+                                        <span>{{ article.date_posted|timesince }} ago</span>
+                                        <span class="mx-2">•</span>
+                                        <span class="badge bg-primary">{{ article.country.code }}</span>
+                                    </div>
                                 </div>
                                 <h6 class="news-title mb-3 flex-grow-1">
-                                    <a href="{% url 'news:article_detail' article.pk %}" class="text-decoration-none news-title">
-                                        {{ article.title|truncatechars:60 }}
+                                    <a href="{% url 'news:article_detail' article.pk %}" class="text-decoration-none text-dark">
+                                        {{ article.title|truncatechars:70 }}
                                     </a>
                                 </h6>
                                 <div class="mt-auto">
                                     <div class="d-flex justify-content-between align-items-center">
-                                        <small class="text-muted">{{ article.news_provider.name|truncatechars:15 }}</small>
-                                        <a href="{{ article.link }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                                        <small class="text-muted fw-medium">{{ article.news_provider.name|truncatechars:15 }}</small>
+                                        <a href="{{ article.link }}" target="_blank" rel="noopener" class="btn btn-sm btn-outline-primary">
                                             <i class="fas fa-external-link-alt"></i>
                                         </a>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </article>
                     </div>
                     {% endfor %}
                 </div>
                 {% else %}
                 <div class="text-center py-5">
-                    <i class="fas fa-inbox fa-4x text-muted mb-3"></i>
+                    <div class="mb-4">
+                        <i class="fas fa-inbox fa-4x text-muted opacity-50"></i>
+                    </div>
                     <h4 class="text-muted">No news articles available</h4>
                     <p class="text-muted">Articles will appear here once they are published.</p>
                 </div>
@@ -159,82 +620,86 @@
         </div>
 
         <!-- Sidebar -->
-        <div class="col-lg-4">
+        <div class="col-xl-4 col-lg-4 col-md-12">
             <!-- Market Overview -->
             <div class="sidebar-widget" id="market-overview">
-                <h5 class="widget-title">
-                    <i class="fas fa-chart-line me-2"></i>Market Overview
+                <h5 class="widget-title d-flex align-items-center">
+                    <i class="fas fa-chart-line me-2 text-primary"></i>Market Overview
                 </h5>
                 <div id="stockmarket">
-                    <h6 class="mb-3 text-muted">Major Indices</h6>
+                    <h6 class="mb-3 text-muted fw-semibold">Major Indices</h6>
                     {% for ticker in market_tickers %}
                     <div class="market-item">
-                        <div>
+                        <div class="d-flex flex-column">
                             <div class="market-symbol">{{ ticker.company_name|truncatechars:20 }}</div>
                             <small class="text-muted">{{ ticker.symbol }}</small>
                         </div>
                         <div class="text-end">
-                            <div class="market-price">{{ ticker.current_price|floatformat:2 }}</div>
+                            <div class="market-price">${{ ticker.current_price|floatformat:2 }}</div>
                             <div class="market-change {% if ticker.is_positive_change %}change-positive{% else %}change-negative{% endif %}">
                                 {{ ticker.formatted_percentage_change }}
                             </div>
                         </div>
                     </div>
                     {% empty %}
-                    <div class="text-center text-muted py-3">
-                        <i class="fas fa-chart-line fa-2x mb-2"></i>
-                        <p class="mb-0">No market data available</p>
+                    <div class="text-center text-muted py-4">
+                        <i class="fas fa-chart-line fa-3x mb-3 opacity-50"></i>
+                        <p class="mb-1">No market data available</p>
                         <small>Add market tickers in admin panel</small>
                     </div>
                     {% endfor %}
                 </div>
                 {% if market_tickers %}
                 <div class="mt-3 text-center">
-                    <a href="{% url 'news:search' %}?tab=market" class="btn btn-sm btn-outline-primary">View Detailed Charts</a>
+                    <a href="{% url 'news:search' %}?tab=market" class="btn btn-sm btn-outline-primary">
+                        <i class="fas fa-chart-bar me-1"></i>View Detailed Charts
+                    </a>
                 </div>
                 {% endif %}
             </div>
 
             <!-- Currency Exchange Rates -->
             <div class="sidebar-widget" id="currencies">
-                <h5 class="widget-title">
-                    <i class="fas fa-coins me-2"></i>Exchange Rates
+                <h5 class="widget-title d-flex align-items-center">
+                    <i class="fas fa-coins me-2 text-warning"></i>Exchange Rates
                 </h5>
                 {% for rate in exchange_rates %}
                 <div class="market-item">
-                    <div>
+                    <div class="d-flex flex-column">
                         <div class="market-symbol">{{ rate.currency_pair }}</div>
                         <small class="text-muted">{{ rate.base_currency }} to {{ rate.quote_currency }}</small>
                     </div>
                     <div class="text-end">
                         <div class="market-price">{{ rate.current_rate|floatformat:4 }}</div>
                         <div class="market-change {% if rate.percentage_change >= 0 %}change-positive{% else %}change-negative{% endif %}">
-                            {% if rate.percentage_change >= 0 %}+{% endif %}{{ rate.percentage_change }}%
+                            {% if rate.percentage_change >= 0 %}+{% endif %}{{ rate.percentage_change|floatformat:2 }}%
                         </div>
                     </div>
                 </div>
                 {% empty %}
-                <div class="text-center text-muted py-3">
-                    <i class="fas fa-coins fa-2x mb-2"></i>
-                    <p class="mb-0">No exchange rates available</p>
+                <div class="text-center text-muted py-4">
+                    <i class="fas fa-coins fa-3x mb-3 opacity-50"></i>
+                    <p class="mb-1">No exchange rates available</p>
                     <small>Add exchange rates in admin panel</small>
                 </div>
                 {% endfor %}
                 {% if exchange_rates %}
                 <div class="mt-3 text-center">
-                    <a href="{% url 'news:search' %}?tab=forex" class="btn btn-sm btn-outline-primary">Currency Converter</a>
+                    <a href="{% url 'news:search' %}?tab=forex" class="btn btn-sm btn-outline-primary">
+                        <i class="fas fa-exchange-alt me-1"></i>Currency Converter
+                    </a>
                 </div>
                 {% endif %}
             </div>
 
             <!-- Commodities -->
             <div class="sidebar-widget" id="commodities">
-                <h5 class="widget-title">
-                    <i class="fas fa-gem me-2"></i>Commodities
+                <h5 class="widget-title d-flex align-items-center">
+                    <i class="fas fa-gem me-2 text-success"></i>Commodities
                 </h5>
                 {% for commodity in commodities %}
                 <div class="market-item">
-                    <div>
+                    <div class="d-flex flex-column">
                         <div class="market-symbol">{{ commodity.name }}</div>
                         <small class="text-muted">{{ commodity.symbol }}</small>
                     </div>
@@ -246,9 +711,9 @@
                     </div>
                 </div>
                 {% empty %}
-                <div class="text-center text-muted py-3">
-                    <i class="fas fa-gem fa-2x mb-2"></i>
-                    <p class="mb-0">No commodities data available</p>
+                <div class="text-center text-muted py-4">
+                    <i class="fas fa-gem fa-3x mb-3 opacity-50"></i>
+                    <p class="mb-1">No commodities data available</p>
                     <small>Add commodities in admin panel</small>
                 </div>
                 {% endfor %}
@@ -256,12 +721,12 @@
 
             <!-- Cryptocurrency -->
             <div class="sidebar-widget" id="crypto">
-                <h5 class="widget-title">
-                    <i class="fab fa-bitcoin me-2"></i>Cryptocurrency
+                <h5 class="widget-title d-flex align-items-center">
+                    <i class="fab fa-bitcoin me-2 text-info"></i>Cryptocurrency
                 </h5>
                 {% for crypto in cryptocurrencies %}
                 <div class="market-item">
-                    <div>
+                    <div class="d-flex flex-column">
                         <div class="market-symbol">{{ crypto.name }}</div>
                         <small class="text-muted">{{ crypto.symbol }}</small>
                     </div>
@@ -279,75 +744,251 @@
                     </div>
                 </div>
                 {% empty %}
-                <div class="text-center text-muted py-3">
-                    <i class="fab fa-bitcoin fa-2x mb-2"></i>
-                    <p class="mb-0">No cryptocurrency data available</p>
+                <div class="text-center text-muted py-4">
+                    <i class="fab fa-bitcoin fa-3x mb-3 opacity-50"></i>
+                    <p class="mb-1">No cryptocurrency data available</p>
                     <small>Add cryptocurrencies in admin panel</small>
                 </div>
                 {% endfor %}
                 {% if cryptocurrencies %}
                 <div class="mt-3 text-center">
-                    <a href="{% url 'news:search' %}?tab=crypto" class="btn btn-sm btn-outline-primary">Crypto Dashboard</a>
+                    <a href="{% url 'news:search' %}?tab=crypto" class="btn btn-sm btn-outline-primary">
+                        <i class="fab fa-bitcoin me-1"></i>Crypto Dashboard
+                    </a>
                 </div>
                 {% endif %}
             </div>
 
             <!-- Top Countries -->
             <div class="sidebar-widget">
-                <h5 class="widget-title">
-                    <i class="fas fa-globe me-2"></i>News by Country
+                <h5 class="widget-title d-flex align-items-center">
+                    <i class="fas fa-globe me-2 text-primary"></i>News by Country
                 </h5>
                 {% for country in top_countries %}
                 <div class="market-item">
                     <div class="d-flex align-items-center">
                         {% if country.flag_url %}
                         <img src="{{ country.flag_url }}" alt="{{ country.name }}" 
-                             style="width: 24px; height: 18px; margin-right: 10px; border-radius: 3px;">
+                             class="me-3 rounded-1" 
+                             style="width: 28px; height: 20px; object-fit: cover;"
+                             loading="lazy">
                         {% endif %}
                         <div>
                             <div class="market-symbol">{{ country.name }}</div>
                         </div>
                     </div>
                     <div class="text-end">
-                        <span class="badge bg-info">{{ country.article_count }}</span>
+                        <span class="badge bg-info rounded-pill">{{ country.article_count }}</span>
                     </div>
                 </div>
                 {% empty %}
-                <p class="text-muted text-center">No country data available</p>
+                <div class="text-center text-muted py-4">
+                    <i class="fas fa-globe fa-3x mb-3 opacity-50"></i>
+                    <p class="mb-1">No country data available</p>
+                    <small>Countries will appear here once articles are added</small>
+                </div>
                 {% endfor %}
             </div>
         </div>
     </div>
 </div>
 
-<!-- Market Data Update Script -->
+<!-- Enhanced Market Data Update Script -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Simulate real-time market data updates
+    // Professional loading states
+    function showLoadingState(element) {
+        element.style.opacity = '0.6';
+        element.style.transition = 'opacity 0.3s ease';
+    }
+    
+    function hideLoadingState(element) {
+        element.style.opacity = '1';
+    }
+    
+    // Enhanced market data update simulation
     function updateMarketData() {
+        const marketWidgets = document.querySelectorAll('.sidebar-widget');
         const marketItems = document.querySelectorAll('.market-change');
-        marketItems.forEach(item => {
-            // Add subtle animation to indicate data refresh
-            item.style.opacity = '0.5';
+        
+        // Add subtle loading animation
+        marketItems.forEach((item, index) => {
             setTimeout(() => {
-                item.style.opacity = '1';
-            }, 200);
+                showLoadingState(item);
+                
+                // Simulate data update
+                setTimeout(() => {
+                    hideLoadingState(item);
+                    
+                    // Add pulse effect for updated data
+                    item.style.animation = 'pulse 0.6s ease-in-out';
+                    setTimeout(() => {
+                        item.style.animation = '';
+                    }, 600);
+                }, 300);
+            }, index * 100);
         });
     }
     
-    // Update market data every 30 seconds
-    setInterval(updateMarketData, 30000);
-    
-    // Add loading animation to market widgets on hover
+    // Enhanced hover effects for better user experience
     document.querySelectorAll('.sidebar-widget').forEach(widget => {
         widget.addEventListener('mouseenter', function() {
-            this.style.transform = 'translateY(-2px)';
+            this.style.transform = 'translateY(-4px)';
+            this.style.transition = 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
         });
         
         widget.addEventListener('mouseleave', function() {
             this.style.transform = 'translateY(0)';
         });
     });
+    
+    // Enhanced news card hover effects
+    document.querySelectorAll('.news-card').forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            const image = this.querySelector('.news-image');
+            if (image) {
+                image.style.transform = 'scale(1.02)';
+                image.style.transition = 'transform 0.3s ease';
+            }
+        });
+        
+        card.addEventListener('mouseleave', function() {
+            const image = this.querySelector('.news-image');
+            if (image) {
+                image.style.transform = 'scale(1)';
+            }
+        });
+    });
+    
+    // Lazy loading for images
+    const imageObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const img = entry.target;
+                if (img.dataset.src) {
+                    img.src = img.dataset.src;
+                    img.removeAttribute('data-src');
+                    observer.unobserve(img);
+                }
+            }
+        });
+    });
+    
+    document.querySelectorAll('img[data-src]').forEach(img => {
+        imageObserver.observe(img);
+    });
+    
+    // Real-time data updates with error handling
+    function safeUpdateMarketData() {
+        try {
+            updateMarketData();
+        } catch (error) {
+            console.warn('Market data update failed:', error);
+        }
+    }
+    
+    // Update market data every 30 seconds
+    const updateInterval = setInterval(safeUpdateMarketData, 30000);
+    
+    // Cleanup on page unload
+    window.addEventListener('beforeunload', () => {
+        clearInterval(updateInterval);
+    });
+    
+    // Add smooth scrolling for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+    
+    // Add progressive loading for content
+    const contentObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+            }
+        });
+    }, {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    });
+    
+    document.querySelectorAll('.news-card, .sidebar-widget').forEach(el => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(20px)';
+        el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        contentObserver.observe(el);
+    });
+    
+    // Add error handling for external links
+    document.querySelectorAll('a[target="_blank"]').forEach(link => {
+        link.addEventListener('click', function(e) {
+            // Add analytics or tracking here if needed
+            console.log('External link clicked:', this.href);
+        });
+    });
+    
+    // Performance optimization: Debounced resize handler
+    let resizeTimeout;
+    window.addEventListener('resize', function() {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(function() {
+            // Handle responsive adjustments if needed
+            console.log('Window resized, adjusting layout...');
+        }, 250);
+    });
 });
+
+// CSS Animation keyframes (if not already defined)
+if (!document.querySelector('#dynamic-animations')) {
+    const style = document.createElement('style');
+    style.id = 'dynamic-animations';
+    style.textContent = `
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .animate-fadeInUp {
+            animation: fadeInUp 0.6s ease forwards;
+        }
+    `;
+    document.head.appendChild(style);
+}
+</script>
+
+<!-- Performance and SEO Optimizations -->
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "NewsMediaOrganization",
+    "name": "Daily News Flow",
+    "description": "Professional news platform delivering real-time global news, market updates, and financial insights",
+    "url": "{{ request.build_absolute_uri }}",
+    "sameAs": [
+        "https://twitter.com/dailynewsflow",
+        "https://facebook.com/dailynewsflow"
+    ]
+}
 </script>
 {% endblock %}
