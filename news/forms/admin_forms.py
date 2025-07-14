@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
-from ..models import Country, NewsProvider
+from ..models import Country, NewsProvider, Category
 
 
 class AdminLoginForm(forms.Form):
@@ -178,3 +178,78 @@ class NewsProviderForm(forms.ModelForm):
             self.initial['is_active'] = True
         # Filter to show only active countries
         self.fields['country'].queryset = Country.objects.filter(is_active=True).order_by('name')
+
+
+class CategoryForm(forms.ModelForm):
+    """Form for creating and editing categories"""
+    
+    class Meta:
+        model = Category
+        fields = ['name', 'slug', 'description', 'icon', 'color', 'is_active']
+        widgets = {
+            'name': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Enter category name (e.g., Politics, Business)',
+                'required': True
+            }),
+            'slug': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'URL-friendly version (e.g., politics, business)',
+                'required': True,
+                'pattern': '[a-z0-9-]+',
+                'title': 'Only lowercase letters, numbers, and hyphens allowed'
+            }),
+            'description': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 3,
+                'placeholder': 'Brief description of the category'
+            }),
+            'icon': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'FontAwesome icon class (e.g., fas fa-newspaper)',
+                'required': True
+            }),
+            'color': forms.TextInput(attrs={
+                'class': 'form-control',
+                'type': 'color',
+                'title': 'Choose category color'
+            }),
+            'is_active': forms.CheckboxInput(attrs={
+                'class': 'form-check-input'
+            })
+        }
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if not self.instance.pk:
+            self.initial['is_active'] = True
+            self.initial['color'] = '#007bff'
+            self.initial['icon'] = 'fas fa-newspaper'
+    
+    def clean_slug(self):
+        slug = self.cleaned_data.get('slug', '').lower()
+        if not slug:
+            raise forms.ValidationError("Slug is required.")
+        
+        # Check for valid characters
+        import re
+        if not re.match(r'^[a-z0-9-]+$', slug):
+            raise forms.ValidationError("Slug can only contain lowercase letters, numbers, and hyphens.")
+        
+        # Check for uniqueness (excluding current instance if editing)
+        existing = Category.objects.filter(slug=slug)
+        if self.instance.pk:
+            existing = existing.exclude(pk=self.instance.pk)
+        
+        if existing.exists():
+            raise forms.ValidationError("A category with this slug already exists.")
+        
+        return slug
+    
+    def clean_color(self):
+        color = self.cleaned_data.get('color', '')
+        if color and not color.startswith('#'):
+            color = '#' + color
+        if len(color) != 7:
+            raise forms.ValidationError("Please enter a valid hex color code.")
+        return color

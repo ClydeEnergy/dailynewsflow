@@ -9,8 +9,8 @@ from django.utils import timezone
 from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
 from django.views.decorators.csrf import csrf_protect
-from .models import NewsArticle, Country, NewsProvider, MarketTicker, Commodity, Cryptocurrency, SocialMediaPost, ExchangeRate
-from .forms import (NewsArticleForm, AdminLoginForm, AdminUserForm, CountryForm, NewsProviderForm,
+from .models import NewsArticle, Country, NewsProvider, Category, MarketTicker, Commodity, Cryptocurrency, SocialMediaPost, ExchangeRate
+from .forms import (NewsArticleForm, AdminLoginForm, AdminUserForm, CountryForm, NewsProviderForm, CategoryForm,
                    MarketTickerForm, CommodityForm, CryptocurrencyForm, SocialMediaPostForm, ExchangeRateForm)
 
 
@@ -348,6 +348,23 @@ def admin_delete_article(request, pk):
     return render(request, 'admin/article_delete.html', context)
 
 
+def admin_toggle_article_status(request, pk):
+    """Toggle article active status"""
+    article = get_object_or_404(NewsArticle, pk=pk)
+    article.is_active = not article.is_active
+    article.save(update_fields=['is_active'])
+    
+    status = "activated" if article.is_active else "deactivated"
+    messages.success(request, f'Article "{article.title}" {status} successfully!')
+    
+    return JsonResponse({
+        'success': True,
+        'message': f'Article {status}',
+        'is_active': article.is_active
+    })
+
+
+# Countries Management
 @user_passes_test(is_admin_user, login_url='news:admin_login')
 def admin_countries(request):
     """Manage countries"""
@@ -503,18 +520,125 @@ def admin_edit_provider(request, pk):
     return render(request, 'admin/provider_form.html', context)
 
 
+# Categories Management Views
+@user_passes_test(is_admin_user, login_url='news:admin_login')
+def admin_categories(request):
+    """Manage categories"""
+    search_query = request.GET.get('search', '')
+    
+    categories = Category.objects.annotate(
+        article_count=Count('articles', filter=Q(articles__is_active=True))
+    ).order_by('name')
+    
+    if search_query:
+        categories = categories.filter(
+            Q(name__icontains=search_query) |
+            Q(description__icontains=search_query)
+        )
+    
+    # Pagination
+    paginator = Paginator(categories, 20)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    
+    context = {
+        'page_obj': page_obj,
+        'search_query': search_query,
+        'total_categories': categories.count(),
+        'active_categories': categories.filter(is_active=True).count(),
+    }
+    
+    return render(request, 'admin/categories.html', context)
+
+
+@user_passes_test(is_admin_user, login_url='news:admin_login')
+def admin_add_category(request):
+    """Add new category"""
+    if request.method == 'POST':
+        form = CategoryForm(request.POST)
+        if form.is_valid():
+            category = form.save()
+            messages.success(request, f'Category "{category.name}" added successfully!')
+            return redirect('news:admin_categories')
+        else:
+            messages.error(request, 'Please correct the errors below.')
+    else:
+        form = CategoryForm()
+    
+    context = {
+        'form': form,
+        'action': 'Add',
+        'title': 'Add New Category'
+    }
+    return render(request, 'admin/category_form.html', context)
+
+
+@user_passes_test(is_admin_user, login_url='news:admin_login')
+def admin_edit_category(request, pk):
+    """Edit category"""
+    category = get_object_or_404(Category, pk=pk)
+    
+    if request.method == 'POST':
+        form = CategoryForm(request.POST, instance=category)
+        if form.is_valid():
+            category = form.save()
+            messages.success(request, f'Category "{category.name}" updated successfully!')
+            return redirect('news:admin_categories')
+        else:
+            messages.error(request, 'Please correct the errors below.')
+    else:
+        form = CategoryForm(instance=category)
+    
+    context = {
+        'form': form,
+        'category': category,
+        'action': 'Edit',
+        'title': f'Edit Category - {category.name}'
+    }
+    return render(request, 'admin/category_form.html', context)
+
+
+@user_passes_test(is_admin_user, login_url='news:admin_login')
+def admin_delete_category(request, pk):
+    """Delete category"""
+    category = get_object_or_404(Category, pk=pk)
+    
+    # Check if category has associated articles
+    article_count = category.articles.count()
+    
+    if request.method == 'POST':
+        if article_count > 0:
+            messages.error(request, f'Cannot delete category "{category.name}" because it has {article_count} associated articles. Please reassign or delete those articles first.')
+        else:
+            category_name = category.name
+            category.delete()
+            messages.success(request, f'Category "{category_name}" deleted successfully!')
+        return redirect('news:admin_categories')
+    
+    context = {
+        'category': category,
+        'article_count': article_count,
+        'title': f'Delete Category - {category.name}'
+    }
+    return render(request, 'admin/confirm_delete.html', context)
+
+
 @require_http_methods(["POST"])
 @user_passes_test(is_admin_user, login_url='news:admin_login')
-def admin_toggle_article_status(request, pk):
-    """Toggle article active status"""
-    article = get_object_or_404(NewsArticle, pk=pk)
-    article.is_active = not article.is_active
-    article.save(update_fields=['is_active'])
+def admin_toggle_category_status(request, pk):
+    """Toggle category active status"""
+    category = get_object_or_404(Category, pk=pk)
+    category.is_active = not category.is_active
+    category.save(update_fields=['is_active'])
     
-    status = "activated" if article.is_active else "deactivated"
-    messages.success(request, f'Article "{article.title}" has been {status}.')
+    status = "activated" if category.is_active else "deactivated"
+    messages.success(request, f'Category "{category.name}" {status} successfully!')
     
-    return JsonResponse({'success': True, 'is_active': article.is_active})
+    return JsonResponse({
+        'success': True,
+        'message': f'Category {status}',
+        'is_active': category.is_active
+    })
 
 
 # Market Ticker Views

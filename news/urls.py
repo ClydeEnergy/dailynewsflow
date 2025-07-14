@@ -53,6 +53,13 @@ urlpatterns = [
     path('admin/providers/add/', admin_views.admin_add_provider, name='admin_add_provider'),
     path('admin/providers/<int:pk>/edit/', admin_views.admin_edit_provider, name='admin_edit_provider'),
     
+    # Categories Management
+    path('admin/categories/', admin_views.admin_categories, name='admin_categories'),
+    path('admin/categories/add/', admin_views.admin_add_category, name='admin_add_category'),
+    path('admin/categories/<int:pk>/edit/', admin_views.admin_edit_category, name='admin_edit_category'),
+    path('admin/categories/<int:pk>/delete/', admin_views.admin_delete_category, name='admin_delete_category'),
+    path('admin/categories/<int:pk>/toggle-status/', admin_views.admin_toggle_category_status, name='admin_toggle_category_status'),
+    
     # Market Tickers Management
     path('admin/market-tickers/', admin_views.admin_market_tickers, name='admin_market_tickers'),
     path('admin/market-tickers/add/', admin_views.admin_add_market_ticker, name='admin_add_market_ticker'),

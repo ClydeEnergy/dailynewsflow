@@ -523,6 +523,27 @@ body {
     background: #f8f9fa;
 }
 
+/* Responsive Market Table */
+@media (max-width: 1200px) {
+    .market-header {
+        grid-template-columns: 2fr 1fr 1fr 1fr;
+    }
+    
+    .market-row {
+        grid-template-columns: 2fr 1fr 1fr 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .market-header {
+        grid-template-columns: 2fr 1fr 1fr;
+    }
+    
+    .market-row {
+        grid-template-columns: 2fr 1fr 1fr;
+    }
+}
+
 .market-symbol {
     font-weight: 600;
     color: var(--dark-color);
@@ -568,17 +589,6 @@ body {
 @media (max-width: 1200px) {
     .filter-form {
         grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    }
-    
-    .market-header,
-    .market-row {
-        grid-template-columns: 2fr 1fr 1fr 1fr;
-        gap: 0.25rem;
-    }
-    
-    .col-currency,
-    .col-action {
-        display: none;
     }
     
     /* Tablet adjustments */
@@ -668,19 +678,6 @@ body {
     .sidebar-widget {
         padding: 1rem;
     }
-    
-    .market-header,
-    .market-row {
-        grid-template-columns: 1fr 1fr 1fr;
-        gap: 0.25rem;
-        font-size: 0.8rem;
-    }
-    
-    .col-exchange,
-    .col-currency,
-    .col-action {
-        display: none;
-    }
 }
 
 @media (max-width: 576px) {
@@ -760,106 +757,88 @@ body {
     }
 }
 
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
+/* Additional Responsive Improvements */
+.container-fluid {
+    max-width: 1400px;
+    margin: 0 auto;
 }
 
-/* Loading and Animation States */
-.loading {
-    opacity: 0.7;
-    pointer-events: none;
+/* Ensure proper column alignment */
+.row {
+    margin-left: -15px;
+    margin-right: -15px;
 }
 
-.fade-in {
-    animation: fadeIn 0.5s ease-in;
+.row > [class*="col-"] {
+    padding-left: 15px;
+    padding-right: 15px;
 }
 
-/* Card Grid Improvements */
-.news-grid,
-.social-grid {
-    display: grid;
-    gap: 1.5rem;
+/* Sidebar specific improvements */
+.sidebar-widget {
+    margin-bottom: 2rem;
 }
 
-.news-grid {
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-}
-
-.social-grid {
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-}
-
-/* Bootstrap grid override for consistent spacing */
-.row.g-4 {
-    --bs-gutter-x: 1.5rem;
-    --bs-gutter-y: 1.5rem;
-}
-
-/* Improved card alignment */
-.d-flex.align-items-stretch {
-    height: auto;
-}
-
-.d-flex.align-items-stretch .card {
-    width: 100%;
-}
-
-/* Professional button improvements */
-.btn-professional {
-    transition: all 0.3s ease;
-    font-weight: 500;
-}
-
-.btn-professional:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-}
-
-/* Image optimization */
-.news-image {
-    object-position: center;
-    background-color: #f8f9fa;
-}
-
-.social-post-card .rounded-circle {
-    flex-shrink: 0;
-}
-
-/* Fix for webkit line-clamp compatibility */
-.news-card .card-body .news-title {
-    -webkit-line-clamp: 3;
-    line-clamp: 3;
-}
-
-.news-card .card-body .news-description {
-    -webkit-line-clamp: 2;
-    line-clamp: 2;
-}
-
-.social-post-content-rich {
-    -webkit-line-clamp: 4;
-    line-clamp: 4;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-/* Print Styles */
-@media print {
-    .hero-section,
-    .sidebar-widget,
-    .social-post-card {
-        display: none;
+/* Mobile First Approach */
+@media (max-width: 991.98px) {
+    .col-lg-8 {
+        order: 1;
+        margin-bottom: 2rem;
     }
     
-    .news-card {
-        break-inside: avoid;
-        box-shadow: none;
-        border: 1px solid #ddd;
-        margin-bottom: 1rem;
+    .col-lg-4 {
+        order: 2;
+    }
+    
+    .sidebar-widget {
+        margin-bottom: 1.5rem;
+    }
+}
+
+/* Ensure proper spacing */
+.mb-5 {
+    margin-bottom: 3rem !important;
+}
+
+.section-title {
+    margin-bottom: 1.5rem;
+}
+
+/* Fix for market table overflow */
+.market-table {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Better card grid */
+.news-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+@media (max-width: 576px) {
+    .news-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .container-fluid {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+}
+
+/* Improved responsive behavior */
+@media (min-width: 992px) {
+    .col-lg-8 {
+        flex: 0 0 66.666667%;
+        max-width: 66.666667%;
+    }
+    
+    .col-lg-4 {
+        flex: 0 0 33.333333%;
+        max-width: 33.333333%;
     }
 }
 </style>
@@ -962,10 +941,10 @@ body {
     </div>
 </section>
 
-<div class="container">
+<div class="container-fluid">
     <div class="row">
         <!-- Main Content -->
-        <div class="col-lg-8">
+        <div class="col-lg-8 col-md-12">
             <!-- Latest News Grid -->
             <section class="mb-5">
                 <div class="d-flex justify-content-between align-items-center mb-4">
@@ -1253,76 +1232,76 @@ body {
         </div>
 
         <!-- Sidebar -->
-        <div class="col-lg-4">
+        <div class="col-lg-4 col-md-12">
             <!-- Market Overview -->
             <div class="sidebar-widget" id="market-overview">
-    <h5 class="widget-title">
-        <i class="fas fa-chart-line me-2"></i>Market Overview
-    </h5>
-    <div id="stockmarket">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <h6 class="text-muted mb-0">Major Indices</h6>
-        </div>
-        
-        <!-- Enhanced Market Table with Currency -->
-        <div class="market-table">
-            <div class="market-header">
-                <div class="col-symbol">Symbol</div>
-                <div class="col-exchange">Exchange</div>
-                <div class="col-currency">Currency</div>
-                <div class="col-price">Price</div>
-                <div class="col-change">Change</div>
-                <div class="col-action"></div>
-            </div>
-            
-            {% for ticker in market_tickers %}
-            <div class="market-row">
-                <div class="col-symbol">
-                    <div class="market-symbol">{{ ticker.company_name|truncatechars:15 }}</div>
-                    <small class="text-muted">{{ ticker.symbol }}</small>
-                </div>
-                <div class="col-exchange">
-                    <span class="exchange-badge">{{ ticker.exchange }}</span>
-                </div>
-                <div class="col-currency">
-                    <span class="currency-badge">{{ ticker.currency }}</span>
-                </div>
-                <div class="col-price">
-                    <div class="market-price">
-                        {{ ticker.current_price|floatformat:2 }}
+                <h5 class="widget-title">
+                    <i class="fas fa-chart-line me-2"></i>Market Overview
+                </h5>
+                <div id="stockmarket">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h6 class="text-muted mb-0">Major Indices</h6>
+                    </div>
+                    
+                    <!-- Enhanced Market Table with Currency -->
+                    <div class="market-table">
+                        <div class="market-header">
+                            <div class="col-symbol">Symbol</div>
+                            <div class="col-exchange d-none d-md-block">Exchange</div>
+                            <div class="col-currency d-none d-lg-block">Currency</div>
+                            <div class="col-price">Price</div>
+                            <div class="col-change">Change</div>
+                            <div class="col-action d-none d-md-block"></div>
+                        </div>
+                        
+                        {% for ticker in market_tickers %}
+                        <div class="market-row">
+                            <div class="col-symbol">
+                                <div class="market-symbol">{{ ticker.company_name|truncatechars:15 }}</div>
+                                <small class="text-muted">{{ ticker.symbol }}</small>
+                            </div>
+                            <div class="col-exchange d-none d-md-block">
+                                <span class="exchange-badge">{{ ticker.exchange }}</span>
+                            </div>
+                            <div class="col-currency d-none d-lg-block">
+                                <span class="currency-badge">{{ ticker.currency }}</span>
+                            </div>
+                            <div class="col-price">
+                                <div class="market-price">
+                                    {{ ticker.current_price|floatformat:2 }}
+                                </div>
+                            </div>
+                            <div class="col-change">
+                                <div class="market-change {% if ticker.is_positive_change %}change-positive{% else %}change-negative{% endif %}">
+                                    {{ ticker.formatted_percentage_change }}
+                                </div>
+                            </div>
+                            <div class="col-action d-none d-md-block">
+                                {% if ticker.details_link %}
+                                <a href="{{ ticker.details_link }}" class="action-link" title="View details" target="_blank" rel="noopener">
+                                    <i class="fas fa-chevron-right"></i>
+                                </a>
+                                {% else %}
+                                <span class="action-link text-muted" title="No details available">
+                                    <i class="fas fa-chevron-right"></i>
+                                </span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% empty %}
+                        <div class="market-row">
+                            <div class="col-12 text-center text-muted">
+                                <p>No market tickers available.</p>
+                            </div>
+                        </div>
+                        {% endfor %}
                     </div>
                 </div>
-                <div class="col-change">
-                    <div class="market-change {% if ticker.is_positive_change %}change-positive{% else %}change-negative{% endif %}">
-                        {{ ticker.formatted_percentage_change }}
-                    </div>
-                </div>
-                <div class="col-action">
-                    {% if ticker.details_link %}
-                    <a href="{{ ticker.details_link }}" class="action-link" title="View details" target="_blank" rel="noopener">
-                        <i class="fas fa-chevron-right"></i>
+                <div class="mt-3 text-center">
+                    <a href="#" class="btn btn-sm btn-outline-primary">
+                        <i class="fas fa-chart-bar me-1"></i>View Detailed Charts
                     </a>
-                    {% else %}
-                    <span class="action-link text-muted" title="No details available">
-                        <i class="fas fa-chevron-right"></i>
-                    </span>
-                    {% endif %}
                 </div>
-            </div>
-            {% empty %}
-            <div class="market-row">
-                <div class="col-12 text-center text-muted">
-                    <p>No market tickers available.</p>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-    </div>
-    <div class="mt-3 text-center">
-        <a href="{#}" class="btn btn-sm btn-outline-primary">
-            <i class="fas fa-chart-bar me-1"></i>View Detailed Charts
-        </a>
-    </div>
             </div>
 
             <!-- Currency Exchange Rates -->
@@ -1333,7 +1312,7 @@ body {
                 <div class="market-table">
                     <div class="market-header">
                         <div class="col-symbol">Pair</div>
-                        <div class="col-exchange">Market</div>
+                        <div class="col-exchange d-none d-md-block">Market</div>
                         <div class="col-price">Rate</div>
                         <div class="col-change">Change</div>
                     </div>
@@ -1344,7 +1323,7 @@ body {
                             <div class="market-symbol">{{ rate.currency_pair }}</div>
                             <small class="text-muted">{{ rate.base_currency }} to {{ rate.quote_currency }}</small>
                         </div>
-                        <div class="col-exchange">
+                        <div class="col-exchange d-none d-md-block">
                             <span class="exchange-badge" style="background: linear-gradient(45deg, #f39c12, #e67e22);">{{ rate.market|upper }}</span>
                         </div>
                         <div class="col-price">
@@ -1364,7 +1343,7 @@ body {
                             <div class="market-symbol">EUR/USD</div>
                             <small class="text-muted">Euro to Dollar</small>
                         </div>
-                        <div class="col-exchange">
+                        <div class="col-exchange d-none d-md-block">
                             <span class="exchange-badge" style="background: linear-gradient(45deg, #f39c12, #e67e22);">FOREX</span>
                         </div>
                         <div class="col-price">
@@ -1379,7 +1358,7 @@ body {
                             <div class="market-symbol">GBP/USD</div>
                             <small class="text-muted">Pound to Dollar</small>
                         </div>
-                        <div class="col-exchange">
+                        <div class="col-exchange d-none d-md-block">
                             <span class="exchange-badge" style="background: linear-gradient(45deg, #f39c12, #e67e22);">FOREX</span>
                         </div>
                         <div class="col-price">
@@ -1404,7 +1383,7 @@ body {
                 <div class="market-table">
                     <div class="market-header">
                         <div class="col-symbol">Asset</div>
-                        <div class="col-exchange">Market</div>
+                        <div class="col-exchange d-none d-md-block">Market</div>
                         <div class="col-price">Price</div>
                         <div class="col-change">Change</div>
                     </div>
@@ -1415,7 +1394,7 @@ body {
                             <div class="market-symbol">{{ commodity.name }}</div>
                             <small class="text-muted">{{ commodity.symbol }}</small>
                         </div>
-                        <div class="col-exchange">
+                        <div class="col-exchange d-none d-md-block">
                             <span class="exchange-badge" style="background: linear-gradient(45deg, #f1c40f, #f39c12);">
                                 {{ commodity.exchange|default:"SPOT" }}
                             </span>
@@ -1447,7 +1426,7 @@ body {
                 <div class="market-table">
                     <div class="market-header">
                         <div class="col-symbol">Crypto</div>
-                        <div class="col-exchange">Exchange</div>
+                        <div class="col-exchange d-none d-md-block">Exchange</div>
                         <div class="col-price">Price</div>
                         <div class="col-change">Change</div>
                     </div>
@@ -1458,7 +1437,7 @@ body {
                             <div class="market-symbol">{{ crypto.name }}</div>
                             <small class="text-muted">{{ crypto.symbol }}</small>
                         </div>
-                        <div class="col-exchange">
+                        <div class="col-exchange d-none d-md-block">
                             <span class="exchange-badge" style="background: linear-gradient(45deg, #f7931e, #f7931e);">CRYPTO</span>
                         </div>
                         <div class="col-price">
@@ -1495,7 +1474,7 @@ body {
                     <i class="fas fa-globe me-2"></i>News by Country
                 </h5>
                 {% for country in top_countries %}
-                <div class="market-item">
+                <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
                     <div class="d-flex align-items-center">
                         {% if country.flag_url %}
                         <img src="{{ country.flag_url }}" alt="{{ country.name }}" 

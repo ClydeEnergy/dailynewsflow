@@ -196,6 +196,12 @@
                             Articles
                         </a>
                         
+                        <a class="nav-link {% if 'categor' in request.resolver_match.url_name %}active{% endif %}" 
+                           href="{% url 'news:admin_categories' %}">
+                            <i class="fas fa-tags me-2"></i>
+                            Categories
+                        </a>
+                        
                         <a class="nav-link {% if 'countr' in request.resolver_match.url_name %}active{% endif %}" 
                            href="{% url 'news:admin_countries' %}">
                             <i class="fas fa-flag me-2"></i>
