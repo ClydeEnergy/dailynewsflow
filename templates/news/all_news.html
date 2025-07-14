@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load rich_text_filters %}
 
 {% block title %}All News - Daily News Flow{% endblock %}
 
@@ -170,7 +171,7 @@
                             </div>
                             
                             <!-- Article Title -->
-                            <h6 class="card-title mb-3 flex-grow-1" style="min-height: 2.5rem;">
+                            <h6 class="card-title mb-2 flex-grow-1" style="min-height: 2.5rem;">
                                 <a href="{% url 'news:article_detail' article.pk %}" 
                                    class="text-decoration-none text-dark stretched-link">
                                     {{ article.title|truncatechars:80 }}
@@ -179,22 +180,34 @@
                             
                             <!-- Article Description -->
                             {% if article.description %}
-                            <p class="card-text text-muted mb-3" style="font-size: 0.9rem;">
-                                {{ article.description|truncatechars:100 }}
-                            </p>
+                            <div class="card-text text-muted mb-3 article-description-rich">
+                                {{ article.description|smart_truncate_html:120 }}
+                            </div>
+                            {% else %}
+                            <div class="card-text text-muted mb-3" style="min-height: 3rem;">
+                                <em class="text-muted">No description available</em>
+                            </div>
                             {% endif %}
                             
                             <!-- Article Footer -->
                             <div class="mt-auto">
-                                <div class="d-flex justify-content-between align-items-center">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
                                     <small class="text-muted">{{ article.news_provider.name|truncatechars:20 }}</small>
-                                    <div class="article-actions position-relative" style="z-index: 10;">
-                                        <a href="{{ article.link }}" target="_blank" 
-                                           class="btn btn-sm btn-outline-primary position-relative" 
-                                           style="z-index: 15;" title="View Original">
-                                            <i class="fas fa-external-link-alt"></i>
-                                        </a>
-                                    </div>
+                                    <small class="text-muted">
+                                        <i class="fas fa-eye me-1"></i>{{ article.country.name }}
+                                    </small>
+                                </div>
+                                <div class="d-flex gap-2">
+                                    <a href="{% url 'news:article_detail' article.pk %}" 
+                                       class="btn btn-sm btn-primary flex-fill position-relative" 
+                                       style="z-index: 15;" title="Read Full Article">
+                                        <i class="fas fa-book-open me-1"></i>Read Article
+                                    </a>
+                                    <a href="{{ article.link }}" target="_blank" 
+                                       class="btn btn-sm btn-outline-secondary position-relative" 
+                                       style="z-index: 15;" title="View Original Source">
+                                        <i class="fas fa-external-link-alt"></i>
+                                    </a>
                                 </div>
                             </div>
                         </div>
@@ -324,6 +337,98 @@ document.addEventListener('DOMContentLoaded', function() {
     border: none;
 }
 
+/* Rich Text Content Styling for Article Descriptions */
+.article-description-rich {
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: #666;
+}
+
+.article-description-rich p {
+    margin-bottom: 0.5rem;
+}
+
+.article-description-rich p:last-child {
+    margin-bottom: 0;
+}
+
+.article-description-rich ul, 
+.article-description-rich ol {
+    margin: 0.5rem 0;
+    padding-left: 1.5rem;
+}
+
+.article-description-rich li {
+    margin-bottom: 0.25rem;
+    line-height: 1.4;
+}
+
+.article-description-rich ul li {
+    list-style-type: disc;
+}
+
+.article-description-rich ol li {
+    list-style-type: decimal;
+}
+
+.article-description-rich strong {
+    font-weight: 600;
+    color: #444;
+}
+
+.article-description-rich em {
+    font-style: italic;
+    color: #555;
+}
+
+.article-description-rich u {
+    text-decoration: underline;
+    text-decoration-color: #007bff;
+    text-decoration-thickness: 1px;
+}
+
+.article-description-rich a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.article-description-rich a:hover {
+    text-decoration: underline;
+}
+
+/* Ensure truncated rich content displays properly */
+.article-description-rich {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-height: 3rem;
+    max-height: 4.5rem;
+}
+
+/* Mobile responsive adjustments for rich content */
+@media (max-width: 768px) {
+    .article-description-rich {
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+        min-height: 2rem;
+        max-height: 3rem;
+        font-size: 0.85rem;
+    }
+    
+    .article-description-rich p {
+        margin-bottom: 0.25rem;
+    }
+    
+    .article-description-rich ul, 
+    .article-description-rich ol {
+        margin: 0.25rem 0;
+        padding-left: 1rem;
+    }
+}
+
 .filter-section {
     background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
 }
@@ -349,6 +454,38 @@ document.addEventListener('DOMContentLoaded', function() {
 
 .article-actions .btn:hover {
     transform: translateY(-1px);
+}
+
+/* Enhanced button styling for article cards */
+.card-body .btn-primary {
+    background: linear-gradient(45deg, #007bff, #0056b3);
+    border: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.card-body .btn-primary:hover {
+    background: linear-gradient(45deg, #0056b3, #004085);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
+}
+
+.card-body .btn-outline-secondary {
+    border-width: 1px;
+    transition: all 0.3s ease;
+}
+
+.card-body .btn-outline-secondary:hover {
+    background-color: #6c757d;
+    border-color: #6c757d;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(108, 117, 125, 0.3);
+}
+
+/* Ensure buttons don't interfere with card hover */
+.card-body .d-flex .btn {
+    position: relative;
+    z-index: 15;
 }
 
 .pagination .page-link {
