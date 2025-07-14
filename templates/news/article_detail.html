@@ -301,12 +301,12 @@
                         {% for related_article in related_articles %}
                         <div class="related-article-item mb-3 pb-3 {% if not forloop.last %}border-bottom{% endif %}">
                             <h6 class="mb-1">
-                                <a href="{% url 'news:article_detail' related_article.slug %}" class="text-decoration-none text-dark">
+                                <a href="{% url 'news:article_detail' related_article.pk %}" class="text-decoration-none text-dark">
                                     {{ related_article.title|truncatewords:10 }}
                                 </a>
                             </h6>
                             <small class="text-muted">
-                                {{ related_article.published_at|timesince }} ago • {{ related_article.views }} views
+                                {{ related_article.date_posted|timesince }} ago
                             </small>
                         </div>
                         {% endfor %}

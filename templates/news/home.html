@@ -2,99 +2,90 @@
 {% load static %}
 {% load rich_text_filters %}
 
-{% block title %}Daily News Flow - Professional News & Financial Insights{% endblock %}
+{% block title %}Executive Dashboard - Daily News Flow{% endblock %}
 
-{% block description %}Stay ahead with professional news coverage, real-time market data, currency exchange rates, and stock market updates. Your trusted source for global financial insights.{% endblock %}
+{% block description %}Executive news intelligence platform delivering strategic insights and market intelligence for C-level decision makers. Trusted by industry leaders worldwide.{% endblock %}
 
 {% block content %}
-<!-- Hero Section -->
-<section class="hero-section">
-    <div class="container-fluid">
-        <!-- Professional News Filter Section -->
-        <div class="row justify-content-center">
-            <div class="col-12 col-xl-10">
-                <div class="hero-filter-section">
-                    <h3 class="filter-title">
-                        <i class="fas fa-filter me-2"></i>
-                        Advanced News Filter
-                    </h3>
-                    
-                    <form class="filter-form" method="get" action="{% url 'news:home' %}" id="newsFilterForm">
-                        <div class="filter-group">
-                            <label class="filter-label">
-                                <i class="fas fa-calendar-alt me-1"></i>Date Range
-                            </label>
-                            <input type="date" 
-                                   name="from_date" 
-                                   class="filter-input" 
-                                   value="{{ request.GET.from_date }}"
-                                   max="{{ today|date:'Y-m-d' }}"
-                                   title="Filter news from this date">
-                        </div>
-                        
-                        <div class="filter-group">
-                            <label class="filter-label">
-                                <i class="fas fa-globe me-1"></i>Country
-                            </label>
-                            <select name="country" class="filter-select" title="Filter by country">
-                                <option value="">All Countries</option>
-                                {% for country in countries %}
-                                <option value="{{ country.code }}" 
-                                        {% if request.GET.country == country.code %}selected{% endif %}>
-                                    {{ country.name }}
-                                    {% if country.article_count %}({{ country.article_count }}){% endif %}
-                                </option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                        
-                        <div class="filter-group">
-                            <button type="submit" class="filter-btn" title="Apply filters">
-                                <i class="fas fa-search me-1"></i>
-                                Filter
-                            </button>
-                        </div>
-                    </form>
-                    
-                    <!-- Quick Filter Tabs -->
-                    <div class="quick-filter-tabs">
-                        <a href="{% url 'news:home' %}" 
-                           class="quick-filter-tab {% if not request.GET.from_date and not request.GET.country and not request.GET.category %}active{% endif %}">
-                            <i class="fas fa-globe-americas me-1"></i>All News
-                        </a>
-                        <a href="{% url 'news:home' %}?from_date={{ today|date:'Y-m-d' }}" 
-                           class="quick-filter-tab {% if request.GET.from_date == today|date:'Y-m-d' %}active{% endif %}">
-                            <i class="fas fa-clock me-1"></i>Today
-                        </a>
-                        <a href="{% url 'news:home' %}?from_date={{ week_ago|date:'Y-m-d' }}" 
-                           class="quick-filter-tab {% if request.GET.from_date == week_ago|date:'Y-m-d' %}active{% endif %}">
-                            <i class="fas fa-calendar-week me-1"></i>This Week
-                        </a>
-                        {% for category in categories %}
-                        <a href="{% url 'news:home' %}?category={{ category.slug }}" 
-                           class="quick-filter-tab {% if request.GET.category == category.slug %}active{% endif %}">
-                            <i class="{{ category.icon }} me-1"></i>{{ category.name }}
-                        </a>
-                        {% endfor %}
+<!-- Executive Hero Section -->
+<section class="executive-hero">
+    <div class="container">
+        <div class="row align-items-center min-vh-60">
+            <div class="col-lg-8">
+                <div class="hero-content">
+                    <div class="hero-badge">
+                        <i class="fas fa-crown me-2"></i>Executive Intelligence Platform
                     </div>
-                    
-                    <!-- Filter Statistics -->
-                    <div class="filter-stats">
-                        <div class="filter-stat">
-                            <span class="filter-stat-number" id="filteredArticles">{{ total_articles|default:"0" }}</span>
-                            <span class="filter-stat-label">Articles Found</span>
+                    <h1 class="executive-title">
+                        Strategic News Intelligence
+                        <span class="title-gradient">for Global Leaders</span>
+                    </h1>
+                    <p class="executive-subtitle">
+                        Curated business intelligence, market insights, and strategic analysis 
+                        designed for C-suite executives and decision makers.
+                    </p>
+                    <div class="hero-actions">
+                        <a href="{% url 'news:all_news' %}" class="btn-executive primary">
+                            <i class="fas fa-chart-bar me-2"></i>
+                            <span>Access Intelligence Hub</span>
+                        </a>
+                        <a href="{% url 'news:markets' %}" class="btn-executive secondary">
+                            <i class="fas fa-analytics me-2"></i>
+                            <span>Market Analysis</span>
+                        </a>
+                    </div>
+                    <div class="trust-indicators">
+                        <div class="trust-item">
+                            <i class="fas fa-shield-alt"></i>
+                            <span>Verified Sources</span>
                         </div>
-                        <div class="filter-stat">
-                            <span class="filter-stat-number">{{ total_countries|default:"0" }}</span>
-                            <span class="filter-stat-label">Countries</span>
+                        <div class="trust-item">
+                            <i class="fas fa-clock"></i>
+                            <span>Real-time Updates</span>
                         </div>
-                        <div class="filter-stat">
-                            <span class="filter-stat-number">{{ total_providers|default:"0" }}</span>
-                            <span class="filter-stat-label">News Sources</span>
+                        <div class="trust-item">
+                            <i class="fas fa-globe"></i>
+                            <span>Global Coverage</span>
                         </div>
-                        <div class="filter-stat">
-                            <span class="filter-stat-number">Live</span>
-                            <span class="filter-stat-label">Updates</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="executive-dashboard">
+                    <div class="dashboard-header">
+                        <h3>Live Intelligence</h3>
+                        <div class="status-indicator">
+                            <span class="status-dot"></span>
+                            <span>Active</span>
+                        </div>
+                    </div>
+                    <div class="dashboard-stats">
+                        <div class="stat-executive">
+                            <div class="stat-icon">
+                                <i class="fas fa-newspaper"></i>
+                            </div>
+                            <div class="stat-data">
+                                <div class="stat-value">{{ total_articles|default:"0" }}</div>
+                                <div class="stat-label">Active Articles</div>
+                            </div>
+                        </div>
+                        <div class="stat-executive">
+                            <div class="stat-icon">
+                                <i class="fas fa-globe-americas"></i>
+                            </div>
+                            <div class="stat-data">
+                                <div class="stat-value">{{ total_countries|default:"0" }}</div>
+                                <div class="stat-label">Global Markets</div>
+                            </div>
+                        </div>
+                        <div class="stat-executive">
+                            <div class="stat-icon">
+                                <i class="fas fa-building"></i>
+                            </div>
+                            <div class="stat-data">
+                                <div class="stat-value">{{ total_providers|default:"0" }}</div>
+                                <div class="stat-label">News Partners</div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -103,398 +94,1012 @@
     </div>
 </section>
 
-<!-- Main Content -->
-<div class="container my-5">
-    <div class="row">
-        <!-- Main Content Column -->
-        <div class="col-lg-8">
-            <!-- Latest News Section -->
-            <section class="mb-5">
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h2 class="section-title">
-                        <i class="fas fa-newspaper me-2"></i>Latest News
-                    </h2>
-                    <a href="{% url 'news:all_news' %}" class="btn btn-outline-primary">
-                        View All <i class="fas fa-arrow-right ms-1"></i>
-                    </a>
-                </div>
-
-                {% if recent_articles %}
-                <div class="row g-4">
-                    {% for article in recent_articles %}
-                    <div class="col-md-6">
-                        <div class="card news-card h-100 shadow-sm">
-                            {% if article.image %}
-                            <div class="position-relative">
-                                <img src="{{ article.image }}" 
-                                     class="card-img-top news-image" 
-                                     alt="{{ article.title }}"
-                                     style="height: 200px; object-fit: cover;">
-                                {% if article.category %}
-                                <span class="position-absolute top-0 start-0 m-2 badge category-badge"
-                                      style="background-color: {{ article.category.color|default:'#007bff' }};">
-                                    <i class="{{ article.category.icon }} me-1"></i>{{ article.category.name }}
-                                </span>
-                                {% endif %}
-                                <span class="position-absolute top-0 end-0 m-2 badge bg-dark">
-                                    <i class="fas fa-flag me-1"></i>{{ article.country.code }}
-                                </span>
-                            </div>
-                            {% else %}
-                            <div class="card-img-top bg-light d-flex align-items-center justify-content-center" 
-                                 style="height: 200px;">
-                                <div class="text-center">
-                                    <i class="fas fa-newspaper fa-3x text-muted mb-2"></i>
-                                    {% if article.category %}
-                                    <div>
-                                        <span class="badge category-badge"
-                                              style="background-color: {{ article.category.color|default:'#007bff' }};">
-                                            <i class="{{ article.category.icon }} me-1"></i>{{ article.category.name }}
-                                        </span>
-                                    </div>
-                                    {% endif %}
-                                </div>
-                            </div>
-                            {% endif %}
-                            
-                            <div class="card-body d-flex flex-column">
-                                <div class="news-meta mb-2">
-                                    <small class="text-muted">
-                                        <i class="fas fa-clock me-1"></i>{{ article.date_posted|timesince }} ago
-                                        <span class="mx-1">•</span>
-                                        {{ article.news_provider.name|truncatechars:20 }}
-                                    </small>
-                                </div>
-                                
-                                <h5 class="card-title news-title">
-                                    <a href="{% url 'news:article_detail' article.pk %}" 
-                                       class="text-decoration-none text-dark stretched-link">
-                                        {{ article.title }}
-                                    </a>
-                                </h5>
-                                
-                                {% if article.description %}
-                                <p class="card-text text-muted mb-3">
-                                    {{ article.description|smart_truncate_html:100 }}
-                                </p>
-                                {% endif %}
-                                
-                                <div class="mt-auto">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <span class="badge bg-light text-dark">{{ article.country.name }}</span>
-                                        <div class="article-actions position-relative" style="z-index: 10;">
-                                            <a href="{% url 'news:article_detail' article.pk %}"
-                                               class="btn btn-sm btn-primary position-relative"
-                                               style="z-index: 15;">
-                                                <i class="fas fa-eye me-1"></i>Read
-                                            </a>
-                                            <a href="{{ article.link }}" target="_blank"
-                                               class="btn btn-sm btn-outline-secondary position-relative ms-1"
-                                               style="z-index: 15;">
-                                                <i class="fas fa-external-link-alt me-1"></i>Source
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
+<!-- Executive Filter Panel -->
+<section class="executive-filter-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-lg-11 col-xl-10">
+                <div class="executive-filter-card">
+                    <div class="filter-executive-header">
+                        <div class="filter-title-group">
+                            <h2 class="filter-executive-title">Intelligence Filters</h2>
+                            <p class="filter-executive-subtitle">Customize your strategic intelligence feed</p>
+                        </div>
+                        <div class="filter-status">
+                            <div class="active-filter-count">
+                                <span class="count-badge">0</span>
+                                <span>Active Filters</span>
                             </div>
                         </div>
                     </div>
-                    {% endfor %}
-                </div>
-                {% else %}
-                <div class="text-center py-5">
-                    <i class="fas fa-inbox fa-4x text-muted mb-3"></i>
-                    <h4 class="text-muted">No news articles available</h4>
-                    <p class="text-muted">Articles will appear here once they are published.</p>
-                </div>
-                {% endif %}
-            </section>
-
-            <!-- Social Media Section -->
-            {% if social_posts %}
-            <section class="mb-5">
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h2 class="section-title">
-                        <i class="fas fa-share-alt me-2"></i>Social Media Updates
-                    </h2>
-                    <div class="d-flex align-items-center">
-                        <span class="badge bg-success me-2">
-                            <i class="fas fa-circle me-1" style="font-size: 0.5rem;"></i>Live
-                        </span>
-                        <a href="{% url 'news:all_social_posts' %}" class="btn btn-outline-primary btn-sm">
-                            View All
-                        </a>
-                    </div>
-                </div>
-
-                <div class="row g-4">
-                    {% for post in social_posts|slice:":4" %}
-                    <div class="col-md-6">
-                        <div class="card social-post-card h-100 shadow-sm">
-                            <div class="card-body">
-                                <div class="d-flex align-items-start mb-3">
-                                    {% if post.author_avatar %}
-                                    <img src="{{ post.author_avatar }}" 
-                                         alt="{{ post.author_name }}" 
-                                         class="rounded-circle me-3" 
-                                         style="width: 40px; height: 40px; object-fit: cover;">
-                                    {% else %}
-                                    <div class="rounded-circle bg-primary d-flex align-items-center justify-content-center me-3" 
-                                         style="width: 40px; height: 40px;">
-                                        <i class="fas fa-user text-white"></i>
-                                    </div>
-                                    {% endif %}
-                                    
-                                    <div class="flex-grow-1">
-                                        <div class="d-flex justify-content-between align-items-start mb-1">
-                                            <div>
-                                                <strong class="d-block">{{ post.author_name }}</strong>
-                                                {% if post.author_handle %}
-                                                <small class="text-muted">{{ post.author_handle }}</small>
-                                                {% endif %}
-                                            </div>
-                                            <small class="text-muted">{{ post.created_at|timesince }} ago</small>
-                                        </div>
-                                        <div class="d-flex align-items-center">
-                                            <i class="fab fa-{{ post.platform|lower }} me-1 text-primary"></i>
-                                            <span class="badge bg-light text-dark">{{ post.get_platform_display }}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div class="social-content mb-3">
-                                    {{ post.content|smart_truncate_html:120 }}
-                                </div>
-                                
-                                {% if post.image %}
-                                <div class="mb-3">
-                                    <img src="{{ post.image }}" 
-                                         alt="Post image" 
-                                         class="img-fluid rounded" 
-                                         style="max-height: 200px; width: 100%; object-fit: cover;">
-                                </div>
-                                {% endif %}
-                                
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <div class="social-engagement">
-                                        <span class="me-3">
-                                            <i class="fas fa-heart text-danger me-1"></i>{{ post.likes|floatformat:0 }}
-                                        </span>
-                                        <span class="me-3">
-                                            <i class="fas fa-share text-primary me-1"></i>{{ post.shares|floatformat:0 }}
-                                        </span>
-                                        <span>
-                                            <i class="fas fa-comment text-info me-1"></i>{{ post.comments|floatformat:0 }}
-                                        </span>
-                                    </div>
-                                    <div class="social-actions">
-                                        {% if post.external_url %}
-                                        <a href="{{ post.external_url }}" 
-                                           target="_blank" 
-                                           class="btn btn-sm btn-outline-primary">
-                                            <i class="fas fa-external-link-alt me-1"></i>View
-                                        </a>
-                                        {% endif %}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    {% endfor %}
-                </div>
-            </section>
-            {% endif %}
-        </div>
-
-        <!-- Sidebar -->
-        <div class="col-lg-4">
-            <!-- Markets Widget -->
-            <div class="card sidebar-widget mb-4">
-                <div class="card-header">
-                    <h5 class="card-title mb-0">
-                        <i class="fas fa-chart-line me-2"></i>Financial Markets
-                    </h5>
-                </div>
-                <div class="card-body text-center">
-                    <div class="mb-3">
-                        <i class="fas fa-chart-pie fa-3x text-primary mb-3"></i>
-                        <h6>Real-time Market Data</h6>
-                        <p class="text-muted small">Track stocks, forex, commodities and crypto</p>
-                    </div>
-                    <a href="{% url 'news:markets' %}" class="btn btn-primary">
-                        <i class="fas fa-chart-line me-2"></i>View Markets
-                    </a>
                     
-                    <div class="row g-2 mt-3">
-                        <div class="col-3">
-                            <div class="text-center">
-                                <i class="fas fa-chart-line text-primary"></i>
-                                <small class="d-block text-muted">Stocks</small>
+                    <form method="get" action="{% url 'news:home' %}" class="executive-filter-form" id="executiveFilterForm">
+                        <div class="filter-controls-grid">
+                            <div class="filter-group">
+                                <label class="executive-label">
+                                    <i class="fas fa-calendar-alt"></i>
+                                    <span>Time Period</span>
+                                </label>
+                                <div class="input-executive-wrapper">
+                                    <input type="date" 
+                                           name="from_date" 
+                                           class="input-executive" 
+                                           value="{{ request.GET.from_date }}"
+                                           max="{{ today|date:'Y-m-d' }}">
+                                    <i class="fas fa-calendar input-icon"></i>
+                                </div>
+                            </div>
+                            
+                            <div class="filter-group">
+                                <label class="executive-label">
+                                    <i class="fas fa-globe-americas"></i>
+                                    <span>Market Region</span>
+                                </label>
+                                <div class="select-executive-wrapper">
+                                    <select name="country" class="select-executive">
+                                        <option value="">Global Markets</option>
+                                        {% for country in countries %}
+                                        <option value="{{ country.code }}" 
+                                                {% if request.GET.country == country.code %}selected{% endif %}>
+                                            {{ country.name }}
+                                            {% if country.article_count %}({{ country.article_count }}){% endif %}
+                                        </option>
+                                        {% endfor %}
+                                    </select>
+                                    <i class="fas fa-chevron-down select-arrow"></i>
+                                </div>
+                            </div>
+                            
+                            <div class="filter-group">
+                                <label class="executive-label">
+                                    <i class="fas fa-layer-group"></i>
+                                    <span>Intelligence Category</span>
+                                </label>
+                                <div class="select-executive-wrapper">
+                                    <select name="category" class="select-executive">
+                                        <option value="">All Intelligence</option>
+                                        {% for category in categories %}
+                                        <option value="{{ category.slug }}" 
+                                                {% if request.GET.category == category.slug %}selected{% endif %}>
+                                            {{ category.name }}
+                                            {% if category.article_count %}({{ category.article_count }}){% endif %}
+                                        </option>
+                                        {% endfor %}
+                                    </select>
+                                    <i class="fas fa-chevron-down select-arrow"></i>
+                                </div>
+                            </div>
+                            
+                            <div class="filter-actions-group">
+                                <button type="submit" class="btn-apply-filters">
+                                    <i class="fas fa-filter"></i>
+                                    <span>Apply Intelligence</span>
+                                </button>
+                                <a href="{% url 'news:home' %}" class="btn-reset-filters">
+                                    <i class="fas fa-refresh"></i>
+                                </a>
                             </div>
                         </div>
-                        <div class="col-3">
-                            <div class="text-center">
-                                <i class="fas fa-coins text-warning"></i>
-                                <small class="d-block text-muted">Forex</small>
-                            </div>
+                    </form>
+                    
+                    <div class="executive-quick-filters">
+                        <div class="quick-filter-label">
+                            <i class="fas fa-bolt"></i>
+                            <span>Quick Access:</span>
                         </div>
-                        <div class="col-3">
-                            <div class="text-center">
-                                <i class="fas fa-gem text-success"></i>
-                                <small class="d-block text-muted">Commodities</small>
-                            </div>
-                        </div>
-                        <div class="col-3">
-                            <div class="text-center">
-                                <i class="fab fa-bitcoin text-info"></i>
-                                <small class="d-block text-muted">Crypto</small>
-                            </div>
+                        <div class="quick-filter-options">
+                            <a href="{% url 'news:home' %}?from_date={{ today|date:'Y-m-d' }}" 
+                               class="quick-filter-executive {% if request.GET.from_date == today|date:'Y-m-d' %}active{% endif %}">
+                                Today's Brief
+                            </a>
+                            <a href="{% url 'news:home' %}?from_date={{ week_ago|date:'Y-m-d' }}" 
+                               class="quick-filter-executive {% if request.GET.from_date == week_ago|date:'Y-m-d' %}active{% endif %}">
+                                Weekly Summary
+                            </a>
+                            {% for category in categories|slice:":3" %}
+                            <a href="{% url 'news:home' %}?category={{ category.slug }}" 
+                               class="quick-filter-executive {% if request.GET.category == category.slug %}active{% endif %}">
+                                {{ category.name }}
+                            </a>
+                            {% endfor %}
                         </div>
                     </div>
-                </div>
-            </div>
-
-            <!-- Countries Widget -->
-            <div class="card sidebar-widget">
-                <div class="card-header">
-                    <h5 class="card-title mb-0">
-                        <i class="fas fa-globe me-2"></i>News by Country
-                    </h5>
-                </div>
-                <div class="card-body">
-                    {% for country in top_countries %}
-                    <div class="d-flex justify-content-between align-items-center py-2 {% if not forloop.last %}border-bottom{% endif %}">
-                        <div class="d-flex align-items-center">
-                            {% if country.flag_url %}
-                            <img src="{{ country.flag_url }}" 
-                                 alt="{{ country.name }}" 
-                                 class="me-2"
-                                 style="width: 24px; height: 18px; border-radius: 2px;">
-                            {% endif %}
-                            <span>{{ country.name }}</span>
-                        </div>
-                        <span class="badge bg-primary">{{ country.article_count }}</span>
-                    </div>
-                    {% empty %}
-                    <p class="text-muted text-center mb-0">No country data available</p>
-                    {% endfor %}
                 </div>
             </div>
         </div>
     </div>
-</div>
+</section>
+
+<!-- Executive Content Section -->
+<section class="executive-content">
+    <div class="container">
+        <div class="row">
+            <!-- Primary Intelligence Feed -->
+            <div class="col-lg-8">
+                <!-- Strategic News Intelligence -->
+                <div class="intelligence-block">
+                    <div class="intelligence-header">
+                        <div class="header-content">
+                            <h2 class="intelligence-title">
+                                <i class="fas fa-chart-line me-3"></i>Strategic Intelligence Feed
+                            </h2>
+                            <p class="intelligence-subtitle">Curated insights for executive decision-making</p>
+                        </div>
+                        <a href="{% url 'news:all_news' %}" class="btn-intelligence-view">
+                            <span>Full Intelligence Hub</span>
+                            <i class="fas fa-arrow-right ms-2"></i>
+                        </a>
+                    </div>
+
+                    {% if recent_articles %}
+                    <div class="executive-news-grid">
+                        {% for article in recent_articles %}
+                        <article class="executive-news-item">
+                            <div class="news-priority-bar"></div>
+                            
+                            <div class="news-visual-section">
+                                {% if article.image %}
+                                <img src="{{ article.image }}" 
+                                     alt="{{ article.title }}" 
+                                     class="news-executive-image"
+                                     loading="lazy"
+                                     onload="this.style.opacity='1';"
+                                     onerror="console.error('Failed to load image:', this.src); this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                <div class="executive-placeholder" style="display: none;">
+                                    <i class="fas fa-newspaper fa-2x"></i>
+                                </div>
+                                {% else %}
+                                <div class="executive-placeholder">
+                                    <i class="fas fa-newspaper fa-2x"></i>
+                                </div>
+                                {% endif %}
+                                
+                                {% if article.category %}
+                                <div class="executive-category-badge" 
+                                     style="background: linear-gradient(135deg, {{ article.category.color|default:'#1a365d' }}, {{ article.category.color|default:'#1a365d' }}dd);">
+                                    {{ article.category.name }}
+                                </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="news-intelligence-content">
+                                <div class="intelligence-meta">
+                                    <div class="meta-priority">
+                                        <span class="priority-indicator high">
+                                            <i class="fas fa-exclamation-triangle"></i>
+                                            High Priority
+                                        </span>
+                                    </div>
+                                    <div class="meta-details">
+                                        <span class="meta-time">
+                                            <i class="fas fa-clock"></i>
+                                            {{ article.date_posted|timesince }} ago
+                                        </span>
+                                        <span class="meta-region">
+                                            <i class="fas fa-globe-americas"></i>
+                                            {{ article.country.name }}
+                                        </span>
+                                    </div>
+                                </div>
+                                
+                                <h3 class="intelligence-title-link">
+                                    <a href="{% url 'news:article_detail' article.pk %}" class="title-executive-link">
+                                        {{ article.title }}
+                                    </a>
+                                </h3>
+                                
+                                {% if article.description %}
+                                <div class="intelligence-summary">
+                                    {{ article.description|smart_truncate_html:140 }}
+                                </div>
+                                {% endif %}
+                                
+                                <div class="intelligence-footer">
+                                    <div class="source-executive">
+                                        <i class="fas fa-building"></i>
+                                        <span>{{ article.news_provider.name }}</span>
+                                    </div>
+                                    <div class="intelligence-actions">
+                                        <a href="{% url 'news:article_detail' article.pk %}" 
+                                           class="action-executive primary">
+                                            <i class="fas fa-eye"></i>
+                                            <span>Analyze</span>
+                                        </a>
+                                        <a href="{{ article.link }}" 
+                                           target="_blank" 
+                                           class="action-executive secondary"
+                                           rel="noopener noreferrer">
+                                            <i class="fas fa-external-link-alt"></i>
+                                            <span>Source</span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="executive-empty-state">
+                        <div class="empty-icon-executive">
+                            <i class="fas fa-chart-line fa-4x"></i>
+                        </div>
+                        <h4 class="empty-title-executive">No Intelligence Available</h4>
+                        <p class="empty-message-executive">
+                            Our intelligence team is curating the latest strategic insights. 
+                            Check back shortly for premium content.
+                        </p>
+                        <a href="{% url 'news:all_news' %}" class="btn-executive primary">
+                            <i class="fas fa-refresh me-2"></i>Refresh Intelligence
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- Market Intelligence Updates -->
+                {% if social_posts %}
+                <div class="intelligence-block">
+                    <div class="intelligence-header">
+                        <div class="header-content">
+                            <h2 class="intelligence-title">
+                                <i class="fas fa-pulse me-3"></i>Live Market Pulse
+                            </h2>
+                            <p class="intelligence-subtitle">Real-time sentiment and social intelligence</p>
+                        </div>
+                        <div class="live-indicator">
+                            <span class="live-dot"></span>
+                            <span class="live-text">Live Updates</span>
+                        </div>
+                    </div>
+
+                    <div class="market-intelligence-grid">
+                        {% for post in social_posts|slice:":4" %}
+                        <div class="market-intelligence-item">
+                            <div class="intelligence-source">
+                                <div class="source-avatar">
+                                    {% if post.author_avatar %}
+                                    <img src="{{ post.author_avatar }}" 
+                                         alt="{{ post.author_name }}"
+                                         onload="this.style.opacity='1';"
+                                         onerror="console.error('Failed to load avatar:', this.src); this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                    <div class="avatar-executive-placeholder" style="display: none;">
+                                        <i class="fas fa-user"></i>
+                                    </div>
+                                    {% else %}
+                                    <div class="avatar-executive-placeholder">
+                                        <i class="fas fa-user"></i>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                <div class="source-info">
+                                    <div class="source-name">{{ post.author_name }}</div>
+                                    <div class="source-meta">
+                                        <i class="fab fa-{{ post.platform|lower }}"></i>
+                                        <span>{{ post.get_platform_display }}</span>
+                                        <span class="meta-separator">•</span>
+                                        <span>{{ post.created_at|timesince }} ago</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="intelligence-content">
+                                {{ post.content|smart_truncate_html:100 }}
+                            </div>
+                            
+                            {% if post.image %}
+                            <div class="intelligence-visual">
+                                <img src="{{ post.image }}" 
+                                     alt="Market intelligence visual"
+                                     onload="this.style.opacity='1';"
+                                     onerror="console.error('Failed to load social image:', this.src); this.parentElement.style.display='none';">
+                            </div>
+                            {% endif %}
+                            
+                            <div class="intelligence-metrics">
+                                <div class="metric-item">
+                                    <i class="fas fa-heart"></i>
+                                    <span>{{ post.likes|floatformat:0 }}</span>
+                                </div>
+                                <div class="metric-item">
+                                    <i class="fas fa-share"></i>
+                                    <span>{{ post.shares|floatformat:0 }}</span>
+                                </div>
+                                <div class="metric-item">
+                                    <i class="fas fa-comments"></i>
+                                    <span>{{ post.comments|floatformat:0 }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Executive Dashboard Sidebar -->
+            <div class="col-lg-4">
+                <!-- Market Intelligence Center -->
+                <div class="executive-sidebar-card">
+                    <div class="sidebar-executive-header">
+                        <h3><i class="fas fa-chart-area me-2"></i>Market Intelligence Center</h3>
+                        <div class="market-status">
+                            <span class="status-dot active"></span>
+                            <span>Markets Open</span>
+                        </div>
+                    </div>
+                    <div class="sidebar-executive-content">
+                        <div class="market-overview">
+                            <div class="overview-icon">
+                                <i class="fas fa-analytics fa-3x"></i>
+                            </div>
+                            <h5 class="overview-title">Real-time Market Analytics</h5>
+                            <p class="overview-description">
+                                Access comprehensive market data, currency rates, and commodity prices
+                            </p>
+                            <a href="{% url 'news:markets' %}" class="btn-sidebar-primary">
+                                <i class="fas fa-chart-line me-2"></i>Access Markets
+                            </a>
+                        </div>
+                        
+                        <div class="market-categories-executive">
+                            <div class="category-executive-item">
+                                <div class="category-icon">
+                                    <i class="fas fa-chart-line"></i>
+                                </div>
+                                <div class="category-info">
+                                    <span class="category-name">Equities</span>
+                                    <span class="category-status">Active</span>
+                                </div>
+                            </div>
+                            <div class="category-executive-item">
+                                <div class="category-icon">
+                                    <i class="fas fa-coins"></i>
+                                </div>
+                                <div class="category-info">
+                                    <span class="category-name">Foreign Exchange</span>
+                                    <span class="category-status">24/7</span>
+                                </div>
+                            </div>
+                            <div class="category-executive-item">
+                                <div class="category-icon">
+                                    <i class="fas fa-gem"></i>
+                                </div>
+                                <div class="category-info">
+                                    <span class="category-name">Commodities</span>
+                                    <span class="category-status">Active</span>
+                                </div>
+                            </div>
+                            <div class="category-executive-item">
+                                <div class="category-icon">
+                                    <i class="fab fa-bitcoin"></i>
+                                </div>
+                                <div class="category-info">
+                                    <span class="category-name">Digital Assets</span>
+                                    <span class="category-status">24/7</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Global Intelligence Coverage -->
+                <div class="executive-sidebar-card">
+                    <div class="sidebar-executive-header">
+                        <h3><i class="fas fa-globe-americas me-2"></i>Global Intelligence Network</h3>
+                        <span class="coverage-badge">Live Coverage</span>
+                    </div>
+                    <div class="sidebar-executive-content">
+                        <div class="global-coverage-list">
+                            {% for country in top_countries %}
+                            <div class="coverage-item">
+                                <div class="country-info-executive">
+                                    {% if country.flag_url %}
+                                    <img src="{{ country.flag_url }}" 
+                                         alt="{{ country.name }}" 
+                                         class="country-flag-executive"
+                                         onload="this.style.opacity='1';">
+                                    {% else %}
+                                    <div class="flag-placeholder">
+                                        <i class="fas fa-flag"></i>
+                                    </div>
+                                    {% endif %}
+                                    <div class="country-details">
+                                        <span class="country-name-executive">{{ country.name }}</span>
+                                        <span class="country-activity">Active Intelligence</span>
+                                    </div>
+                                </div>
+                                <div class="intelligence-count">
+                                    <span class="count-value">{{ country.article_count }}</span>
+                                    <span class="count-label">Reports</span>
+                                </div>
+                            </div>
+                            {% empty %}
+                            <div class="no-coverage">
+                                <i class="fas fa-satellite-dish fa-2x mb-3"></i>
+                                <p>Expanding global network...</p>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Enhanced Filter Functionality
-    const filterForm = document.getElementById('newsFilterForm');
-    if (filterForm) {
-        const countrySelect = filterForm.querySelector('select[name="country"]');
-        const dateInput = filterForm.querySelector('input[name="from_date"]');
+    // Executive Filter System
+    const executiveFilterForm = document.getElementById('executiveFilterForm');
+    const activeFilterCount = document.querySelector('.count-badge');
+    
+    if (executiveFilterForm) {
+        const filterInputs = executiveFilterForm.querySelectorAll('select, input[type="date"]');
         
-        // Auto-submit when filters change
-        if (countrySelect) {
-            countrySelect.addEventListener('change', function() {
-                filterForm.submit();
+        // Update active filter count
+        function updateFilterCount() {
+            let activeCount = 0;
+            filterInputs.forEach(input => {
+                if (input.value && input.value.trim() !== '') {
+                    activeCount++;
+                }
             });
+            
+            if (activeFilterCount) {
+                activeFilterCount.textContent = activeCount;
+                activeFilterCount.parentElement.style.opacity = activeCount > 0 ? '1' : '0.5';
+            }
         }
         
-        if (dateInput) {
-            dateInput.addEventListener('change', function() {
-                filterForm.submit();
+        // Auto-submit on filter change
+        filterInputs.forEach(input => {
+            input.addEventListener('change', function() {
+                updateFilterCount();
+                // Add loading state
+                const submitBtn = executiveFilterForm.querySelector('.btn-apply-filters');
+                if (submitBtn) {
+                    const originalText = submitBtn.innerHTML;
+                    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i><span>Processing...</span>';
+                    submitBtn.disabled = true;
+                    
+                    setTimeout(() => {
+                        executiveFilterForm.submit();
+                    }, 500);
+                }
             });
-        }
+        });
+        
+        // Initial filter count
+        updateFilterCount();
     }
     
-    // Card hover effects
-    document.querySelectorAll('.news-card, .social-post-card').forEach(card => {
+    // Executive news cards animation with staggered effect
+    const executiveNewsCards = document.querySelectorAll('.executive-news-item, .market-intelligence-item');
+    
+    // Intersection Observer for sophisticated animations
+    const executiveObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry, index) => {
+            if (entry.isIntersecting) {
+                setTimeout(() => {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0) scale(1)';
+                }, index * 150); // Stagger by 150ms for premium feel
+            }
+        });
+    }, {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    });
+    
+    executiveNewsCards.forEach((card, index) => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(40px) scale(0.95)';
+        card.style.transition = `all 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) ${index * 0.1}s`;
+        executiveObserver.observe(card);
+    });
+    
+    // Premium hover effects for executive cards
+    executiveNewsCards.forEach(card => {
         card.addEventListener('mouseenter', function() {
-            this.style.transform = 'translateY(-5px)';
-            this.style.transition = 'transform 0.3s ease';
+            this.style.transform = 'translateY(-12px) scale(1.02)';
+            this.style.boxShadow = '0 25px 50px rgba(26, 54, 93, 0.15)';
+            this.style.transition = 'all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
         });
         
         card.addEventListener('mouseleave', function() {
-            this.style.transform = 'translateY(0)';
+            this.style.transform = 'translateY(0) scale(1)';
+            this.style.boxShadow = '0 4px 20px rgba(26, 54, 93, 0.08)';
+            this.style.transition = 'all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
         });
     });
+    
+    // Executive dashboard stats animation
+    const statValues = document.querySelectorAll('.stat-value');
+    const dashboardObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const target = entry.target;
+                const finalNumber = target.textContent;
+                
+                if (!isNaN(finalNumber) && finalNumber > 0) {
+                    let currentNumber = 0;
+                    const increment = Math.ceil(finalNumber / 60);
+                    
+                    const timer = setInterval(() => {
+                        currentNumber += increment;
+                        if (currentNumber >= finalNumber) {
+                            target.textContent = finalNumber;
+                            clearInterval(timer);
+                        } else {
+                            target.textContent = currentNumber;
+                        }
+                    }, 40);
+                }
+                
+                dashboardObserver.unobserve(target);
+            }
+        });
+    });
+    
+    statValues.forEach(stat => dashboardObserver.observe(stat));
+    
+    // Enhanced image loading with executive-level quality
+    const executiveImages = document.querySelectorAll('.news-executive-image, .intelligence-visual img, .source-avatar img');
+    executiveImages.forEach(img => {
+        img.style.opacity = '0';
+        img.style.transition = 'opacity 0.6s ease-in-out';
+        
+        img.addEventListener('load', function() {
+            this.style.opacity = '1';
+            console.log('Executive image loaded successfully:', this.src);
+        });
+        
+        img.addEventListener('error', function() {
+            console.error('Executive image failed to load:', this.src);
+            this.style.display = 'none';
+            const placeholder = this.nextElementSibling;
+            if (placeholder && placeholder.classList.contains('executive-placeholder')) {
+                placeholder.style.display = 'flex';
+                placeholder.style.opacity = '1';
+            }
+        });
+        
+        // If image is already loaded (cached)
+        if (img.complete) {
+            img.style.opacity = '1';
+        }
+    });
+    
+    // Executive filter buttons with premium loading states
+    const executiveButtons = document.querySelectorAll('.btn-apply-filters, .btn-executive');
+    executiveButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            if (!this.disabled && this.type === 'submit') {
+                const originalContent = this.innerHTML;
+                this.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i><span>Processing Intelligence...</span>';
+                this.disabled = true;
+                this.style.background = 'linear-gradient(135deg, #2d5a87, #1a365d)';
+                
+                // Re-enable after processing
+                setTimeout(() => {
+                    this.innerHTML = originalContent;
+                    this.disabled = false;
+                    this.style.background = '';
+                }, 2000);
+            }
+        });
+    });
+    
+    // Executive quick filter tags with premium interactions
+    const quickFilterTags = document.querySelectorAll('.quick-filter-executive');
+    quickFilterTags.forEach(tag => {
+        tag.addEventListener('mouseenter', function() {
+            if (!this.classList.contains('active')) {
+                this.style.transform = 'translateY(-3px) scale(1.05)';
+                this.style.boxShadow = '0 8px 25px rgba(26, 54, 93, 0.2)';
+            }
+        });
+        
+        tag.addEventListener('mouseleave', function() {
+            if (!this.classList.contains('active')) {
+                this.style.transform = 'translateY(0) scale(1)';
+                this.style.boxShadow = '0 2px 8px rgba(26, 54, 93, 0.1)';
+            }
+        });
+    });
+    
+    // Executive accessibility enhancements
+    executiveNewsCards.forEach(card => {
+        card.setAttribute('tabindex', '0');
+        card.setAttribute('role', 'article');
+        card.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                const primaryLink = this.querySelector('.title-executive-link');
+                if (primaryLink) {
+                    primaryLink.click();
+                }
+            }
+        });
+        
+        card.addEventListener('focus', function() {
+            this.style.outline = '3px solid #3182ce';
+            this.style.outlineOffset = '4px';
+        });
+        
+        card.addEventListener('blur', function() {
+            this.style.outline = 'none';
+        });
+    });
+    
+    // Executive live indicators animation
+    const liveDots = document.querySelectorAll('.live-dot, .status-dot');
+    liveDots.forEach(dot => {
+        setInterval(() => {
+            dot.style.animation = 'none';
+            setTimeout(() => {
+                dot.style.animation = 'pulse-executive 2s infinite';
+            }, 10);
+        }, 3000);
+    });
+    
+    // Smooth scroll with executive timing for internal links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start',
+                    inline: 'nearest'
+                });
+            }
+        });
+    });
+    
+    // Executive-level performance monitoring
+    console.log('Executive Dashboard initialized successfully');
+    console.log(`Loaded ${executiveNewsCards.length} intelligence items`);
+    console.log(`Monitoring ${executiveImages.length} premium assets`);
 });
 </script>
 
 <style>
-/* Professional Styling */
-.hero-section {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    min-height: 400px;
-    display: flex;
-    align-items: center;
+/* Executive Design System */
+:root {
+    --exec-primary: #1a365d;
+    --exec-secondary: #2d5a87;
+    --exec-accent: #3182ce;
+    --exec-light: #f7fafc;
+    --exec-dark: #1a202c;
+    --exec-gradient: linear-gradient(135deg, #1a365d 0%, #2d5a87 50%, #3182ce 100%);
+    --exec-gray-50: #f9fafb;
+    --exec-gray-100: #f3f4f6;
+    --exec-gray-200: #e5e7eb;
+    --exec-gray-300: #d1d5db;
+    --exec-gray-600: #4b5563;
+    --exec-gray-700: #374151;
+    --exec-gray-900: #111827;
+    --exec-blue-50: #eff6ff;
+    --exec-blue-600: #2563eb;
+    --exec-blue-700: #1d4ed8;
+    --exec-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --exec-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    --exec-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    --exec-shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    --exec-shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+/* Executive Hero Section */
+.executive-hero {
+    background: var(--exec-gradient);
+    color: white;
+    padding: 5rem 0 4rem;
     position: relative;
     overflow: hidden;
 }
 
-.hero-section::before {
+.executive-hero::before {
     content: '';
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0,0,0,0.3);
-    z-index: 1;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.03)" stroke-width="1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+    opacity: 0.6;
 }
 
-.hero-section .container-fluid {
+.min-vh-60 {
+    min-height: 60vh;
+}
+
+.hero-content {
     position: relative;
     z-index: 2;
-    max-width: 1400px;
-    margin: 0 auto;
-    padding-left: 20px;
-    padding-right: 20px;
+    padding-right: 2rem;
 }
 
-.hero-filter-section {
-    background: rgba(255, 255, 255, 0.95);
+.hero-badge {
+    display: inline-flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.15);
     backdrop-filter: blur(10px);
-    border-radius: 1rem;
-    padding: 2rem;
-    box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+    padding: 0.5rem 1rem;
+    border-radius: 25px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
     border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.executive-title {
+    font-size: 3.5rem;
+    font-weight: 800;
+    line-height: 1.1;
+    margin-bottom: 1.5rem;
+    letter-spacing: -0.02em;
+}
+
+.title-gradient {
+    display: block;
+    background: linear-gradient(45deg, #fbbf24, #f59e0b, #d97706);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-top: 0.5rem;
+}
+
+.executive-subtitle {
+    font-size: 1.25rem;
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: 300;
+    line-height: 1.6;
+    max-width: 600px;
+    margin-bottom: 2.5rem;
+}
+
+.hero-actions {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.btn-executive {
+    display: inline-flex;
+    align-items: center;
+    padding: 1rem 2rem;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 1rem;
+    text-decoration: none;
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     position: relative;
     overflow: hidden;
-    margin: 0 auto;
-    max-width: 100%;
 }
 
-.hero-filter-section::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    pointer-events: none;
+.btn-executive.primary {
+    background: rgba(255, 255, 255, 0.95);
+    color: var(--exec-primary);
+    border: 2px solid transparent;
 }
 
-.hero-filter-section:hover::before {
-    opacity: 1;
+.btn-executive.primary:hover {
+    background: white;
+    color: var(--exec-primary);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(255, 255, 255, 0.3);
 }
 
-.filter-title {
-    color: #007bff;
+.btn-executive.secondary {
+    background: transparent;
+    color: white;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.btn-executive.secondary:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.6);
+    color: white;
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(255, 255, 255, 0.2);
+}
+
+.trust-indicators {
+    display: flex;
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.trust-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.trust-item i {
+    color: #fbbf24;
+    font-size: 1rem;
+}
+
+/* Executive Dashboard */
+.executive-dashboard {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    padding: 2rem;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    position: relative;
+    z-index: 2;
+}
+
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--exec-gray-200);
+}
+
+.dashboard-header h3 {
+    font-size: 1.25rem;
     font-weight: 700;
-    margin-bottom: 1.5rem;
-    font-size: 1.5rem;
-    text-align: center;
+    color: var(--exec-gray-900);
+    margin: 0;
 }
 
-.filter-form {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+.status-indicator {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--exec-gray-700);
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    background: #10b981;
+    border-radius: 50%;
+    animation: pulse-executive 2s infinite;
+}
+
+@keyframes pulse-executive {
+    0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.7;
+        transform: scale(1.2);
+    }
+}
+
+.dashboard-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.stat-executive {
+    display: flex;
+    align-items: center;
     gap: 1rem;
+    padding: 1rem;
+    background: var(--exec-gray-50);
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+
+.stat-executive:hover {
+    background: white;
+    box-shadow: var(--exec-shadow);
+    transform: translateY(-2px);
+}
+
+.stat-icon {
+    width: 48px;
+    height: 48px;
+    background: var(--exec-gradient);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.25rem;
+}
+
+.stat-data {
+    flex: 1;
+}
+
+.stat-value {
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: var(--exec-gray-900);
+    line-height: 1;
+    margin-bottom: 0.25rem;
+}
+
+.stat-label {
+    font-size: 0.875rem;
+    color: var(--exec-gray-600);
+    font-weight: 500;
+}
+
+/* Executive Filter Section */
+.executive-filter-section {
+    background: var(--exec-gray-50);
+    padding: 3rem 0;
+    border-bottom: 1px solid var(--exec-gray-200);
+}
+
+.executive-filter-card {
+    background: white;
+    border-radius: 20px;
+    padding: 2.5rem;
+    box-shadow: var(--exec-shadow-lg);
+    border: 1px solid var(--exec-gray-200);
+}
+
+.filter-executive-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 2.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 2px solid var(--exec-gray-100);
+}
+
+.filter-title-group h2.filter-executive-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--exec-gray-900);
+    margin: 0 0 0.5rem 0;
+}
+
+.filter-executive-subtitle {
+    color: var(--exec-gray-600);
+    font-size: 1rem;
+    margin: 0;
+}
+
+.filter-status {
+    text-align: right;
+}
+
+.active-filter-count {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--exec-gray-700);
+}
+
+.count-badge {
+    background: var(--exec-blue-600);
+    color: white;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+.filter-controls-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr auto;
+    gap: 2rem;
     align-items: end;
-    margin-bottom: 1.5rem;
 }
 
 .filter-group {
@@ -502,261 +1107,1036 @@ document.addEventListener('DOMContentLoaded', function() {
     flex-direction: column;
 }
 
-.filter-label {
-    font-weight: 600;
-    color: #343a40;
-    margin-bottom: 0.5rem;
-    font-size: 0.9rem;
-}
-
-.filter-input,
-.filter-select {
-    padding: 0.75rem;
-    border: 2px solid #e9ecef;
-    border-radius: 0.5rem;
-    font-size: 0.95rem;
-    transition: all 0.3s ease;
-    background: white;
-}
-
-.filter-input:focus,
-.filter-select:focus {
-    border-color: #007bff;
-    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-    outline: none;
-    transform: scale(1.02);
-}
-
-.filter-btn {
-    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
-    color: white;
-    border: none;
-    padding: 0.75rem 1.5rem;
-    border-radius: 0.5rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
+.executive-label {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--exec-gray-800);
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
 
-.filter-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    background: linear-gradient(135deg, #0056b3 0%, #007bff 100%);
+.executive-label i {
+    color: var(--exec-blue-600);
+    font-size: 1rem;
 }
 
-/* Quick Filter Tabs */
-.quick-filter-tabs {
+.input-executive-wrapper, .select-executive-wrapper {
+    position: relative;
+}
+
+.input-executive, .select-executive {
+    width: 100%;
+    padding: 1rem 1.25rem;
+    border: 2px solid var(--exec-gray-200);
+    border-radius: 12px;
+    font-size: 1rem;
+    background: white;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.input-executive:focus, .select-executive:focus {
+    outline: none;
+    border-color: var(--exec-blue-600);
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+    transform: translateY(-1px);
+}
+
+.select-executive {
+    appearance: none;
+    cursor: pointer;
+    padding-right: 3rem;
+}
+
+.select-arrow {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--exec-gray-400);
+    pointer-events: none;
+    transition: all 0.3s ease;
+}
+
+.select-executive:focus + .select-arrow {
+    color: var(--exec-blue-600);
+    transform: translateY(-50%) rotate(180deg);
+}
+
+.filter-actions-group {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.btn-apply-filters {
+    background: var(--exec-gradient);
+    color: white;
+    border: none;
+    padding: 1rem 1.5rem;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+.btn-apply-filters:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(26, 54, 93, 0.3);
+}
+
+.btn-reset-filters {
+    background: var(--exec-gray-100);
+    color: var(--exec-gray-600);
+    border: none;
+    padding: 1rem;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 3rem;
+    height: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+}
+
+.btn-reset-filters:hover {
+    background: var(--exec-gray-200);
+    color: var(--exec-gray-800);
+    transform: rotate(180deg);
+}
+
+.executive-quick-filters {
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--exec-gray-200);
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.quick-filter-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 700;
+    color: var(--exec-gray-800);
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+}
+
+.quick-filter-label i {
+    color: var(--exec-blue-600);
+}
+
+.quick-filter-options {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.5rem;
-    justify-content: center;
-    margin-bottom: 1.5rem;
+    gap: 0.75rem;
 }
 
-.quick-filter-tab {
-    padding: 0.5rem 1rem;
-    background: white;
-    color: #007bff;
+.quick-filter-executive {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.75rem 1.25rem;
+    background: var(--exec-gray-100);
+    color: var(--exec-gray-700);
     text-decoration: none;
-    border-radius: 2rem;
-    font-weight: 500;
-    font-size: 0.85rem;
+    border-radius: 25px;
+    font-size: 0.875rem;
+    font-weight: 600;
     transition: all 0.3s ease;
-    border: 2px solid #007bff;
+    border: 2px solid transparent;
 }
 
-.quick-filter-tab:hover,
-.quick-filter-tab.active {
-    background: #007bff;
+.quick-filter-executive:hover,
+.quick-filter-executive.active {
+    background: var(--exec-gradient);
+    color: white;
+    border-color: var(--exec-blue-600);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 15px rgba(26, 54, 93, 0.3);
+}
+
+/* Executive Content Section */
+.executive-content {
+    padding: 4rem 0;
+    background: white;
+}
+
+.intelligence-block {
+    margin-bottom: 4rem;
+}
+
+.intelligence-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 3rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 3px solid var(--exec-gray-100);
+}
+
+.header-content h2.intelligence-title {
+    font-size: 2.25rem;
+    font-weight: 700;
+    color: var(--exec-gray-900);
+    margin: 0 0 0.5rem 0;
+}
+
+.intelligence-subtitle {
+    font-size: 1.125rem;
+    color: var(--exec-gray-600);
+    font-weight: 400;
+    margin: 0;
+}
+
+.btn-intelligence-view {
+    display: inline-flex;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    background: var(--exec-gradient);
+    color: white;
+    text-decoration: none;
+    border-radius: 12px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-intelligence-view:hover {
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(26, 54, 93, 0.3);
+}
+
+.live-indicator {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--exec-gray-700);
+}
+
+.live-dot {
+    width: 8px;
+    height: 8px;
+    background: #ef4444;
+    border-radius: 50%;
+    animation: pulse-executive 2s infinite;
+}
+
+.live-text {
+    color: #ef4444;
+}
+
+/* Executive News Grid */
+.executive-news-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+@media (min-width: 1200px) {
+    .executive-news-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (min-width: 768px) and (max-width: 1199px) {
+    .executive-news-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 767px) {
+    .executive-news-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.executive-news-item {
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: var(--exec-shadow);
+    border: 1px solid var(--exec-gray-200);
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.executive-news-item:hover {
+    box-shadow: var(--exec-shadow-2xl);
+    transform: translateY(-8px);
+}
+
+.news-priority-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--exec-gradient);
+    z-index: 1;
+}
+
+.news-visual-section {
+    position: relative;
+    height: 240px;
+    overflow: hidden;
+    background: var(--exec-gray-100);
+}
+
+.news-executive-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+    opacity: 1;
+    display: block;
+}
+
+.executive-news-item:hover .news-executive-image {
+    transform: scale(1.05);
+}
+
+.executive-placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--exec-gray-100), var(--exec-gray-200));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--exec-gray-600);
+}
+
+.executive-category-badge {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    padding: 0.375rem 0.75rem;
+    border-radius: 20px;
+    color: white;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    backdrop-filter: blur(10px);
+}
+
+.news-intelligence-content {
+    padding: 1.5rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.intelligence-meta {
+    margin-bottom: 1rem;
+}
+
+.meta-priority {
+    margin-bottom: 0.5rem;
+}
+
+.priority-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.priority-indicator.high {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.meta-details {
+    display: flex;
+    gap: 1rem;
+    font-size: 0.875rem;
+    color: var(--exec-gray-600);
+}
+
+.meta-time, .meta-region {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.intelligence-title-link {
+    font-size: 1.25rem;
+    font-weight: 700;
+    line-height: 1.4;
+    margin-bottom: 1rem;
+    min-height: 3rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.title-executive-link {
+    color: var(--exec-gray-900);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.title-executive-link:hover {
+    color: var(--exec-blue-600);
+}
+
+.intelligence-summary {
+    color: var(--exec-gray-600);
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+    flex: 1;
+    min-height: 4rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.intelligence-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: auto;
+    padding-top: 1rem;
+    border-top: 1px solid var(--exec-gray-100);
+}
+
+.source-executive {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    color: var(--exec-gray-600);
+    font-weight: 500;
+}
+
+.source-executive i {
+    color: var(--exec-blue-600);
+}
+
+.intelligence-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.action-executive {
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.875rem;
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    transition: all 0.3s ease;
+}
+
+.action-executive.primary {
+    background: var(--exec-blue-600);
+    color: white;
+    border: 2px solid var(--exec-blue-600);
+}
+
+.action-executive.primary:hover {
+    background: var(--exec-blue-700);
+    border-color: var(--exec-blue-700);
     color: white;
     transform: translateY(-1px);
 }
 
-/* Filter Statistics */
-.filter-stats {
+.action-executive.secondary {
+    background: transparent;
+    color: var(--exec-gray-700);
+    border: 2px solid var(--exec-gray-300);
+}
+
+.action-executive.secondary:hover {
+    background: var(--exec-gray-100);
+    border-color: var(--exec-gray-400);
+    color: var(--exec-gray-900);
+    transform: translateY(-1px);
+}
+
+/* Market Intelligence Grid */
+.market-intelligence-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-    gap: 1rem;
-    margin-top: 1.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
 }
 
-.filter-stat {
-    text-align: center;
-    padding: 1rem;
+@media (min-width: 1200px) {
+    .market-intelligence-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+@media (min-width: 768px) and (max-width: 1199px) {
+    .market-intelligence-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+.market-intelligence-item {
     background: white;
-    border-radius: 0.5rem;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    border: 1px solid #e9ecef;
+    border: 1px solid var(--exec-gray-200);
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: var(--exec-shadow);
+    transition: all 0.3s ease;
 }
 
-.filter-stat-number {
+.market-intelligence-item:hover {
+    box-shadow: var(--exec-shadow-lg);
+    transform: translateY(-4px);
+}
+
+.intelligence-source {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.source-avatar img,
+.avatar-executive-placeholder {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 0.75rem;
     display: block;
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: #007bff;
+    opacity: 1;
+}
+
+.avatar-executive-placeholder {
+    background: var(--exec-gradient);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+.source-info {
+    flex: 1;
+}
+
+.source-name {
+    font-weight: 600;
+    color: var(--exec-gray-900);
     margin-bottom: 0.25rem;
 }
 
-.filter-stat-label {
-    font-size: 0.8rem;
-    color: #6c757d;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+.source-meta {
+    font-size: 0.875rem;
+    color: var(--exec-gray-600);
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
 }
 
-.section-title {
-    font-size: 1.75rem;
+.meta-separator {
+    color: var(--exec-gray-400);
+}
+
+.intelligence-content {
+    color: var(--exec-gray-700);
+    line-height: 1.6;
+    margin-bottom: 1rem;
+}
+
+.intelligence-visual {
+    margin-bottom: 1rem;
+    overflow: hidden;
+    border-radius: 8px;
+}
+
+.intelligence-visual img {
+    width: 100%;
+    max-height: 150px;
+    object-fit: cover;
+    border-radius: 8px;
+    display: block;
+    opacity: 1;
+}
+
+.intelligence-metrics {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.875rem;
+    color: var(--exec-gray-600);
+}
+
+.metric-item {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+}
+
+.metric-item i {
+    color: var(--exec-gray-400);
+}
+
+/* Executive Sidebar */
+.executive-sidebar-card {
+    background: white;
+    border: 1px solid var(--exec-gray-200);
+    border-radius: 16px;
+    box-shadow: var(--exec-shadow);
+    margin-bottom: 2rem;
+    overflow: hidden;
+}
+
+.sidebar-executive-header {
+    background: linear-gradient(135deg, var(--exec-gray-50), var(--exec-gray-100));
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--exec-gray-200);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.sidebar-executive-header h3 {
+    font-size: 1.125rem;
     font-weight: 700;
-    color: #333;
-    margin-bottom: 0;
+    color: var(--exec-gray-900);
+    margin: 0;
 }
 
-.news-card, .social-post-card {
-    border: none;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+.market-status, .coverage-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--exec-gray-700);
+}
+
+.status-dot.active {
+    background: #10b981;
+}
+
+.coverage-badge {
+    background: var(--exec-blue-600);
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+}
+
+.sidebar-executive-content {
+    padding: 2rem;
+}
+
+.market-overview {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.overview-icon {
+    color: var(--exec-blue-600);
+    margin-bottom: 1rem;
+}
+
+.overview-title {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--exec-gray-900);
+    margin-bottom: 0.75rem;
+}
+
+.overview-description {
+    color: var(--exec-gray-600);
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+}
+
+.btn-sidebar-primary {
+    background: var(--exec-gradient);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    transition: all 0.3s ease;
+}
+
+.btn-sidebar-primary:hover {
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 15px rgba(26, 54, 93, 0.3);
+}
+
+.market-categories-executive {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+}
+
+.category-executive-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: var(--exec-gray-50);
     border-radius: 12px;
     transition: all 0.3s ease;
 }
 
-.news-card:hover, .social-post-card:hover {
-    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+.category-executive-item:hover {
+    background: white;
+    box-shadow: var(--exec-shadow);
+    transform: translateY(-1px);
 }
 
-.news-image {
-    border-radius: 12px 12px 0 0;
+.category-icon {
+    width: 40px;
+    height: 40px;
+    background: var(--exec-gradient);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
 }
 
-.category-badge {
+.category-info {
+    flex: 1;
+}
+
+.category-name {
+    font-weight: 600;
+    color: var(--exec-gray-900);
+    display: block;
+    margin-bottom: 0.25rem;
+}
+
+.category-status {
     font-size: 0.75rem;
-    font-weight: 600;
-    padding: 4px 8px;
+    color: var(--exec-gray-600);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.global-coverage-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.coverage-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background: var(--exec-gray-50);
     border-radius: 12px;
+    transition: all 0.3s ease;
 }
 
-.news-title {
-    font-size: 1.1rem;
+.coverage-item:hover {
+    background: white;
+    box-shadow: var(--exec-shadow);
+    transform: translateY(-1px);
+}
+
+.country-info-executive {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.country-flag-executive {
+    width: 32px;
+    height: 24px;
+    border-radius: 4px;
+    object-fit: cover;
+    opacity: 1;
+}
+
+.flag-placeholder {
+    width: 32px;
+    height: 24px;
+    background: var(--exec-gray-300);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--exec-gray-600);
+}
+
+.country-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.country-name-executive {
     font-weight: 600;
-    line-height: 1.4;
+    color: var(--exec-gray-900);
+    margin-bottom: 0.125rem;
 }
 
-.news-title a {
-    color: #333;
-    transition: color 0.3s ease;
+.country-activity {
+    font-size: 0.75rem;
+    color: var(--exec-gray-600);
 }
 
-.news-title a:hover {
-    color: #007bff;
+.intelligence-count {
+    text-align: center;
 }
 
-.sidebar-widget {
-    border: none;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    border-radius: 12px;
+.count-value {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--exec-blue-600);
+    display: block;
 }
 
-.sidebar-widget .card-header {
-    background: linear-gradient(45deg, #f8f9fa, #e9ecef);
-    border-bottom: 1px solid #dee2e6;
-    border-radius: 12px 12px 0 0;
+.count-label {
+    font-size: 0.75rem;
+    color: var(--exec-gray-600);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
-.article-actions .btn {
-    font-size: 0.85rem;
-    padding: 0.375rem 0.75rem;
-    border-radius: 6px;
+.no-coverage {
+    text-align: center;
+    padding: 2rem;
+    color: var(--exec-gray-600);
 }
 
-.social-engagement {
-    font-size: 0.9rem;
+/* Executive Empty State */
+.executive-empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    max-width: 500px;
+    margin: 0 auto;
 }
 
-.social-engagement span {
-    color: #6c757d;
+.empty-icon-executive {
+    color: var(--exec-gray-400);
+    margin-bottom: 2rem;
 }
 
-.social-content {
-    font-size: 0.95rem;
-    line-height: 1.5;
-    color: #333;
+.empty-title-executive {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--exec-gray-900);
+    margin-bottom: 1rem;
 }
 
-@media (max-width: 768px) {
-    .hero-section {
-        padding: 40px 0;
-        min-height: 300px;
+.empty-message-executive {
+    font-size: 1.125rem;
+    color: var(--exec-gray-600);
+    line-height: 1.6;
+    margin-bottom: 2rem;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .filter-controls-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem;
     }
     
-    .hero-filter-section {
-        padding: 1.5rem;
-        margin: 1rem;
+    .filter-actions-group {
+        grid-column: span 2;
+        justify-self: center;
     }
     
-    .filter-title {
-        font-size: 1.25rem;
-    }
-    
-    .filter-form {
-        grid-template-columns: 1fr;
+    .hero-actions {
+        flex-direction: column;
         gap: 0.75rem;
     }
     
-    .filter-stats {
-        grid-template-columns: repeat(2, 1fr);
+    .trust-indicators {
+        gap: 1rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .executive-hero {
+        padding: 3rem 0 2rem;
     }
     
-    .quick-filter-tabs {
-        justify-content: flex-start;
-        overflow-x: auto;
-        padding-bottom: 0.5rem;
+    .executive-title {
+        font-size: 2.5rem;
     }
     
-    .quick-filter-tab {
-        white-space: nowrap;
-        flex-shrink: 0;
-        font-size: 0.8rem;
-        padding: 0.4rem 0.8rem;
+    .hero-content {
+        padding-right: 0;
+        margin-bottom: 2rem;
     }
     
-    .section-title {
+    .executive-filter-card {
+        padding: 2rem;
+    }
+    
+    .filter-executive-header {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: flex-start;
+    }
+    
+    .filter-controls-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    
+    .filter-actions-group {
+        grid-column: span 1;
+        justify-self: stretch;
+    }
+    
+    .btn-apply-filters {
+        flex: 1;
+        justify-content: center;
+    }
+    
+    .executive-quick-filters {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+    
+    .quick-filter-options {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .intelligence-header {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: flex-start;
+    }
+    
+    .trust-indicators {
+        flex-direction: column;
+        gap: 0.75rem;
+        align-items: flex-start;
+    }
+}
+
+@media (max-width: 480px) {
+    .executive-title {
+        font-size: 2rem;
+    }
+    
+    .title-gradient {
+        font-size: 1.75rem;
+    }
+    
+    .executive-filter-section {
+        padding: 2rem 0;
+    }
+    
+    .executive-filter-card {
+        padding: 1.5rem;
+        margin: 0 0.5rem;
+    }
+    
+    .filter-executive-title {
+        font-size: 1.5rem !important;
+    }
+    
+    .btn-executive {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .dashboard-stats {
+        gap: 1rem;
+    }
+    
+    .stat-executive {
+        padding: 0.75rem;
+    }
+    
+    .stat-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+    }
+    
+    .stat-value {
         font-size: 1.5rem;
     }
-    
-    .container-fluid {
-        padding-left: 15px;
-        padding-right: 15px;
+}
+
+/* Performance Optimizations */
+.executive-news-item,
+.market-intelligence-item,
+.executive-sidebar-card,
+.executive-filter-card {
+    will-change: transform;
+}
+
+/* Accessibility Enhancements */
+.executive-news-item:focus,
+.market-intelligence-item:focus {
+    outline: 3px solid var(--exec-blue-600);
+    outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
     }
 }
 
-@media (max-width: 1200px) {
-    .filter-form {
-        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    }
+/* Image Loading States */
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
 }
 
-@media (max-width: 576px) {
-    .hero-filter-section {
-        padding: 1rem;
-        margin: 0.5rem;
+.news-executive-image,
+.intelligence-visual img,
+.source-avatar img,
+.country-flag-executive {
+    opacity: 1 !important;
+    visibility: visible !important;
+    display: block !important;
+}
+
+/* Print Styles */
+@media print {
+    .executive-filter-section {
+        display: none;
     }
     
-    .filter-title {
-        font-size: 1.1rem;
-    }
-    
-    .filter-group {
-        margin-bottom: 0.75rem;
-    }
-    
-    .quick-filter-tab {
-        font-size: 0.8rem;
-        padding: 0.4rem 0.8rem;
-    }
-    
-    .container-fluid {
-        padding-left: 10px;
-        padding-right: 10px;
+    .executive-hero {
+        background: white !important;
+        color: black !important;
+        padding: 1rem 0 !important;
     }
 }
 </style>
