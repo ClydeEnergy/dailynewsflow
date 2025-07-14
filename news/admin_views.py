@@ -10,7 +10,7 @@ from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
 from django.views.decorators.csrf import csrf_protect
 from .models import NewsArticle, Country, NewsProvider, MarketTicker, Commodity, Cryptocurrency, SocialMediaPost, ExchangeRate
-from .forms import (NewsArticleForm, AdminLoginForm, AdminUserForm,
+from .forms import (NewsArticleForm, AdminLoginForm, AdminUserForm, CountryForm, NewsProviderForm,
                    MarketTickerForm, CommodityForm, CryptocurrencyForm, SocialMediaPostForm, ExchangeRateForm)
 
 
@@ -381,15 +381,48 @@ def admin_countries(request):
 @user_passes_test(is_admin_user, login_url='news:admin_login')
 def admin_add_country(request):
     """Add new country"""
-    messages.error(request, 'CountryForm is not implemented. Please contact the administrator.')
-    return redirect('news:admin_countries')
+    if request.method == 'POST':
+        form = CountryForm(request.POST)
+        if form.is_valid():
+            country = form.save()
+            messages.success(request, f'Country "{country.name}" added successfully!')
+            return redirect('news:admin_countries')
+        else:
+            messages.error(request, 'Please correct the errors below.')
+    else:
+        form = CountryForm()
+    
+    context = {
+        'form': form,
+        'action': 'Add',
+        'title': 'Add New Country'
+    }
+    return render(request, 'admin/country_form.html', context)
 
 
 @user_passes_test(is_admin_user, login_url='news:admin_login')
 def admin_edit_country(request, pk):
     """Edit country"""
-    messages.error(request, 'CountryForm is not implemented. Please contact the administrator.')
-    return redirect('news:admin_countries')
+    country = get_object_or_404(Country, pk=pk)
+    
+    if request.method == 'POST':
+        form = CountryForm(request.POST, instance=country)
+        if form.is_valid():
+            country = form.save()
+            messages.success(request, f'Country "{country.name}" updated successfully!')
+            return redirect('news:admin_countries')
+        else:
+            messages.error(request, 'Please correct the errors below.')
+    else:
+        form = CountryForm(instance=country)
+    
+    context = {
+        'form': form,
+        'country': country,
+        'action': 'Edit',
+        'title': f'Edit Country - {country.name}'
+    }
+    return render(request, 'admin/country_form.html', context)
 
 
 @user_passes_test(is_admin_user, login_url='news:admin_login')
@@ -426,15 +459,48 @@ def admin_providers(request):
 @user_passes_test(is_admin_user, login_url='news:admin_login')
 def admin_add_provider(request):
     """Add new news provider"""
-    messages.error(request, 'NewsProviderForm is not implemented. Please contact the administrator.')
-    return redirect('news:admin_providers')
+    if request.method == 'POST':
+        form = NewsProviderForm(request.POST)
+        if form.is_valid():
+            provider = form.save()
+            messages.success(request, f'News provider "{provider.name}" added successfully!')
+            return redirect('news:admin_providers')
+        else:
+            messages.error(request, 'Please correct the errors below.')
+    else:
+        form = NewsProviderForm()
+    
+    context = {
+        'form': form,
+        'action': 'Add',
+        'title': 'Add New News Provider'
+    }
+    return render(request, 'admin/provider_form.html', context)
 
 
 @user_passes_test(is_admin_user, login_url='news:admin_login')
 def admin_edit_provider(request, pk):
     """Edit news provider"""
-    messages.error(request, 'NewsProviderForm is not implemented. Please contact the administrator.')
-    return redirect('news:admin_providers')
+    provider = get_object_or_404(NewsProvider, pk=pk)
+    
+    if request.method == 'POST':
+        form = NewsProviderForm(request.POST, instance=provider)
+        if form.is_valid():
+            provider = form.save()
+            messages.success(request, f'News provider "{provider.name}" updated successfully!')
+            return redirect('news:admin_providers')
+        else:
+            messages.error(request, 'Please correct the errors below.')
+    else:
+        form = NewsProviderForm(instance=provider)
+    
+    context = {
+        'form': form,
+        'provider': provider,
+        'action': 'Edit',
+        'title': f'Edit News Provider - {provider.name}'
+    }
+    return render(request, 'admin/provider_form.html', context)
 
 
 @require_http_methods(["POST"])

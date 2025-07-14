@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
+from ..models import Country, NewsProvider
 
 
 class AdminLoginForm(forms.Form):
@@ -99,3 +100,81 @@ class AdminUserForm(UserCreationForm):
                 user.set_password(self.cleaned_data['password1'])
             user.save()
         return user
+
+
+class CountryForm(forms.ModelForm):
+    """Form for creating and editing countries"""
+    
+    class Meta:
+        model = Country
+        fields = ['name', 'code', 'flag_url', 'is_active']
+        widgets = {
+            'name': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Enter country name',
+                'required': True
+            }),
+            'code': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Enter 2-letter country code (e.g., US, GB)',
+                'required': True,
+                'maxlength': 2,
+                'style': 'text-transform: uppercase;'
+            }),
+            'flag_url': forms.URLInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Enter flag image URL (optional)'
+            }),
+            'is_active': forms.CheckboxInput(attrs={
+                'class': 'form-check-input'
+            })
+        }
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if not self.instance.pk:
+            self.initial['is_active'] = True
+    
+    def clean_code(self):
+        code = self.cleaned_data.get('code', '').upper()
+        if len(code) != 2:
+            raise forms.ValidationError("Country code must be exactly 2 letters.")
+        return code
+
+
+class NewsProviderForm(forms.ModelForm):
+    """Form for creating and editing news providers"""
+    
+    class Meta:
+        model = NewsProvider
+        fields = ['name', 'website', 'country', 'logo_url', 'is_active']
+        widgets = {
+            'name': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Enter news provider name',
+                'required': True
+            }),
+            'website': forms.URLInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Enter provider website URL',
+                'required': True
+            }),
+            'country': forms.Select(attrs={
+                'class': 'form-select',
+                'required': True
+            }),
+            'logo_url': forms.URLInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Enter logo image URL (optional)'
+            }),
+            'is_active': forms.CheckboxInput(attrs={
+                'class': 'form-check-input'
+            })
+        }
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if not self.instance.pk:
+            self.initial['is_active'] = True
+        # Filter to show only active countries
+        self.fields['country'].queryset = Country.objects.filter(is_active=True).order_by('name')

@@ -269,6 +269,7 @@ body {
     flex-grow: 1;
     display: -webkit-box;
     -webkit-line-clamp: 3;
+    line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -279,6 +280,7 @@ body {
 .news-card .card-body .news-description {
     display: -webkit-box;
     -webkit-line-clamp: 2;
+    line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -413,6 +415,7 @@ body {
     flex-grow: 1;
     display: -webkit-box;
     -webkit-line-clamp: 4;
+    line-clamp: 4;
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -760,32 +763,6 @@ body {
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(20px); }
     to { opacity: 1; transform: translateY(0); }
-}
-    
-    .filter-stats {
-        grid-template-columns: 1fr;
-    }
-    
-    .filter-stat {
-        padding: 0.75rem;
-    }
-    
-    .news-image {
-        height: 160px;
-    }
-    
-    .market-header,
-    .market-row {
-        grid-template-columns: 1fr 1fr;
-        gap: 0.5rem;
-    }
-    
-    .col-exchange,
-    .col-currency,
-    .col-change,
-    .col-action {
-        display: none;
-    }
 }
 
 /* Loading and Animation States */
